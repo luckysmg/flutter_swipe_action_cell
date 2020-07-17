@@ -15,7 +15,7 @@ So I try to create one.
 Tip:This widget should be put in the itemBuilder of your ListView
 
  - Example 1:Simple delete the item in ListView
-[](2)
+[](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif)
 
 ```dart
  SwipeActionCell(
@@ -39,7 +39,7 @@ Tip:This widget should be put in the itemBuilder of your ListView
 
  - Example 2:Perform first action when full swipe
  
- [](2)
+ [](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif)
  
  ```dart
  SwipeActionCell(
@@ -67,7 +67,7 @@ Tip:This widget should be put in the itemBuilder of your ListView
 
  - Example 3:Delete with animation 
  
- [](3)
+ [](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif)
  
  ```dart
 SwipeActionCell(
@@ -99,7 +99,7 @@ SwipeActionCell(
 
  - Example 4:More than one action: 
  
- [](4)
+ [](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif)
  
  ```dart
 SwipeActionCell(
