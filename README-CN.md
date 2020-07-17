@@ -11,11 +11,11 @@ Language:
 
 ## 开始
 
-
-Tip你把下面的放在你ListView的itemBuilder里面返回就行
-
  - Example 1:最简单的例子---删除
+ 
 ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif)
+
+Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```dart
  SwipeActionCell(
       key: ObjectKey(list[index]),///这个key要填上
@@ -35,7 +35,8 @@ Tip你把下面的放在你ListView的itemBuilder里面返回就行
       ),
     );
 ```
-
+     
+ 
  - Example 2:拉满将会执行第一个action
  
  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif)
@@ -93,7 +94,7 @@ SwipeActionCell(
     );
  ```
 
- - Example 4:多余一个action 
+ - Example 4:多于一个action
  
 ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif)
  
@@ -145,10 +146,7 @@ SwipeActionCell(
  ```
 
 # 关于 CompletionHandler 
-it means how you want control this cell after you tap it.
-If you don't want any animation,just don't call it and update your data and UI with setState()
-他代表你在点击action之后如何操纵这个cell，如果你不想要任何动画，那么就不执行handler，而是直接更新你的数据，然后setState就行
-
+它代表你在点击action之后如何操纵这个cell，如果你不想要任何动画，那么就不执行handler，而是直接更新你的数据，然后setState就行
 
 如果你想要动画:
 - hander(true) :代表这一行将会被删除（虽然UI上看不到那一行了，但是你仍然应该更新你的数据并且setState)
