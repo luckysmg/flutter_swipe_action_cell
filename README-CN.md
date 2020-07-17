@@ -4,22 +4,21 @@ Language:
 
 # flutter_swipe_action_cell
 
-A package that can give you a cell that can be swiped ,effect is like iOS native
+一个可以提供iOS原生效果的列表侧滑库
 
-## Why do I want to create this lib?
-I like iOS native 's swipe action ,but flutter doesn't give an official widget .
-So I try to create one.
+## 为什么我想要这个库？
+我喜欢iOS原生的侧滑效果，很爽，但是flutter并没有提供官方的组件，所以我尝试写一个
 
-## Get started with example
+## 开始
 
 
-Tip:This widget should be put in the itemBuilder of your ListView
+Tip你把下面的放在你ListView的itemBuilder里面返回就行
 
- - Example 1:Simple delete the item in ListView
+ - Example 1:最简单的例子---删除
 ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif)
 ```dart
  SwipeActionCell(
-      key: ObjectKey(list[index]),///this key is necessary
+      key: ObjectKey(list[index]),///这个key要填上
       actions: <SwipeAction>[
         SwipeAction(
             title: "delete",
@@ -37,16 +36,16 @@ Tip:This widget should be put in the itemBuilder of your ListView
     );
 ```
 
- - Example 2:Perform first action when full swipe
+ - Example 2:拉满将会执行第一个action
  
  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif)
  
  ```dart
  SwipeActionCell(
-       ///this key is necessary
+        ///这个key需要
        key: ObjectKey(list[index]),
  
-       ///this is the same as iOS native
+       ///参数名和iOS原生相同
        performsFirstActionWithFullSwipe: true,
        actions: <SwipeAction>[
          SwipeAction(
@@ -65,24 +64,21 @@ Tip:This widget should be put in the itemBuilder of your ListView
      );
  ```
 
- - Example 3:Delete with animation 
+ - Example 3:伴随动画的删除（按照iOS原生动画做的）
  
 ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif)
  
  ```dart
 SwipeActionCell(
-      ///this key is necessary
       key: ObjectKey(list[index]),
-      ///this name is the same as iOS native
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
             title: "delete",
             onTap: (CompletionHandler handler) async {
               list.removeAt(index);
-              /// await handler(true) : will delete this row
-              ///And after delete animation,setState will called to 
-              /// sync your data source with your UI
+              /// await handler(true) : 代表将会删除这一行
+             ///在删除动画结束后，setState函数才应该被调用来同步你的数据和UI
 
               await handler(true);
               setState(() {});
@@ -97,16 +93,14 @@ SwipeActionCell(
     );
  ```
 
- - Example 4:More than one action: 
+ - Example 4:多余一个action 
  
 ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif)
  
  ```dart
 SwipeActionCell(
-      ///this key is necessary
       key: ObjectKey(list[index]),
 
-      ///this is the same as iOS native
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
@@ -121,8 +115,7 @@ SwipeActionCell(
             title: "noAction",
             onTap: (CompletionHandler handler) async {
 
-              ///false means that you just do nothing,it will close
-              /// action buttons by default 
+              ///handler(false) 代表不会做任何事情，默认地，他会关闭这个action
               handler(false);
               showCupertinoDialog(
                   context: context,
@@ -151,18 +144,21 @@ SwipeActionCell(
     );
  ```
 
-# About CompletionHandler in onTap function of SwipeAction
+# 关于 CompletionHandler 
 it means how you want control this cell after you tap it.
 If you don't want any animation,just don't call it and update your data and UI with setState()
+他代表你在点击action之后如何操纵这个cell，如果你不想要任何动画，那么就不执行handler，而是直接更新你的数据，然后setState就行
 
-If you want some animation:
-- hander(true) : Means this row will be deleted(You should call setState after it)
 
-- await handler(true) : Means that you will await the animation to complete(you should call setState after it so that you will get an animation)
+如果你想要动画:
+- hander(true) :代表这一行将会被删除（虽然UI上看不到那一行了，但是你仍然应该更新你的数据并且setState)
 
-- handler(false) : means it will not delete this row.By default,it just close this cell's action buttons.
+- await handler(true) :代表你将会等待删除动画执行完毕，你应该在这一行之后去执行setState，否则看不到动画（适合同步删除，也就是删除这个cell在业务上不需要服务器的参与） 
 
-- await handler(false) : means it will wait the close animation to complete.
+- handler(false) : 点击后内部不会有删除这一行的动作，默认地，他只会关闭这个action button
+means it will not delete this row.By default,it just close this cell's action buttons.
+
+- await handler(false) : 相比上面来说，他只会等待关闭动画结束
 
 
  
