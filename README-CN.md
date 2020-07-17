@@ -12,8 +12,8 @@ Language:
 ## 开始
 
  - Example 1:最简单的例子---删除
- 
-![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif)
+
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif" width="200"  alt=""/>
 
 Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```dart
@@ -39,8 +39,8 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
  
  - Example 2:拉满将会执行第一个action
  
- ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif)
- 
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif" width="200"  alt=""/>
+
  ```dart
  SwipeActionCell(
         ///这个key需要
@@ -67,7 +67,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 
  - Example 3:伴随动画的删除（按照iOS原生动画做的）
  
-![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif)
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif" width="200"  alt=""/>
  
  ```dart
 SwipeActionCell(
@@ -96,7 +96,8 @@ SwipeActionCell(
 
  - Example 4:多于一个action
  
-![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif)
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif" width="200"  alt=""/>
+
  
  ```dart
 SwipeActionCell(
