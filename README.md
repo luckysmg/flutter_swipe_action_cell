@@ -16,7 +16,9 @@ So I try to create one.
 Tip:This widget should be put in the itemBuilder of your ListView
 
  - Example 1:Simple delete the item in ListView
-![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif)
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif" width="200"  alt=""/>
+
+ 
 ```dart
  SwipeActionCell(
       key: ObjectKey(list[index]),///this key is necessary
@@ -39,7 +41,8 @@ Tip:This widget should be put in the itemBuilder of your ListView
 
  - Example 2:Perform first action when full swipe
  
- ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif)
+  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif" width="200"  alt=""/>
+
  
  ```dart
  SwipeActionCell(
@@ -67,8 +70,8 @@ Tip:This widget should be put in the itemBuilder of your ListView
 
  - Example 3:Delete with animation 
  
-![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif)
- 
+  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif" width="200"  alt=""/>
+
  ```dart
 SwipeActionCell(
       ///this key is necessary
@@ -99,7 +102,8 @@ SwipeActionCell(
 
  - Example 4:More than one action: 
  
-![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif)
+  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif" width="200"  alt=""/>
+
  
  ```dart
 SwipeActionCell(
