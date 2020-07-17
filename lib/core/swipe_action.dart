@@ -46,6 +46,10 @@ class SwipeAction {
   ///这个属性只对第一个  [SwipeAction]有用!!!!
   final bool forceAlignmentLeft;
 
+  ///The width space this action button will take when opening.
+  ///当处于打开状态下这个按钮所占的宽度
+  final double widthSpace;
+
   final Color color;
   final Function(CompletionHandler) onTap;
   final Widget icon;
@@ -62,5 +66,6 @@ class SwipeAction {
     this.closeOnTap = true,
     this.backgroundRadius = 0.0,
     this.forceAlignmentLeft = false,
+    this.widthSpace = 80,
   });
 }

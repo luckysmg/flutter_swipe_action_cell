@@ -33,7 +33,6 @@ class SwipeActionCell extends StatefulWidget {
 
   ///Indicates the max width of per action button,def value is 60dp
   ///代表每个action按钮最多能拉多长,默认80dp
-  final double maxActionButtonWidth;
 
   ///When drag cell a long distance,it will be dismissed，
   ///and it will execute the onTap  of the first [SwipeAction]
@@ -49,7 +48,6 @@ class SwipeActionCell extends StatefulWidget {
     Key key,
     @required this.actions,
     @required this.child,
-    this.maxActionButtonWidth = 80,
     this.closeWhenScrolling = true,
     this.performsFirstActionWithFullSwipe = false,
     this.firstActionWillCoverAllSpaceOnDeleting = true,
@@ -76,8 +74,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   AnimationController controller;
   AnimationController deleteController;
   Animation<double> animation;
-  Animation<double> closeCurvedAnim;
-  Animation<double> openCurvedAnim;
+  Animation<double> curvedAnim;
   Animation<double> deleteCurvedAnim;
 
   ScrollPosition scrollPosition;
@@ -97,7 +94,8 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     lockAnim = false;
     ignorePointer = false;
     actionsCount = widget.actions.length;
-    maxPullWidth = actionsCount * widget.maxActionButtonWidth;
+    maxPullWidth = getMaxPullWidth();
+
     currentOffset = Offset.zero;
     controller = AnimationController(
       vsync: this,
@@ -109,14 +107,20 @@ class _SwipeActionCellState extends State<SwipeActionCell>
       value: 1.0,
       duration: const Duration(milliseconds: 500),
     );
-    closeCurvedAnim =
+    curvedAnim =
         CurvedAnimation(parent: controller, curve: Curves.easeOutQuart);
-    openCurvedAnim =
-        CurvedAnimation(parent: controller, curve: Curves.easeOutExpo);
     deleteCurvedAnim =
         CurvedAnimation(parent: deleteController, curve: Curves.easeInToLinear);
 
     _listenEvent();
+  }
+
+  double getMaxPullWidth() {
+    double sum = 0.0;
+    for (final action in widget.actions) {
+      sum += action.widthSpace;
+    }
+    return sum;
   }
 
   void _listenEvent() {
@@ -174,7 +178,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   void didUpdateWidget(SwipeActionCell oldWidget) {
     super.didUpdateWidget(oldWidget);
     actionsCount = widget.actions.length;
-    maxPullWidth = actionsCount * widget.maxActionButtonWidth;
+    maxPullWidth = getMaxPullWidth();
     _updateItemDimension();
     if (widget.closeWhenScrolling != oldWidget.closeWhenScrolling) {
       _removeScrollListener();
@@ -312,7 +316,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     _resetAnimValue();
     final double startOffset = currentOffset.dx;
     animation = Tween<double>(begin: startOffset, end: -maxPullWidth)
-        .animate(openCurvedAnim)
+        .animate(curvedAnim)
           ..addListener(() {
             if (lockAnim) return;
             this.currentOffset = Offset(animation.value, 0);
@@ -324,8 +328,8 @@ class _SwipeActionCellState extends State<SwipeActionCell>
 
   void _closeWithAnim() async {
     _resetAnimValue();
-    animation = Tween<double>(begin: currentOffset.dx, end: 0.0)
-        .animate(closeCurvedAnim)
+    animation =
+        Tween<double>(begin: currentOffset.dx, end: 0.0).animate(curvedAnim)
           ..addListener(() {
             if (lockAnim) return;
             this.currentOffset = Offset(animation.value, 0);
@@ -390,22 +394,34 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   Widget _buildActionButtons() {
     final List<Widget> actionButtons =
         List.generate(widget.actions.length, (index) {
-      final action = widget.actions[actionsCount - 1 - index];
+      final actualIndex = actionsCount - 1 - index;
+      final action = widget.actions[actualIndex];
       bool isLastOne = index == actionsCount - 1;
       bool willPull =
           isLastOne && lastItemOut && widget.performsFirstActionWithFullSwipe;
 
+      ///compute width
+      double width;
+      final currentPullWidth = currentOffset.dx.abs();
+      if (willPull) {
+        width = currentPullWidth;
+      } else {
+        double factor = currentPullWidth / maxPullWidth;
+        double sumWidth = 0.0;
+        for (int i = 0; i <= actualIndex; i++) {
+          sumWidth += widget.actions[i].widthSpace;
+        }
+        width = sumWidth * factor;
+      }
+
       SwipeActionButtonConfig config = SwipeActionButtonConfig(
-          willPull
-              ? currentOffset.dx.abs()
-              : currentOffset.dx.abs() * (1 - index / actionsCount),
+          width,
           action,
           widget.performsFirstActionWithFullSwipe,
           widget.actions.length == 1,
           action.backgroundRadius,
           this.globalKey,
           widget.firstActionWillCoverAllSpaceOnDeleting,
-          widget.maxActionButtonWidth,
           isLastOne);
 
       return SwipeActionButtonWidget(

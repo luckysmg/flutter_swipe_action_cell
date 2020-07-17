@@ -101,8 +101,10 @@ SwipeActionCell(
  
  ```dart
 SwipeActionCell(
+      ///this key is necessary
       key: ObjectKey(list[index]),
 
+      ///this is the same as iOS native
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
@@ -114,10 +116,11 @@ SwipeActionCell(
             },
             color: Colors.red),
         SwipeAction(
-            title: "noAction",
+            widthSpace: 120,
+            title: "popAlert",
             onTap: (CompletionHandler handler) async {
-
-              ///handler(false) 代表不会做任何事情，默认地，他会关闭这个action
+              ///false means that you just do nothing,it will close
+              /// action buttons by default
               handler(false);
               showCupertinoDialog(
                   context: context,
@@ -136,7 +139,7 @@ SwipeActionCell(
                     );
                   });
             },
-            color: Colors.blue),
+            color: Colors.orange),
       ],
       child: Padding(
         padding: const EdgeInsets.all(8.0),

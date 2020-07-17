@@ -122,11 +122,11 @@ SwipeActionCell(
             },
             color: Colors.red),
         SwipeAction(
-            title: "noAction",
+            widthSpace: 120,
+            title: "popAlert",
             onTap: (CompletionHandler handler) async {
-
               ///false means that you just do nothing,it will close
-              /// action buttons by default 
+              /// action buttons by default
               handler(false);
               showCupertinoDialog(
                   context: context,
@@ -145,7 +145,7 @@ SwipeActionCell(
                     );
                   });
             },
-            color: Colors.blue),
+            color: Colors.orange),
       ],
       child: Padding(
         padding: const EdgeInsets.all(8.0),

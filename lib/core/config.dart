@@ -10,7 +10,6 @@ class SwipeActionButtonConfig {
   final double radius;
   final GlobalKey parentKey;
   final bool firstActionWillCoverAllSpaceOnDeleting;
-  final double maxPerActionButtonWidth;
   final isLastOne;
 
   SwipeActionButtonConfig(
@@ -21,6 +20,5 @@ class SwipeActionButtonConfig {
       this.radius,
       this.parentKey,
       this.firstActionWillCoverAllSpaceOnDeleting,
-      this.maxPerActionButtonWidth,
       this.isLastOne);
 }
