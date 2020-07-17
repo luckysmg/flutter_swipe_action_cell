@@ -1,4 +1,4 @@
-library swipe_action_cell;
+library flutter_swipe_action_cell;
 
 import 'dart:async';
 
@@ -327,8 +327,8 @@ class _SwipeActionCellState extends State<SwipeActionCell>
 
   void _closeWithAnim() async {
     _resetAnimValue();
-    animation = Tween<double>(begin: currentOffset.dx, end: 0.0)
-        .animate(curvedAnim)
+    animation =
+        Tween<double>(begin: currentOffset.dx, end: 0.0).animate(curvedAnim)
           ..addListener(() {
             if (lockAnim) return;
             this.currentOffset = Offset(animation.value, 0);
@@ -495,8 +495,7 @@ class SwipeAction {
   final String title;
   final double backgroundRadius;
 
-
-  const SwipeAction( {
+  const SwipeAction({
     @required this.onTap,
     this.title,
     this.style = const TextStyle(fontSize: 18, color: Colors.white),
@@ -509,4 +508,3 @@ class SwipeAction {
     this.widthSpace = 80,
   });
 }
-
