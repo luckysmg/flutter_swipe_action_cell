@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'config.dart';
 import 'events.dart';
-import 'swipe_action.dart';
+import 'swipe_action_cell.dart';
 
 class SwipeActionButtonWidget extends StatefulWidget {
   final SwipeActionButtonConfig config;
