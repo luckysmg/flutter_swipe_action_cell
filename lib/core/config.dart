@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'swipe_action.dart';
 
-
 class SwipeActionButtonConfig {
   final double width;
   final SwipeAction action;

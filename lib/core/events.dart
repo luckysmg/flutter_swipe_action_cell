@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-
 class CellOpenEvent {
   CellOpenEvent(this.key);
 
@@ -31,8 +30,9 @@ class PullLastButtonToCoverCellEvent {
   GlobalKey key;
 }
 
-class IgnorePointerEvent{
-  IgnorePointerEvent({this.key,this.ignore});
+class IgnorePointerEvent {
+  IgnorePointerEvent({this.key, this.ignore});
+
   GlobalKey key;
   bool ignore;
 }

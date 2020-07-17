@@ -62,7 +62,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
       this.duration = const Duration();
       if (config.isTheOnlyOne && config.fullDraggable) {
         alignment =
-        event.isPullingOut ? Alignment.centerLeft : Alignment.centerRight;
+            event.isPullingOut ? Alignment.centerLeft : Alignment.centerRight;
       } else {
         alignment = Alignment.centerLeft;
       }
@@ -161,8 +161,8 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
         padding: EdgeInsets.only(
           left: config.action.leftPadding,
           right: config.isTheOnlyOne &&
-              !(config.action.forceAlignmentLeft) &&
-              config.fullDraggable
+                  !(config.action.forceAlignmentLeft) &&
+                  config.fullDraggable
               ? 16
               : 0,
         ),
@@ -178,11 +178,11 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
                 config.action.icon ?? const SizedBox(),
                 config.action.title != null
                     ? Text(
-                  config.action.title,
-                  overflow: TextOverflow.clip,
-                  maxLines: 1,
-                  style: config.action.style,
-                )
+                        config.action.title,
+                        overflow: TextOverflow.clip,
+                        maxLines: 1,
+                        style: config.action.style,
+                      )
                     : const SizedBox(),
               ],
             ),
