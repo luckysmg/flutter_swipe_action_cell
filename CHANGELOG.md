@@ -1,3 +1,1 @@
-## [0.0.1] - init project
-
-* TODO: Describe initial release.
+## [1.0.0] - first release
