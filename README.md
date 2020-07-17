@@ -17,7 +17,7 @@ Tip:This widget should be put in the itemBuilder of your ListView
 
  - Example 1:Simple delete the item in ListView
  
- (There is a gif here,if it unable to load,please go to [HomePage](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README.md))
+ (Tip:There is a gif here,if it unable to load,please go to [HomePage](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README.md))
  
  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif" width="200"  alt=""/>
 
