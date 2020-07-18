@@ -67,8 +67,8 @@ class _Page1State extends State<Page1> {
         SwipeAction(
             title: "delete",
             onTap: (CompletionHandler handler) async {
-              list.removeAt(index);
               await handler(true);
+              list.removeAt(index);
               setState(() {});
             },
             color: Colors.red),

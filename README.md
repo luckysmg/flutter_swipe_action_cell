@@ -85,12 +85,13 @@ SwipeActionCell(
         SwipeAction(
             title: "delete",
             onTap: (CompletionHandler handler) async {
-              list.removeAt(index);
+              
               /// await handler(true) : will delete this row
               ///And after delete animation,setState will called to 
               /// sync your data source with your UI
 
               await handler(true);
+              list.removeAt(index);
               setState(() {});
             },
             color: Colors.red),
@@ -113,17 +114,18 @@ SwipeActionCell(
       ///this key is necessary
       key: ObjectKey(list[index]),
 
-      ///this is the same as iOS native
+      ///this name is the same as iOS native
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
             title: "delete",
             onTap: (CompletionHandler handler) async {
-              list.removeAt(index);
               await handler(true);
+              list.removeAt(index);
               setState(() {});
             },
             color: Colors.red),
+
         SwipeAction(
             widthSpace: 120,
             title: "popAlert",
@@ -152,10 +154,12 @@ SwipeActionCell(
       ],
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text("this is index of ${list[index]}",
+        child: Text(
+            "this is index of ${list[index]}",
             style: TextStyle(fontSize: 40)),
       ),
     );
+
  ```
 
 # About CompletionHandler in onTap function of SwipeAction
@@ -171,6 +175,9 @@ If you want some animation:
 
 - await handler(false) : means it will wait the close animation to complete.
 
+#About all parameter:
+I wrote them in my code with dart doc comments.You can read them in
+source code.
 
  
 

@@ -9,6 +9,7 @@ import 'events.dart';
 import 'swipe_action_cell.dart';
 
 class SwipeActionButtonWidget extends StatefulWidget {
+  ///配置
   final SwipeActionButtonConfig config;
 
   const SwipeActionButtonWidget({
@@ -118,7 +119,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   void _animToCoverCell() {
     setState(() {
       isDeleting = true;
-      width = widget.config.parentKey.currentContext.size.width;
+      width = widget.config.contentWidth;
       alignment = Alignment.centerLeft;
     });
   }

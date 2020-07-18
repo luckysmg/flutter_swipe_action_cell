@@ -24,6 +24,7 @@ class SwipeActionCell extends StatefulWidget {
   final List<SwipeAction> actions;
 
   ///your content
+  ///无需多言
   final Widget child;
 
   ///Close actions When you scroll the ListView . default value is true
@@ -50,7 +51,23 @@ class SwipeActionCell extends StatefulWidget {
     this.closeWhenScrolling = true,
     this.performsFirstActionWithFullSwipe = false,
     this.firstActionWillCoverAllSpaceOnDeleting = true,
-  }) : super(key: key);
+  })  : assert(key != null,
+            "You should pass a key like [ValueKey] or [ObjectKey]"),
+
+        ///关于key ！= null请看下面的注释
+
+        super(key: key);
+
+  ///About Key::::::
+  ///You should put a key,like [ValueKey] or [ObjectKey]
+  ///dont use [GlobalKey] or [UniqueKey]
+  ///because that will make app slow.
+  ///
+  ///关于key：：：你应该在构造的时候放入key，推荐使用[ValueKey] 或者 [ObjectKey] 。
+  ///最好 不要 使用[GlobalKey]和[UniqueKey]。
+  ///我之前在内部也想使用[GlobalKey] 和 [UniqueKey]。
+  ///但是想到有性能问题，所以需要您从外部提供轻量级的key用于我框架内部判断，同时用于
+  ///flutter框架内部刷新。
 
   @override
   _SwipeActionCellState createState() => _SwipeActionCellState();
@@ -60,7 +77,6 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     with TickerProviderStateMixin {
   double height;
   double width;
-  GlobalKey globalKey;
 
   int actionsCount;
 
@@ -88,12 +104,11 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   @override
   void initState() {
     super.initState();
-    globalKey = GlobalKey();
     lastItemOut = false;
     lockAnim = false;
     ignorePointer = false;
     actionsCount = widget.actions.length;
-    maxPullWidth = getMaxPullWidth();
+    maxPullWidth = _getMaxPullWidth();
 
     currentOffset = Offset.zero;
     controller = AnimationController(
@@ -114,7 +129,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     _listenEvent();
   }
 
-  double getMaxPullWidth() {
+  double _getMaxPullWidth() {
     double sum = 0.0;
     for (final action in widget.actions) {
       sum += action.widthSpace;
@@ -125,21 +140,21 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   void _listenEvent() {
     otherCellOpenEventSubscription =
         SwipeActionStore.getInstance().bus.on<CellOpenEvent>().listen((event) {
-      if (event.key != this.globalKey) {
+      if (event.key != widget.key) {
         _closeWithAnim();
       }
     });
 
     closeActionEventSubscription =
         SwipeActionStore.getInstance().bus.on<CloseCellEvent>().listen((event) {
-      if (event.key == this.globalKey) _closeWithAnim();
+      if (event.key == widget.key) _closeWithAnim();
     });
 
     deleteCellEventSubscription = SwipeActionStore.getInstance()
         .bus
         .on<DeleteCellEvent>()
         .listen((event) {
-      if (event.key == this.globalKey) {
+      if (event.key == widget.key) {
         _deleteWithAnim();
       }
     });
@@ -168,7 +183,6 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _updateItemDimension();
     _removeScrollListener();
     _addScrollListener();
   }
@@ -177,15 +191,11 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   void didUpdateWidget(SwipeActionCell oldWidget) {
     super.didUpdateWidget(oldWidget);
     actionsCount = widget.actions.length;
-    maxPullWidth = getMaxPullWidth();
-    _updateItemDimension();
+    maxPullWidth = _getMaxPullWidth();
     if (widget.closeWhenScrolling != oldWidget.closeWhenScrolling) {
       _removeScrollListener();
       _addScrollListener();
     }
-    otherCellOpenEventSubscription?.cancel();
-    closeActionEventSubscription?.cancel();
-    _listenEvent();
   }
 
   void _addScrollListener() {
@@ -206,7 +216,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _onHorizontalDragStart(DragStartDetails details) {
-    SwipeActionStore.getInstance().bus?.fire(CellOpenEvent(this.globalKey));
+    SwipeActionStore.getInstance().bus?.fire(CellOpenEvent(widget.key));
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
@@ -272,11 +282,11 @@ class _SwipeActionCellState extends State<SwipeActionCell>
         if (delete) {
           SwipeActionStore.getInstance()
               .bus
-              .fire(IgnorePointerEvent(key: this.globalKey, ignore: true));
+              .fire(IgnorePointerEvent(key: widget.key, ignore: true));
           if (widget.firstActionWillCoverAllSpaceOnDeleting) {
             SwipeActionStore.getInstance()
                 .bus
-                .fire(PullLastButtonToCoverCellEvent(key: this.globalKey));
+                .fire(PullLastButtonToCoverCellEvent(key: widget.key));
           }
           _deleteWithAnim();
 
@@ -344,25 +354,18 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     lockAnim = false;
   }
 
-  void _updateItemDimension() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      height = globalKey.currentContext?.size?.height;
-      width = globalKey.currentContext?.size?.width;
-      setState(() {});
-    });
-  }
-
   void _deleteWithAnim() async {
     animation = Tween<double>(begin: 1.0, end: 0.01).animate(deleteCurvedAnim);
     deleteController.reverse().whenCompleteOrCancel(() {
       SwipeActionStore.getInstance()
           .bus
-          .fire(IgnorePointerEvent(key: this.globalKey, ignore: false));
+          .fire(IgnorePointerEvent(key: widget.key, ignore: false));
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    ///todo看看为啥第一次忽略不响应
     return IgnorePointer(
       ignoring: ignorePointer,
       child: SizeTransition(
@@ -374,14 +377,19 @@ class _SwipeActionCellState extends State<SwipeActionCell>
           onHorizontalDragEnd: _onHorizontalDragEnd,
           child: Stack(
             children: <Widget>[
-              Transform.translate(
-                  key: globalKey,
-                  offset: currentOffset,
-                  transformHitTests: false,
-                  child: Container(
-                      width: double.infinity,
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      child: widget.child)),
+              _ContentWidget(
+                onLayoutUpdate: (size) {
+                  this.width = size.width;
+                  this.height = size.height;
+                },
+                child: Transform.translate(
+                    offset: currentOffset,
+                    transformHitTests: false,
+                    child: Container(
+                        width: double.infinity,
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        child: widget.child)),
+              ),
               currentOffset.dx != 0 ? _buildActionButtons() : const SizedBox(),
             ],
           ),
@@ -400,28 +408,29 @@ class _SwipeActionCellState extends State<SwipeActionCell>
           isLastOne && lastItemOut && widget.performsFirstActionWithFullSwipe;
 
       ///compute width
-      double width;
+      double actionButtonTotalWidth;
       final currentPullWidth = currentOffset.dx.abs();
       if (willPull) {
-        width = currentPullWidth;
+        actionButtonTotalWidth = currentPullWidth;
       } else {
         double factor = currentPullWidth / maxPullWidth;
         double sumWidth = 0.0;
         for (int i = 0; i <= actualIndex; i++) {
           sumWidth += widget.actions[i].widthSpace;
         }
-        width = sumWidth * factor;
+        actionButtonTotalWidth = sumWidth * factor;
       }
 
       SwipeActionButtonConfig config = SwipeActionButtonConfig(
-          width,
+          actionButtonTotalWidth,
           action,
           widget.performsFirstActionWithFullSwipe,
           widget.actions.length == 1,
           action.backgroundRadius,
-          this.globalKey,
+          widget.key,
           widget.firstActionWillCoverAllSpaceOnDeleting,
-          isLastOne);
+          isLastOne,
+          width);
 
       return SwipeActionButtonWidget(
         config: config,
@@ -489,10 +498,19 @@ class SwipeAction {
   ///当处于打开状态下这个按钮所占的宽度
   final double widthSpace;
 
+  ///背景颜色
   final Color color;
+
+  ///点击事件回调
   final Function(CompletionHandler) onTap;
+
+  ///图标
   final Widget icon;
+
+  ///标题
   final String title;
+
+  ///背景左上和左下的圆角
   final double backgroundRadius;
 
   const SwipeAction({
@@ -507,4 +525,38 @@ class SwipeAction {
     this.forceAlignmentLeft = false,
     this.widthSpace = 80,
   });
+}
+
+class _ContentWidget extends StatefulWidget {
+  final Widget child;
+  final Function(Size) onLayoutUpdate;
+
+  const _ContentWidget({Key key, this.onLayoutUpdate, this.child})
+      : super(key: key);
+
+  @override
+  __ContentWidgetState createState() => __ContentWidgetState();
+}
+
+class __ContentWidgetState extends State<_ContentWidget> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (mounted) widget.onLayoutUpdate(context.size);
+    });
+  }
+
+  @override
+  void didUpdateWidget(_ContentWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (mounted) widget.onLayoutUpdate(context.size);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
+  }
 }

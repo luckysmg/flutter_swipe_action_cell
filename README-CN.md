@@ -80,11 +80,12 @@ SwipeActionCell(
         SwipeAction(
             title: "delete",
             onTap: (CompletionHandler handler) async {
-              list.removeAt(index);
+              
               /// await handler(true) : 代表将会删除这一行
              ///在删除动画结束后，setState函数才应该被调用来同步你的数据和UI
 
               await handler(true);
+              list.removeAt(index);
               setState(() {});
             },
             color: Colors.red),
@@ -107,23 +108,23 @@ SwipeActionCell(
       ///this key is necessary
       key: ObjectKey(list[index]),
 
-      ///this is the same as iOS native
+      ///this name is the same as iOS native
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
             title: "delete",
             onTap: (CompletionHandler handler) async {
-              list.removeAt(index);
               await handler(true);
+              list.removeAt(index);
               setState(() {});
             },
             color: Colors.red),
+
         SwipeAction(
             widthSpace: 120,
             title: "popAlert",
             onTap: (CompletionHandler handler) async {
-              ///false means that you just do nothing,it will close
-              /// action buttons by default
+              ///false 代表他不会删除这一行，默认情况下会关闭这个action button
               handler(false);
               showCupertinoDialog(
                   context: context,
@@ -146,10 +147,12 @@ SwipeActionCell(
       ],
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text("this is index of ${list[index]}",
+        child: Text(
+            "this is index of ${list[index]}",
             style: TextStyle(fontSize: 40)),
       ),
     );
+
  ```
 
 # 关于 CompletionHandler 
@@ -164,6 +167,9 @@ SwipeActionCell(
 means it will not delete this row.By default,it just close this cell's action buttons.
 
 - await handler(false) : 相比上面来说，他只会等待关闭动画结束
+
+#关于其他参数：
+我已经在源码中用dart doc写的很清楚了，如果具体不清楚的可以直接点进去源码看注释，很详细。
 
 
  

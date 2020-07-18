@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 class CellOpenEvent {
   CellOpenEvent(this.key);
 
-  GlobalKey key;
+  final Key key;
 }
 
 class PullLastButtonEvent {
@@ -15,24 +15,24 @@ class PullLastButtonEvent {
 class CloseCellEvent {
   CloseCellEvent({this.key});
 
-  GlobalKey key;
+  final Key key;
 }
 
 class DeleteCellEvent {
   DeleteCellEvent({this.key});
 
-  GlobalKey key;
+  final Key key;
 }
 
 class PullLastButtonToCoverCellEvent {
   PullLastButtonToCoverCellEvent({this.key});
 
-  GlobalKey key;
+  final Key key;
 }
 
 class IgnorePointerEvent {
   IgnorePointerEvent({this.key, this.ignore});
 
-  GlobalKey key;
-  bool ignore;
+  final Key key;
+  final bool ignore;
 }

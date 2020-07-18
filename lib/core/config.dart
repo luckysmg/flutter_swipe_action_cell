@@ -8,9 +8,10 @@ class SwipeActionButtonConfig {
   final bool fullDraggable;
   final bool isTheOnlyOne;
   final double radius;
-  final GlobalKey parentKey;
+  final Key parentKey;
   final bool firstActionWillCoverAllSpaceOnDeleting;
-  final isLastOne;
+  final bool isLastOne;
+  final double contentWidth;
 
   SwipeActionButtonConfig(
       this.width,
@@ -20,5 +21,6 @@ class SwipeActionButtonConfig {
       this.radius,
       this.parentKey,
       this.firstActionWillCoverAllSpaceOnDeleting,
-      this.isLastOne);
+      this.isLastOne,
+      this.contentWidth);
 }
