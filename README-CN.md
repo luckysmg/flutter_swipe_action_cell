@@ -21,7 +21,8 @@ Language:
 Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```dart
  SwipeActionCell(
-      key: ObjectKey(list[index]),///这个key要填上
+      ///这个key是必要的
+      key: ObjectKey(list[index]),
       actions: <SwipeAction>[
         SwipeAction(
             title: "delete",
@@ -74,6 +75,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
  
  ```dart
 SwipeActionCell(
+      ///这个key是必要的
       key: ObjectKey(list[index]),
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
@@ -105,10 +107,10 @@ SwipeActionCell(
  
  ```dart
 SwipeActionCell(
-      ///this key is necessary
+      ///这个key是必要的
       key: ObjectKey(list[index]),
 
-      ///this name is the same as iOS native
+      ///这个参数名以及其含义和iOS 原生的相同
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
