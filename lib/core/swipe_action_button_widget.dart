@@ -26,7 +26,6 @@ class SwipeActionButtonWidget extends StatefulWidget {
 class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
     with SingleTickerProviderStateMixin {
   final Duration animDuration = const Duration(milliseconds: 80);
-  SwipeActionButtonConfig config;
   Duration duration;
   double width;
   Alignment alignment;
@@ -41,8 +40,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   void initState() {
     super.initState();
     isDeleting = false;
-    config = widget.config;
-    alignment = config.isTheOnlyOne && config.fullDraggable
+    alignment = widget.config.isTheOnlyOne && widget.config.fullDraggable
         ? Alignment.centerRight
         : Alignment.centerLeft;
 
@@ -61,13 +59,13 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
       await Future.delayed(const Duration(milliseconds: 100));
 
       this.duration = const Duration();
-      if (config.isTheOnlyOne && config.fullDraggable) {
+      if (widget.config.isTheOnlyOne && widget.config.fullDraggable) {
         alignment =
             event.isPullingOut ? Alignment.centerLeft : Alignment.centerRight;
       } else {
         alignment = Alignment.centerLeft;
       }
-      if (config.action.forceAlignmentLeft) {
+      if (widget.config.action.forceAlignmentLeft) {
         alignment = Alignment.centerLeft;
       }
     });
@@ -84,12 +82,12 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   }
 
   void _initCompletionHandler() {
-    if (config.action.onTap != null) {
+    if (widget.config.action.onTap != null) {
       handler = (delete) async {
         if (delete) {
-          if (config.isLastOne) {
-            SwipeActionStore.getInstance().bus.fire(
-                IgnorePointerEvent(key: this.config.parentKey, ignore: true));
+          if (widget.config.isLastOne) {
+            SwipeActionStore.getInstance().bus.fire(IgnorePointerEvent(
+                key: this.widget.config.parentKey, ignore: true));
           }
 
           if (widget.config.firstActionWillCoverAllSpaceOnDeleting) {
@@ -101,7 +99,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
           }
           SwipeActionStore.getInstance()
               .bus
-              .fire((DeleteCellEvent(key: config.parentKey)));
+              .fire((DeleteCellEvent(key: widget.config.parentKey)));
 
           ///wait the animation to complete
           await Future.delayed(const Duration(milliseconds: 501));
@@ -109,7 +107,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
           if (widget.config.action.closeOnTap) {
             SwipeActionStore.getInstance()
                 .bus
-                .fire((CloseCellEvent(key: config.parentKey)));
+                .fire((CloseCellEvent(key: widget.config.parentKey)));
           }
         }
       };
@@ -143,29 +141,31 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
     if (!isDeleting) {
       width = widget.config.width;
     }
-    var duration = config.fullDraggable ? this.duration : const Duration();
+    var duration =
+        widget.config.fullDraggable ? this.duration : const Duration();
     if (isDeleting) {
       duration = const Duration(milliseconds: 100);
     }
 
     return GestureDetector(
       onTap: () {
-        config.action.onTap?.call(handler);
+        widget.config.action.onTap?.call(handler);
       },
       child: AnimatedContainer(
         width: width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(config.action.backgroundRadius),
-              bottomLeft: Radius.circular(config.action.backgroundRadius)),
-          color: config.action.color,
+              topLeft: Radius.circular(widget.config.action.backgroundRadius),
+              bottomLeft:
+                  Radius.circular(widget.config.action.backgroundRadius)),
+          color: widget.config.action.color,
         ),
         duration: duration,
         padding: EdgeInsets.only(
-          left: config.action.leftPadding,
-          right: config.isTheOnlyOne &&
-                  !(config.action.forceAlignmentLeft) &&
-                  config.fullDraggable
+          left: widget.config.action.leftPadding,
+          right: widget.config.isTheOnlyOne &&
+                  !(widget.config.action.forceAlignmentLeft) &&
+                  widget.config.fullDraggable
               ? 16
               : 0,
         ),
@@ -176,13 +176,13 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              config.action.icon ?? const SizedBox(),
-              config.action.title != null
+              widget.config.action.icon ?? const SizedBox(),
+              widget.config.action.title != null
                   ? Text(
-                      config.action.title,
+                      widget.config.action.title,
                       overflow: TextOverflow.clip,
                       maxLines: 1,
-                      style: config.action.style,
+                      style: widget.config.action.style,
                     )
                   : const SizedBox(),
             ],
