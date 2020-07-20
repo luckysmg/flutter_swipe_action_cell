@@ -21,10 +21,7 @@ Language:
 Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```dart
  SwipeActionCell(
-      ///这个key是必要的config.dart
-                  events.dart
-                  swipe_action_button_widget.dart
-                  swipe_action_cell.dart
+      ///这个key是必要的
       key: ObjectKey(list[index]),
       actions: <SwipeAction>[
         SwipeAction(
