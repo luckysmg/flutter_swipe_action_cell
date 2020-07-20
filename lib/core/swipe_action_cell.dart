@@ -149,7 +149,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
         SwipeActionStore.getInstance().bus.on<CloseCellEvent>().listen((event) {
       ///For better performance,
       ///avoid receiving this event when buttons are invisible.
-      if (event.key != widget.key && currentOffset.dx != 0.0) {
+      if (event.key == widget.key && currentOffset.dx != 0.0) {
         _closeWithAnim();
       }
     });
