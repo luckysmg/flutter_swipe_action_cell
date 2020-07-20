@@ -371,7 +371,6 @@ class _SwipeActionCellState extends State<SwipeActionCell>
 
   @override
   Widget build(BuildContext context) {
-    ///todo看看为啥第一次忽略不响应
     return IgnorePointer(
       ignoring: ignorePointer,
       child: SizeTransition(
