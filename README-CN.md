@@ -161,7 +161,7 @@ SwipeActionCell(
 它代表你在点击action之后如何操纵这个cell，如果你不想要任何动画，那么就不执行handler，而是直接更新你的数据，然后setState就行
 
 如果你想要动画:
-- hander(true) :代表这一行将会被删除（虽然UI上看不到那一行了，但是你仍然应该更新你的数据并且setState)
+- handler(true) :代表这一行将会被删除（虽然UI上看不到那一行了，但是你仍然应该更新你的数据并且setState)
 
 - await handler(true) :代表你将会等待删除动画执行完毕，你应该在这一行之后去执行setState，否则看不到动画（适合同步删除，也就是删除这个cell在业务上不需要服务器的参与） 
 
@@ -170,7 +170,7 @@ means it will not delete this row.By default,it just close this cell's action bu
 
 - await handler(false) : 相比上面来说，他只会等待关闭动画结束
 
-#关于其他参数：
+# 关于其他参数：
 我已经在源码中用dart doc写的很清楚了，如果具体不清楚的可以直接点进去源码看注释，很详细。
 
 

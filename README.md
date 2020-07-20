@@ -167,7 +167,7 @@ it means how you want control this cell after you tap it.
 If you don't want any animation,just don't call it and update your data and UI with setState()
 
 If you want some animation:
-- hander(true) : Means this row will be deleted(You should call setState after it)
+- handler(true) : Means this row will be deleted(You should call setState after it)
 
 - await handler(true) : Means that you will await the animation to complete(you should call setState after it so that you will get an animation)
 
@@ -175,7 +175,7 @@ If you want some animation:
 
 - await handler(false) : means it will wait the close animation to complete.
 
-#About all parameter:
+# About all parameter:
 I wrote them in my code with dart doc comments.You can read them in
 source code.
 
