@@ -117,11 +117,13 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   }
 
   void _animToCoverCell() {
-    setState(() {
-      isDeleting = true;
-      width = widget.config.contentWidth;
-      alignment = Alignment.centerLeft;
-    });
+    if (mounted) {
+      setState(() {
+        isDeleting = true;
+        width = widget.config.contentWidth;
+        alignment = Alignment.centerLeft;
+      });
+    }
   }
 
   @override
