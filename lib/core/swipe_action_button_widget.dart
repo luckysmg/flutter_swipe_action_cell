@@ -80,10 +80,10 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
         _animToCoverCell();
       }
     });
-    _initOnTapAction();
+    _initCompletionHandler();
   }
 
-  void _initOnTapAction() {
+  void _initCompletionHandler() {
     if (config.action.onTap != null) {
       handler = (delete) async {
         if (delete) {
