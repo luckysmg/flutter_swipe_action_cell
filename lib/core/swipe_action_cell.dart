@@ -147,7 +147,11 @@ class _SwipeActionCellState extends State<SwipeActionCell>
 
     closeActionEventSubscription =
         SwipeActionStore.getInstance().bus.on<CloseCellEvent>().listen((event) {
-      if (event.key == widget.key) _closeWithAnim();
+      ///For better performance,
+      ///avoid receiving this event when buttons are invisible.
+      if (event.key != widget.key && currentOffset.dx != 0.0) {
+        _closeWithAnim();
+      }
     });
 
     deleteCellEventSubscription = SwipeActionStore.getInstance()
@@ -337,15 +341,17 @@ class _SwipeActionCellState extends State<SwipeActionCell>
 
   void _closeWithAnim() async {
     _resetAnimValue();
-    animation =
-        Tween<double>(begin: currentOffset.dx, end: 0.0).animate(curvedAnim)
-          ..addListener(() {
-            if (lockAnim) return;
-            this.currentOffset = Offset(animation.value, 0);
-            setState(() {});
-          });
+    if (mounted) {
+      animation =
+          Tween<double>(begin: currentOffset.dx, end: 0.0).animate(curvedAnim)
+            ..addListener(() {
+              if (lockAnim) return;
+              this.currentOffset = Offset(animation.value, 0);
+              setState(() {});
+            });
 
-    controller.forward();
+      controller.forward();
+    }
   }
 
   void _resetAnimValue() {
@@ -390,7 +396,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
                         color: Theme.of(context).scaffoldBackgroundColor,
                         child: widget.child)),
               ),
-              currentOffset.dx != 0 ? _buildActionButtons() : const SizedBox(),
+              _buildActionButtons(),
             ],
           ),
         ),

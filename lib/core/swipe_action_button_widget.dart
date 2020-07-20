@@ -169,26 +169,23 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
               ? 16
               : 0,
         ),
-        child: OverflowBox(
-          maxHeight: double.infinity,
-          child: AnimatedAlign(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInOutQuart,
-            alignment: alignment,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                config.action.icon ?? const SizedBox(),
-                config.action.title != null
-                    ? Text(
-                        config.action.title,
-                        overflow: TextOverflow.clip,
-                        maxLines: 1,
-                        style: config.action.style,
-                      )
-                    : const SizedBox(),
-              ],
-            ),
+        child: AnimatedAlign(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOutQuart,
+          alignment: alignment,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              config.action.icon ?? const SizedBox(),
+              config.action.title != null
+                  ? Text(
+                      config.action.title,
+                      overflow: TextOverflow.clip,
+                      maxLines: 1,
+                      style: config.action.style,
+                    )
+                  : const SizedBox(),
+            ],
           ),
         ),
       ),

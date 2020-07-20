@@ -11,9 +11,9 @@ Language:
 
 ## 开始
 
- - Example 1:最简单的例子---删除
+ - #### Example 1:最简单的例子---删除
  
-  (友情提示：这里应该有gif显示，如果看不到去[HomePage](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README.md))
+ ### (友情提示：这里应该有gif显示，如果看不到去[HomePage](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README.md))
 
 
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif" width="200"  alt=""/>
@@ -21,7 +21,10 @@ Language:
 Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```dart
  SwipeActionCell(
-      ///这个key是必要的
+      ///这个key是必要的config.dart
+                  events.dart
+                  swipe_action_button_widget.dart
+                  swipe_action_cell.dart
       key: ObjectKey(list[index]),
       actions: <SwipeAction>[
         SwipeAction(
@@ -41,7 +44,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```
      
  
- - Example 2:拉满将会执行第一个action
+ - #### Example 2:拉满将会执行第一个action
  
  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif" width="200"  alt=""/>
 
@@ -69,7 +72,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
      );
  ```
 
- - Example 3:伴随动画的删除（按照iOS原生动画做的）
+ - #### Example 3:伴随动画的删除（按照iOS原生动画做的）
  
  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif" width="200"  alt=""/>
  
@@ -100,7 +103,7 @@ SwipeActionCell(
     );
  ```
 
- - Example 4:多于一个action
+ - #### Example 4:多于一个action
  
  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif" width="200"  alt=""/>
 
@@ -157,6 +160,61 @@ SwipeActionCell(
 
  ```
 
+ - #### Example 5：仿美团iOS端订单页删除效果
+ 
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/5.gif?raw=true" width="300"  alt=""/>
+
+ #### 根据gif图可以判断，删除逻辑应该是这样的：
+ - 1.点击或者拉动到最后触发删除动作
+ - 2.关闭cell的按钮
+ - 3.请求服务器删除，服务器返回删除成功
+ - 4.触发删除动画，更新UI
+ 
+ 那么对应的例子如下：
+ 
+```dart
+Widget _item(int index) {
+    return SwipeActionCell(
+      ///this key is necessary
+      key: ObjectKey(list[index]),
+
+      ///this name is the same as iOS native
+      performsFirstActionWithFullSwipe: true,
+      actions: <SwipeAction>[
+        SwipeAction(
+            icon: Icon(Icons.add),
+            title: "delete",
+            onTap: (CompletionHandler handler) async {
+              ///先关闭cell
+              await handler(false);
+
+              ///利用延时模拟请求网络的过程
+              await Future.delayed(Duration(seconds: 1));
+
+              ///准备执行删除动画，更新UI
+              ///可以把handler当做参数传到其他地方去调用
+              _remove(index, handler);
+            },
+            color: Colors.red),
+      ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text("this the index of ${list[index]}",
+            style: TextStyle(fontSize: 40)),
+      ),
+    );
+  }
+
+  void _remove(int index, CompletionHandler handler) async {
+    ///在这里删除，删除后更新UI
+    await handler(true);
+    list.removeAt(index);
+    setState(() {});
+  }
+ ```
+
+
+
 # 关于 CompletionHandler 
 它代表你在点击action之后如何操纵这个cell，如果你不想要任何动画，那么就不执行handler，而是直接更新你的数据，然后setState就行
 
@@ -172,6 +230,10 @@ means it will not delete this row.By default,it just close this cell's action bu
 
 # 关于其他参数：
 我已经在源码中用dart doc写的很清楚了，如果具体不清楚的可以直接点进去源码看注释，很详细。
+
+#关于hot reload后没有达到预期效果
+由于参数比较多所以可能在hot reload下可能出现不同步的问题，解决：
+关掉抽屉，重新拉出，若还不行，直接hot restart
 
 
  
