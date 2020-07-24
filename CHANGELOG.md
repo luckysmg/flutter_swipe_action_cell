@@ -1,3 +1,4 @@
+## [1.0.3+1] - bug fixed
 ## [1.0.3] - better performance and bug fix
 ## [1.0.2] - better performance
 ## [1.0.1+4] - modify readme
