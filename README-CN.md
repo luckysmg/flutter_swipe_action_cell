@@ -9,11 +9,19 @@ Language:
 ## 为什么我想要这个库？
 我喜欢iOS原生的侧滑效果，很爽，但是flutter并没有提供官方的组件，所以我尝试写一个
 
-## 开始
+
+
+# 开始:
+
+### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
+### 安装：
+```yaml
+flutter_swipe_action_cell: ^1.0.3+1
+```
 
  - #### Example 1:最简单的例子---删除
  
- ### (友情提示：这里应该有gif显示，如果看不到去[HomePage](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README.md))
+ ### (友情提示：这里应该有gif显示，如果看不到去[HomePage](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README-CN.md))
 
 
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif" width="200"  alt=""/>
@@ -212,7 +220,7 @@ Widget _item(int index) {
 
 
 
-# 关于 CompletionHandler 
+## 关于 CompletionHandler 
 它代表你在点击action之后如何操纵这个cell，如果你不想要任何动画，那么就不执行handler，而是直接更新你的数据，然后setState就行
 
 如果你想要动画:
@@ -225,12 +233,34 @@ means it will not delete this row.By default,it just close this cell's action bu
 
 - await handler(false) : 相比上面来说，他只会等待关闭动画结束
 
-# 关于其他参数：
-我已经在源码中用dart doc写的很清楚了，如果具体不清楚的可以直接点进去源码看注释，很详细。
+# 其他参数如下：
+#### SwipeActionCell：
+参数名 | 含义 | 是否必填
+-------- | --- |-----
+actions | 这个cell下的所有action|是
+child| cell内容 | 是
+closeWhenScrolling | 滚动时关闭打开的cell|否（def=true）
+performsFirstActionWithFullSwipe|往左拉满时执行第一个action|否（def=false)
+firstActionWillCoverAllSpaceOnDeleting|执行动画删除时是否让第一个覆盖cell|否（def=true)
 
-#关于hot reload后没有达到预期效果
+#### SwipeAction：
+参数名 | 含义 | 是否必填
+-------- | --- |-----
+onTap | 点击此action执行的动作|是
+title | action的文字 |否（不填就不显示文字）
+style | title的TextStyle|否（有一个默认样式）
+color | action拉出的背景颜色|否（def=Color.red)
+leftPadding | button的内容距离左边界的padding|否（def=15)
+icon | action的图标|否（不填就不显示）
+closeOnTap | 点击此action是否关闭cell|否（def=true）
+backgroundRadius|拉出的button的左上和左下圆角大小|否（def=0.0）
+forceAlignmentLeft|当只有一个按钮的时候，让内容持续贴在左边|否（def=false
+widthSpace|这个button在正常展开状态下的宽度大小|否（def=80）
+
+
+## 关于hot reload后没有达到预期效果
 由于参数比较多所以可能在hot reload下可能出现不同步的问题，解决：
-关掉抽屉，重新拉出，若还不行，直接hot restart
+关掉cell，重新拉出，若还不行，直接hot restart
 
 
  

@@ -10,8 +10,15 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 I like iOS native 's swipe action ,but flutter doesn't give an official widget .
 So I try to create one.
 
-## Get started with example
+## Get started
 
+### pub home page click here: [pub](https://pub.dev/packages/flutter_swipe_action_cell)
+### install:
+```yaml
+flutter_swipe_action_cell: ^1.0.3+1
+```  
+
+## Example
 
 Tip:This widget should be put in the itemBuilder of your ListView
 
