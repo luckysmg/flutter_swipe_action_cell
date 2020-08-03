@@ -1,3 +1,4 @@
+## [1.0.3+3] - doc fixed
 ## [1.0.3+2] - doc fixed
 ## [1.0.3+1] - bug fixed
 ## [1.0.3] - better performance and bug fix
