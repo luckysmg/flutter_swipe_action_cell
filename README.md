@@ -26,8 +26,8 @@ Tip:This widget should be put in the itemBuilder of your ListView
  
  ### (Tip:There is a gif here,if it is unable to load,please go to [GitHub](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README.md))
  
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif" width="200"  alt=""/>
 
+ ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif)
  
 ```dart
  SwipeActionCell(
@@ -51,7 +51,8 @@ Tip:This widget should be put in the itemBuilder of your ListView
 
  - Example 2:Perform first action when full swipe
  
-  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif" width="200"  alt=""/>
+  
+ ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif)
 
  
  ```dart
@@ -80,7 +81,7 @@ Tip:This widget should be put in the itemBuilder of your ListView
 
  - Example 3:Delete with animation 
  
-  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif" width="200"  alt=""/>
+  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif)
 
  ```dart
 SwipeActionCell(
@@ -113,9 +114,9 @@ SwipeActionCell(
 
  - Example 4:More than one action: 
  
-  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif" width="200"  alt=""/>
+  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif)
 
- 
+
  ```dart
 SwipeActionCell(
       ///this key is necessary
