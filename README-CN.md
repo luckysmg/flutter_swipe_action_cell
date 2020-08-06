@@ -172,11 +172,9 @@ SwipeActionCell(
 return SwipeActionCell(
       ///this key is necessary
       key: ValueKey(list[index]),
-
-      ///this is the same as iOS native
-      performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
+          ///这个参数只能给的第一个action设置哦
           nestedAction: SwipeNestedAction(title: "确认删除"),
           title: "删除",
           onTap: (CompletionHandler handler) async {
@@ -189,8 +187,6 @@ return SwipeActionCell(
         SwipeAction(
             title: "置顶",
             onTap: (CompletionHandler handler) async {
-              ///false means that you just do nothing,it will close
-              /// action buttons by default
               handler(false);
             },
             color: Colors.grey),
