@@ -24,7 +24,7 @@ flutter_swipe_action_cell: ^1.0.4
  ### (友情提示：这里应该有gif显示，如果看不到去[HomePage](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README-CN.md))
 
 
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif" width="200"  alt=""/>
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="200"  alt=""/>
 
 Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```dart
@@ -51,7 +51,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
  
  - #### Example 2:拉满将会执行第一个action
  
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif" width="200"  alt=""/>
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="200"  alt=""/>
 
  ```dart
  SwipeActionCell(
@@ -79,7 +79,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 
  - #### Example 3:伴随动画的删除（按照iOS原生动画做的）
  
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif" width="200"  alt=""/>
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="200"  alt=""/>
  
  ```dart
 SwipeActionCell(
@@ -110,7 +110,7 @@ SwipeActionCell(
 
  - #### Example 4:多于一个action
  
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif" width="200"  alt=""/>
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true" width="200"  alt=""/>
 
  
  ```dart
@@ -166,6 +166,7 @@ SwipeActionCell(
  ```
 
 - #### Example 5：仿微信iOS端消息删除效果
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="300"  alt=""/>
 
 ```dart
 return SwipeActionCell(
@@ -290,9 +291,12 @@ forceAlignmentLeft|当只有一个按钮的时候，让内容持续贴在左边|
 widthSpace|这个button在正常展开状态下的宽度大小|否（def=80）
 
 
-## 关于hot reload后没有达到预期效果
-由于参数比较多所以可能在hot reload下可能出现不同步的问题，解决：
-关掉cell，重新拉出，若还不行，直接hot restart
+#### SwipeNestedAction：
+参数名 | 含义 | 是否必填
+-------- | --- |-----
+icon | 弹出的action的图标|否
+title | 弹出的action的标题 |否
+nestedWidth | 弹出的action的宽度|否（一般不需要设置，此宽度可以调整弹出的宽度）
 
 
  

@@ -577,8 +577,6 @@ class __ContentWidgetState extends State<_ContentWidget> {
 
 ///点击后弹出的action
 class SwipeNestedAction {
-  final TextStyle style;
-
   ///图标
   final Widget icon;
 
@@ -598,7 +596,6 @@ class SwipeNestedAction {
   final double nestedWidth;
 
   SwipeNestedAction({
-    this.style,
     this.icon,
     this.title,
     this.nestedWidth,

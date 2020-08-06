@@ -22,12 +22,12 @@ flutter_swipe_action_cell: ^1.0.4
 
 Tip:This widget should be put in the itemBuilder of your ListView
 
- - Example 1:Simple delete the item in ListView
+ - ####  Example 1:Simple delete the item in ListView
  
  ### (Tip:There is a gif here,if it is unable to load,please go to [GitHub](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README.md))
  
 
- ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif)
+ ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true)
  
 ```dart
  SwipeActionCell(
@@ -49,9 +49,9 @@ Tip:This widget should be put in the itemBuilder of your ListView
     );
 ```
 
- - Example 2:Perform first action when full swipe
+ - ####  Example 2:Perform first action when full swipe
  
- ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif)
+ ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true)
 
  ```dart
  SwipeActionCell(
@@ -77,9 +77,9 @@ Tip:This widget should be put in the itemBuilder of your ListView
      );
  ```
 
- - Example 3:Delete with animation 
+ - ####  Example 3:Delete with animation 
  
-  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif)
+  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true)
 
  ```dart
 SwipeActionCell(
@@ -110,9 +110,9 @@ SwipeActionCell(
     );
  ```
 
- - Example 4:More than one action: 
+  - #### Example 4:More than one action: 
  
-  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif)
+  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true)
 
 
  ```dart
@@ -165,8 +165,38 @@ SwipeActionCell(
             style: TextStyle(fontSize: 40)),
       ),
     );
-
  ```
+
+  - #### Example 5:Delete like wechat message page(need to comfirm it:
+    ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true)
+    
+```dart
+return SwipeActionCell(
+      ///这个key是必要的
+      key: ValueKey(list[index]),
+      actions: <SwipeAction>[
+        SwipeAction(
+          nestedAction: SwipeNestedAction(title: "确认删除"),
+          title: "删除",
+          onTap: (CompletionHandler handler) async {
+            await handler(true);
+            list.removeAt(index);
+            setState(() {});
+          },
+          color: Colors.red,
+        ),
+        SwipeAction(
+            title: "置顶",
+            onTap: (CompletionHandler handler) async {
+              ///代表啥也不做
+              handler(false);
+            },
+            color: Colors.grey),
+      ],
+      child: content(index),
+    );
+```
+
 
 # About CompletionHandler in onTap function of SwipeAction
 it means how you want control this cell after you tap it.
