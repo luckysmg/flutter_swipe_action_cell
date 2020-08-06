@@ -170,8 +170,11 @@ SwipeActionCell(
 
 ```dart
 return SwipeActionCell(
-      ///这个key是必要的
+      ///this key is necessary
       key: ValueKey(list[index]),
+
+      ///this is the same as iOS native
+      performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
           nestedAction: SwipeNestedAction(title: "确认删除"),
@@ -186,12 +189,17 @@ return SwipeActionCell(
         SwipeAction(
             title: "置顶",
             onTap: (CompletionHandler handler) async {
-              ///代表啥也不做
+              ///false means that you just do nothing,it will close
+              /// action buttons by default
               handler(false);
             },
             color: Colors.grey),
       ],
-      child: content(index),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text("this is index of ${list[index]}",
+            style: TextStyle(fontSize: 40)),
+      ),
     );
 
 ```
