@@ -203,7 +203,9 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
       },
       child: AnimatedContainer(
         width: width,
-        duration: duration,
+        duration: isNestedActionShowing
+            ? const Duration(milliseconds: 150)
+            : duration,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(widget.config.action.backgroundRadius),
