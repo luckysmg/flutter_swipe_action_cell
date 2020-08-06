@@ -19,7 +19,7 @@ Language:
 flutter_swipe_action_cell: ^1.0.4
 ```
 
- - #### Example 1:最简单的例子---删除
+ - ## Example 1:最简单的例子---删除
  
  ### (友情提示：这里应该有gif显示，如果看不到去[HomePage](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README-CN.md))
 
@@ -49,7 +49,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```
      
  
- - #### Example 2:拉满将会执行第一个action
+ - ## Example 2:拉满将会执行第一个action
  
  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="200"  alt=""/>
 
@@ -77,7 +77,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
      );
  ```
 
- - #### Example 3:伴随动画的删除（按照iOS原生动画做的）
+ - ## Example 3:伴随动画的删除（按照iOS原生动画做的）
  
  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="200"  alt=""/>
  
@@ -108,7 +108,7 @@ SwipeActionCell(
     );
  ```
 
- - #### Example 4:多于一个action
+ - ## Example 4:多于一个action
  
  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true" width="200"  alt=""/>
 
@@ -165,7 +165,7 @@ SwipeActionCell(
 
  ```
 
-- #### Example 5：仿微信iOS端消息删除效果
+- ## Example 5：仿微信iOS端消息删除效果
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="300"  alt=""/>
 
 ```dart
@@ -206,7 +206,7 @@ return SwipeActionCell(
 
 
 
- - #### Example 6：仿美团iOS端订单页删除效果
+ - ## Example 6：仿美团iOS端订单页删除效果
  
  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/5.gif?raw=true" width="300"  alt=""/>
 
