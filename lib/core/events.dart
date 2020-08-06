@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class CellOpenEvent {
-  CellOpenEvent(this.key);
+  CellOpenEvent({this.key});
 
   final Key key;
 }
@@ -35,4 +35,10 @@ class IgnorePointerEvent {
 
   final Key key;
   final bool ignore;
+}
+
+class CloseNestedActionEvent {
+  CloseNestedActionEvent({this.key});
+
+  final Key key;
 }

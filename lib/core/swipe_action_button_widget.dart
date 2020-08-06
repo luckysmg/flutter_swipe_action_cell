@@ -33,13 +33,21 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
 
   StreamSubscription pullLastButtonSubscription;
   StreamSubscription pullLastButtonToCoverCellEventSubscription;
+  StreamSubscription closeNestedActionEventSubscription;
 
   bool isDeleting;
+  bool isNestedActionShowing;
+
+  Alignment tempAlignment;
+  Duration tempDuration;
 
   @override
   void initState() {
     super.initState();
     isDeleting = false;
+
+    isNestedActionShowing = false;
+
     alignment = widget.config.isTheOnlyOne && widget.config.fullDraggable
         ? Alignment.centerRight
         : Alignment.centerLeft;
@@ -57,7 +65,6 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
 
       ///avoid layout jumping so await
       await Future.delayed(const Duration(milliseconds: 100));
-
       this.duration = const Duration();
       if (widget.config.isTheOnlyOne && widget.config.fullDraggable) {
         alignment =
@@ -78,7 +85,29 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
         _animToCoverCell();
       }
     });
+
+    closeNestedActionEventSubscription = SwipeActionStore.getInstance()
+        .bus
+        .on<CloseNestedActionEvent>()
+        .listen((event) {
+      if (event.key == widget.config.parentKey &&
+          widget.config.action.nestedAction != null &&
+          isNestedActionShowing) {
+        _resetNestedAction();
+      }
+      if (event.key != widget.config.parentKey && isNestedActionShowing) {
+        _resetNestedAction();
+      }
+    });
+
     _initCompletionHandler();
+  }
+
+  void _resetNestedAction() {
+    isNestedActionShowing = false;
+    alignment = tempAlignment;
+    duration = tempDuration;
+    setState(() {});
   }
 
   void _initCompletionHandler() {
@@ -124,23 +153,38 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
     }
   }
 
-  @override
-  void didUpdateWidget(SwipeActionButtonWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
+  void _animToCoverPullActionContent() async {
+    if (mounted) {
+      tempDuration = duration;
+      tempAlignment = alignment;
+      setState(() {
+        duration = const Duration(milliseconds: 150);
+        isNestedActionShowing = true;
+        alignment = Alignment.center;
+        width = widget.config.action.nestedAction.nestedWidth ??
+            widget.config.totalActionWidth;
+      });
+    }
   }
 
   @override
   void dispose() {
     pullLastButtonSubscription?.cancel();
     pullLastButtonToCoverCellEventSubscription?.cancel();
+    closeNestedActionEventSubscription?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!isDeleting) {
+    bool shouldShowNestedActionInfo = widget.config.isLastOne &&
+        widget.config.action.nestedAction != null &&
+        isNestedActionShowing;
+
+    if (!isDeleting && !isNestedActionShowing) {
       width = widget.config.width;
     }
+
     var duration =
         widget.config.fullDraggable ? this.duration : const Duration();
     if (isDeleting) {
@@ -149,10 +193,17 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
 
     return GestureDetector(
       onTap: () {
+        if (widget.config.isLastOne &&
+            widget.config.action.nestedAction != null &&
+            !isNestedActionShowing) {
+          _animToCoverPullActionContent();
+          return;
+        }
         widget.config.action.onTap?.call(handler);
       },
       child: AnimatedContainer(
         width: width,
+        duration: duration,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(widget.config.action.backgroundRadius),
@@ -160,9 +211,10 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
                   Radius.circular(widget.config.action.backgroundRadius)),
           color: widget.config.action.color,
         ),
-        duration: duration,
         padding: EdgeInsets.only(
-          left: widget.config.action.leftPadding,
+          left: alignment == Alignment.center
+              ? 0
+              : widget.config.action.leftPadding,
           right: widget.config.isTheOnlyOne &&
                   !(widget.config.action.forceAlignmentLeft) &&
                   widget.config.fullDraggable
@@ -170,26 +222,49 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
               : 0,
         ),
         child: AnimatedAlign(
-          duration: const Duration(milliseconds: 250),
+          duration: isNestedActionShowing
+              ? const Duration(milliseconds: 0)
+              : const Duration(milliseconds: 250),
           curve: Curves.easeInOutQuart,
           alignment: alignment,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              widget.config.action.icon ?? const SizedBox(),
-              widget.config.action.title != null
-                  ? Text(
-                      widget.config.action.title,
-                      overflow: TextOverflow.clip,
-                      maxLines: 1,
-                      style: widget.config.action.style,
-                    )
-                  : const SizedBox(),
+              _buildIcon(shouldShowNestedActionInfo),
+              _buildTitle(shouldShowNestedActionInfo),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildIcon(bool shouldShowNestedActionInfo) {
+    return shouldShowNestedActionInfo
+        ? widget.config.action.nestedAction.icon ?? const SizedBox()
+        : widget.config.action.icon ?? const SizedBox();
+  }
+
+  Widget _buildTitle(bool shouldShowNestedActionInfo) {
+    if (shouldShowNestedActionInfo) {
+      if (widget.config.action.nestedAction.title == null)
+        return const SizedBox();
+
+      return Text(
+        widget.config.action.nestedAction.title,
+        overflow: TextOverflow.clip,
+        maxLines: 1,
+        style: widget.config.action.style,
+      );
+    } else {
+      if (widget.config.action.title == null) return const SizedBox();
+      return Text(
+        widget.config.action.title,
+        overflow: TextOverflow.clip,
+        maxLines: 1,
+        style: widget.config.action.style,
+      );
+    }
   }
 }
 

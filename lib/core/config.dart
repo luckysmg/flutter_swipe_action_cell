@@ -12,6 +12,7 @@ class SwipeActionButtonConfig {
   final bool firstActionWillCoverAllSpaceOnDeleting;
   final bool isLastOne;
   final double contentWidth;
+  final double totalActionWidth;
 
   SwipeActionButtonConfig(
       this.width,
@@ -22,5 +23,6 @@ class SwipeActionButtonConfig {
       this.parentKey,
       this.firstActionWillCoverAllSpaceOnDeleting,
       this.isLastOne,
-      this.contentWidth);
+      this.contentWidth,
+      this.totalActionWidth);
 }

@@ -16,7 +16,7 @@ Language:
 ### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 ### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.0.3+1
+flutter_swipe_action_cell: ^1.0.4
 ```
 
  - #### Example 1:最简单的例子---删除
@@ -30,7 +30,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```dart
  SwipeActionCell(
       ///这个key是必要的
-      key: ObjectKey(list[index]),
+      key: ValueKey(list[index]),
       actions: <SwipeAction>[
         SwipeAction(
             title: "delete",
@@ -56,7 +56,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
  ```dart
  SwipeActionCell(
         ///这个key需要
-       key: ObjectKey(list[index]),
+       key: ValueKey(list[index]),
  
        ///参数名和iOS原生相同
        performsFirstActionWithFullSwipe: true,
@@ -84,7 +84,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
  ```dart
 SwipeActionCell(
       ///这个key是必要的
-      key: ObjectKey(list[index]),
+      key: ValueKey(list[index]),
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
@@ -116,7 +116,7 @@ SwipeActionCell(
  ```dart
 SwipeActionCell(
       ///这个key是必要的
-      key: ObjectKey(list[index]),
+      key: ValueKey(list[index]),
 
       ///这个参数名以及其含义和iOS 原生的相同
       performsFirstActionWithFullSwipe: true,
@@ -165,7 +165,39 @@ SwipeActionCell(
 
  ```
 
- - #### Example 5：仿美团iOS端订单页删除效果
+- #### Example 5：仿微信iOS端消息删除效果
+
+```dart
+return SwipeActionCell(
+      ///这个key是必要的
+      key: ValueKey(list[index]),
+      actions: <SwipeAction>[
+        SwipeAction(
+          nestedAction: SwipeNestedAction(title: "确认删除"),
+          title: "删除",
+          onTap: (CompletionHandler handler) async {
+            await handler(true);
+            list.removeAt(index);
+            setState(() {});
+          },
+          color: Colors.red,
+        ),
+        SwipeAction(
+            title: "置顶",
+            onTap: (CompletionHandler handler) async {
+              ///代表啥也不做
+              handler(false);
+            },
+            color: Colors.grey),
+      ],
+      child: content(index),
+    );
+
+```
+
+
+
+ - #### Example 6：仿美团iOS端订单页删除效果
  
  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/5.gif?raw=true" width="300"  alt=""/>
 
@@ -181,7 +213,7 @@ SwipeActionCell(
 Widget _item(int index) {
     return SwipeActionCell(
       ///this key is necessary
-      key: ObjectKey(list[index]),
+      key: ValueKey(list[index]),
 
       ///this name is the same as iOS native
       performsFirstActionWithFullSwipe: true,

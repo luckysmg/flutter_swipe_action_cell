@@ -15,7 +15,7 @@ So I try to create one.
 ### pub home page click here: [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 ### install:
 ```yaml
-flutter_swipe_action_cell: ^1.0.3+1
+flutter_swipe_action_cell: ^1.0.4
 ```  
 
 ## Example
@@ -51,10 +51,8 @@ Tip:This widget should be put in the itemBuilder of your ListView
 
  - Example 2:Perform first action when full swipe
  
-  
  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif)
 
- 
  ```dart
  SwipeActionCell(
        ///this key is necessary

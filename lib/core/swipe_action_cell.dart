@@ -220,7 +220,12 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _onHorizontalDragStart(DragStartDetails details) {
-    SwipeActionStore.getInstance().bus?.fire(CellOpenEvent(widget.key));
+    SwipeActionStore.getInstance().bus?.fire(CellOpenEvent(key: widget.key));
+
+    if (widget.actions.first.nestedAction == null) return;
+    SwipeActionStore.getInstance()
+        .bus
+        ?.fire(CloseNestedActionEvent(key: widget.key));
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
@@ -395,7 +400,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
                         color: Theme.of(context).scaffoldBackgroundColor,
                         child: widget.child)),
               ),
-              _buildActionButtons(),
+              currentOffset.dx == 0 ? const SizedBox() : _buildActionButtons(),
             ],
           ),
         ),
@@ -435,7 +440,8 @@ class _SwipeActionCellState extends State<SwipeActionCell>
           widget.key,
           widget.firstActionWillCoverAllSpaceOnDeleting,
           isLastOne,
-          width);
+          width,
+          maxPullWidth);
 
       return SwipeActionButtonWidget(
         config: config,
@@ -518,6 +524,8 @@ class SwipeAction {
   ///背景左上和左下的圆角
   final double backgroundRadius;
 
+  final SwipeNestedAction nestedAction;
+
   const SwipeAction({
     @required this.onTap,
     this.title,
@@ -529,6 +537,7 @@ class SwipeAction {
     this.backgroundRadius = 0.0,
     this.forceAlignmentLeft = false,
     this.widthSpace = 80,
+    this.nestedAction,
   });
 }
 
@@ -564,4 +573,34 @@ class __ContentWidgetState extends State<_ContentWidget> {
   Widget build(BuildContext context) {
     return widget.child;
   }
+}
+
+///点击后弹出的action
+class SwipeNestedAction {
+  final TextStyle style;
+
+  ///图标
+  final Widget icon;
+
+  ///标题
+  final String title;
+
+  ///normally,you dont need to set this value.When your [SwipeNestedAction] take more width than
+  ///original [SwipeAction] ,you can set this value.
+  /// !!!!! this value must be smaller than the sum of all buttons
+  ///
+  ///一般不建议设置此项，此项一般在只有一个action的时候，可能NestedAction的title比较长装不下，才需要设置这个值来调整宽度
+  ///注意，如果你要设置这个值，那么这个值必须比所有按钮宽度值的总和要小，不然你可能会看到下面的按钮露出来
+  ///
+  ///（这个参数的作用也就是微信ios端消息列表里面，你侧滑"订阅号消息"那个cell所呈现的效果。
+  ///因为弹出的"确认删除"四个字需要调整原本宽度
+  ///
+  final double nestedWidth;
+
+  SwipeNestedAction({
+    this.style,
+    this.icon,
+    this.title,
+    this.nestedWidth,
+  });
 }
