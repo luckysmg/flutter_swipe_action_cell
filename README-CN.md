@@ -16,7 +16,7 @@ Language:
 ### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 ### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.0.4
+flutter_swipe_action_cell: ^1.0.4+1
 ```
 
  - ## Example 1:最简单的例子---删除

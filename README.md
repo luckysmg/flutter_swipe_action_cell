@@ -15,7 +15,7 @@ So I try to create one.
 ### pub home page click here: [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 ### install:
 ```yaml
-flutter_swipe_action_cell: ^1.0.4
+flutter_swipe_action_cell: ^1.0.4+1
 ```  
 
 ## Example
