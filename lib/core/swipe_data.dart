@@ -15,14 +15,14 @@ class SwipeData extends InheritedWidget {
 
   SwipeData(
       {@required this.child,
-        @required this.actions,
-        @required this.willPull,
-        @required this.currentOffset,
-        @required this.fullDraggable,
-        @required this.parentKey,
-        @required this.firstActionWillCoverAllSpaceOnDeleting,
-        @required this.contentWidth,
-        @required this.totalActionWidth})
+      @required this.actions,
+      @required this.willPull,
+      @required this.currentOffset,
+      @required this.fullDraggable,
+      @required this.parentKey,
+      @required this.firstActionWillCoverAllSpaceOnDeleting,
+      @required this.contentWidth,
+      @required this.totalActionWidth})
       : super(child: child);
 
   static SwipeData of(BuildContext context) {

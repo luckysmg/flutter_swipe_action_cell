@@ -52,9 +52,9 @@ class SwipeActionCell extends StatefulWidget {
     this.performsFirstActionWithFullSwipe = false,
     this.firstActionWillCoverAllSpaceOnDeleting = true,
   })  : assert(key != null,
-  "You should pass a key like [ValueKey] or [ObjectKey]"),
+            "You should pass a key like [ValueKey] or [ObjectKey]"),
 
-  ///关于key ！= null请看下面的注释
+        ///关于key ！= null请看下面的注释
 
         super(key: key);
 
@@ -140,19 +140,19 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   void _listenEvent() {
     otherCellOpenEventSubscription =
         SwipeActionStore.getInstance().bus.on<CellOpenEvent>().listen((event) {
-          if (event.key != widget.key) {
-            _closeWithAnim();
-          }
-        });
+      if (event.key != widget.key) {
+        _closeWithAnim();
+      }
+    });
 
     closeActionEventSubscription =
         SwipeActionStore.getInstance().bus.on<CloseCellEvent>().listen((event) {
-          ///For better performance,
-          ///avoid receiving this event when buttons are invisible.
-          if (event.key == widget.key && currentOffset.dx != 0.0) {
-            _closeWithAnim();
-          }
-        });
+      ///For better performance,
+      ///avoid receiving this event when buttons are invisible.
+      if (event.key == widget.key && currentOffset.dx != 0.0) {
+        _closeWithAnim();
+      }
+    });
 
     deleteCellEventSubscription = SwipeActionStore.getInstance()
         .bus
@@ -339,11 +339,11 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     final double startOffset = currentOffset.dx;
     animation = Tween<double>(begin: startOffset, end: -maxPullWidth)
         .animate(curvedAnim)
-      ..addListener(() {
-        if (lockAnim) return;
-        this.currentOffset = Offset(animation.value, 0);
-        setState(() {});
-      });
+          ..addListener(() {
+            if (lockAnim) return;
+            this.currentOffset = Offset(animation.value, 0);
+            setState(() {});
+          });
 
     controller.forward();
   }
@@ -352,12 +352,12 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     _resetAnimValue();
     if (mounted) {
       animation =
-      Tween<double>(begin: currentOffset.dx, end: 0.0).animate(curvedAnim)
-        ..addListener(() {
-          if (lockAnim) return;
-          this.currentOffset = Offset(animation.value, 0);
-          setState(() {});
-        });
+          Tween<double>(begin: currentOffset.dx, end: 0.0).animate(curvedAnim)
+            ..addListener(() {
+              if (lockAnim) return;
+              this.currentOffset = Offset(animation.value, 0);
+              setState(() {});
+            });
 
       controller.forward();
     }
@@ -414,7 +414,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
 
   Widget _buildActionButtons() {
     final List<Widget> actionButtons =
-    List.generate(widget.actions.length, (index) {
+        List.generate(widget.actions.length, (index) {
       final actualIndex = actionsCount - 1 - index;
       return SwipeActionButtonWidget(
         actionIndex: actualIndex,
@@ -424,7 +424,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     return SwipeData(
       willPull: lastItemOut && widget.performsFirstActionWithFullSwipe,
       firstActionWillCoverAllSpaceOnDeleting:
-      widget.firstActionWillCoverAllSpaceOnDeleting,
+          widget.firstActionWillCoverAllSpaceOnDeleting,
       parentKey: widget.key,
       totalActionWidth: maxPullWidth,
       actions: widget.actions,

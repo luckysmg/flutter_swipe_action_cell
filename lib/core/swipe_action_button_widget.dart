@@ -78,13 +78,13 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
     if (isPullingOut) {
       animation = Tween<double>(begin: width, end: data.currentOffset)
           .animate(widthPullCurve)
-        ..addListener(() {
-          if (lockAnim) return;
-          width = animation.value;
-          alignment = Alignment.lerp(
-              alignment, Alignment.centerLeft, widthPullController.value);
-          setState(() {});
-        });
+            ..addListener(() {
+              if (lockAnim) return;
+              width = animation.value;
+              alignment = Alignment.lerp(
+                  alignment, Alignment.centerLeft, widthPullController.value);
+              setState(() {});
+            });
       widthPullController.forward().whenComplete(() {
         whenActiveToWidth = true;
         whenPullingOut = true;
@@ -98,13 +98,13 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
       final currentWidth = sumWidth * factor;
       animation = Tween<double>(begin: data.currentOffset, end: currentWidth)
           .animate(widthPullCurve)
-        ..addListener(() {
-          if (lockAnim) return;
-          width = animation.value;
-          alignment = Alignment.lerp(
-              alignment, normalAlignment, widthPullController.value);
-          setState(() {});
-        });
+            ..addListener(() {
+              if (lockAnim) return;
+              width = animation.value;
+              alignment = Alignment.lerp(
+                  alignment, normalAlignment, widthPullController.value);
+              setState(() {});
+            });
       widthPullController.forward().whenComplete(() {
         whenActiveToWidth = true;
         whenPullingOut = false;
@@ -190,13 +190,13 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
     whenActiveToWidth = false;
     animation = Tween<double>(begin: width, end: data.contentWidth)
         .animate(widthPullCurve)
-      ..addListener(() {
-        if (lockAnim) return;
-        width = animation.value;
-        alignment = Alignment.lerp(
-            alignment, Alignment.centerLeft, widthPullController.value);
-        setState(() {});
-      });
+          ..addListener(() {
+            if (lockAnim) return;
+            width = animation.value;
+            alignment = Alignment.lerp(
+                alignment, Alignment.centerLeft, widthPullController.value);
+            setState(() {});
+          });
     widthPullController.forward();
   }
 
@@ -207,16 +207,16 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
     alignment = Alignment.center;
 
     animation = Tween<double>(
-        begin: width,
-        end: action.nestedAction.nestedWidth ?? data.totalActionWidth)
+            begin: width,
+            end: action.nestedAction.nestedWidth ?? data.totalActionWidth)
         .animate(widthFillActionContentCurve)
-      ..addListener(() {
-        if (lockAnim) return;
-        width = animation.value;
-        alignment = Alignment.lerp(alignment, Alignment.center,
-            widthFillActionContentController.value);
-        setState(() {});
-      });
+          ..addListener(() {
+            if (lockAnim) return;
+            width = animation.value;
+            alignment = Alignment.lerp(alignment, Alignment.center,
+                widthFillActionContentController.value);
+            setState(() {});
+          });
     widthFillActionContentController.forward();
   }
 
@@ -286,8 +286,8 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
             padding: EdgeInsets.only(
               left: alignment == Alignment.center ? 0 : action.leftPadding,
               right: isTheOnlyOne &&
-                  !(action.forceAlignmentLeft) &&
-                  data.fullDraggable
+                      !(action.forceAlignmentLeft) &&
+                      data.fullDraggable
                   ? 16
                   : 0,
             ),
