@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import 'config.dart';
 import 'events.dart';
 import 'swipe_action_button_widget.dart';
+import 'swipe_data.dart';
 
 ///
 /// @created by 文景睿
-/// 2020 7月13日
+/// 2020 年 7月13日
 ///
 
 ///Because the cell actions buttons are always on the right side.
@@ -52,9 +52,9 @@ class SwipeActionCell extends StatefulWidget {
     this.performsFirstActionWithFullSwipe = false,
     this.firstActionWillCoverAllSpaceOnDeleting = true,
   })  : assert(key != null,
-            "You should pass a key like [ValueKey] or [ObjectKey]"),
+  "You should pass a key like [ValueKey] or [ObjectKey]"),
 
-        ///关于key ！= null请看下面的注释
+  ///关于key ！= null请看下面的注释
 
         super(key: key);
 
@@ -119,7 +119,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     deleteController = AnimationController(
       vsync: this,
       value: 1.0,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 400),
     );
     curvedAnim =
         CurvedAnimation(parent: controller, curve: Curves.easeOutQuart);
@@ -140,19 +140,19 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   void _listenEvent() {
     otherCellOpenEventSubscription =
         SwipeActionStore.getInstance().bus.on<CellOpenEvent>().listen((event) {
-      if (event.key != widget.key) {
-        _closeWithAnim();
-      }
-    });
+          if (event.key != widget.key) {
+            _closeWithAnim();
+          }
+        });
 
     closeActionEventSubscription =
         SwipeActionStore.getInstance().bus.on<CloseCellEvent>().listen((event) {
-      ///For better performance,
-      ///avoid receiving this event when buttons are invisible.
-      if (event.key == widget.key && currentOffset.dx != 0.0) {
-        _closeWithAnim();
-      }
-    });
+          ///For better performance,
+          ///avoid receiving this event when buttons are invisible.
+          if (event.key == widget.key && currentOffset.dx != 0.0) {
+            _closeWithAnim();
+          }
+        });
 
     deleteCellEventSubscription = SwipeActionStore.getInstance()
         .bus
@@ -239,21 +239,25 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   void _updateWithFullDraggableEffect(DragUpdateDetails details) {
     if (details.delta.dx >= 0 && currentOffset.dx >= 0.0) return;
     currentOffset += Offset(details.delta.dx, 0);
-    if (currentOffset.dx < -0.75 * width) {
-      if (!lastItemOut) {
-        SwipeActionStore.getInstance()
-            .bus
-            .fire(PullLastButtonEvent(isPullingOut: true));
-        lastItemOut = true;
-        HapticFeedback.heavyImpact();
-      }
-    } else {
-      if (lastItemOut) {
-        SwipeActionStore.getInstance()
-            .bus
-            .fire(PullLastButtonEvent(isPullingOut: false));
-        lastItemOut = false;
-        HapticFeedback.heavyImpact();
+
+    ///set performsFirstActionWithFullSwipe
+    if (widget.performsFirstActionWithFullSwipe) {
+      if (currentOffset.dx < -0.75 * width) {
+        if (!lastItemOut) {
+          SwipeActionStore.getInstance()
+              .bus
+              .fire(PullLastButtonEvent(key: widget.key, isPullingOut: true));
+          lastItemOut = true;
+          HapticFeedback.heavyImpact();
+        }
+      } else {
+        if (lastItemOut) {
+          SwipeActionStore.getInstance()
+              .bus
+              .fire(PullLastButtonEvent(key: widget.key, isPullingOut: false));
+          lastItemOut = false;
+          HapticFeedback.heavyImpact();
+        }
       }
     }
 
@@ -291,7 +295,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
         if (delete) {
           SwipeActionStore.getInstance()
               .bus
-              .fire(IgnorePointerEvent(key: widget.key, ignore: true));
+              .fire(IgnorePointerEvent(ignore: true));
           if (widget.firstActionWillCoverAllSpaceOnDeleting) {
             SwipeActionStore.getInstance()
                 .bus
@@ -335,11 +339,11 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     final double startOffset = currentOffset.dx;
     animation = Tween<double>(begin: startOffset, end: -maxPullWidth)
         .animate(curvedAnim)
-          ..addListener(() {
-            if (lockAnim) return;
-            this.currentOffset = Offset(animation.value, 0);
-            setState(() {});
-          });
+      ..addListener(() {
+        if (lockAnim) return;
+        this.currentOffset = Offset(animation.value, 0);
+        setState(() {});
+      });
 
     controller.forward();
   }
@@ -348,12 +352,12 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     _resetAnimValue();
     if (mounted) {
       animation =
-          Tween<double>(begin: currentOffset.dx, end: 0.0).animate(curvedAnim)
-            ..addListener(() {
-              if (lockAnim) return;
-              this.currentOffset = Offset(animation.value, 0);
-              setState(() {});
-            });
+      Tween<double>(begin: currentOffset.dx, end: 0.0).animate(curvedAnim)
+        ..addListener(() {
+          if (lockAnim) return;
+          this.currentOffset = Offset(animation.value, 0);
+          setState(() {});
+        });
 
       controller.forward();
     }
@@ -370,7 +374,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     deleteController.reverse().whenCompleteOrCancel(() {
       SwipeActionStore.getInstance()
           .bus
-          .fire(IgnorePointerEvent(key: widget.key, ignore: false));
+          .fire(IgnorePointerEvent(ignore: false));
     });
   }
 
@@ -410,51 +414,31 @@ class _SwipeActionCellState extends State<SwipeActionCell>
 
   Widget _buildActionButtons() {
     final List<Widget> actionButtons =
-        List.generate(widget.actions.length, (index) {
+    List.generate(widget.actions.length, (index) {
       final actualIndex = actionsCount - 1 - index;
-      final action = widget.actions[actualIndex];
-      bool isLastOne = index == actionsCount - 1;
-      bool willPull =
-          isLastOne && lastItemOut && widget.performsFirstActionWithFullSwipe;
-
-      ///compute width
-      double actionButtonTotalWidth;
-      final currentPullWidth = currentOffset.dx.abs();
-      if (willPull) {
-        actionButtonTotalWidth = currentPullWidth;
-      } else {
-        double factor = currentPullWidth / maxPullWidth;
-        double sumWidth = 0.0;
-        for (int i = 0; i <= actualIndex; i++) {
-          sumWidth += widget.actions[i].widthSpace;
-        }
-        actionButtonTotalWidth = sumWidth * factor;
-      }
-
-      SwipeActionButtonConfig config = SwipeActionButtonConfig(
-          actionButtonTotalWidth,
-          action,
-          widget.performsFirstActionWithFullSwipe,
-          widget.actions.length == 1,
-          action.backgroundRadius,
-          widget.key,
-          widget.firstActionWillCoverAllSpaceOnDeleting,
-          isLastOne,
-          width,
-          maxPullWidth);
-
       return SwipeActionButtonWidget(
-        config: config,
+        actionIndex: actualIndex,
       );
     });
 
-    return SizedBox(
-      height: height,
-      width: double.infinity,
-      child: Stack(
-        overflow: Overflow.visible,
-        alignment: Alignment.centerRight,
-        children: actionButtons,
+    return SwipeData(
+      willPull: lastItemOut && widget.performsFirstActionWithFullSwipe,
+      firstActionWillCoverAllSpaceOnDeleting:
+      widget.firstActionWillCoverAllSpaceOnDeleting,
+      parentKey: widget.key,
+      totalActionWidth: maxPullWidth,
+      actions: widget.actions,
+      contentWidth: width,
+      currentOffset: currentOffset.dx.abs(),
+      fullDraggable: widget.performsFirstActionWithFullSwipe,
+      child: SizedBox(
+        height: height,
+        width: double.infinity,
+        child: Stack(
+          overflow: Overflow.visible,
+          alignment: Alignment.centerRight,
+          children: actionButtons,
+        ),
       ),
     );
   }
@@ -524,6 +508,7 @@ class SwipeAction {
   ///背景左上和左下的圆角
   final double backgroundRadius;
 
+  ///嵌套的action
   final SwipeNestedAction nestedAction;
 
   const SwipeAction({
@@ -595,9 +580,13 @@ class SwipeNestedAction {
   ///
   final double nestedWidth;
 
+  ///弹出动画的曲线
+  final Curve curve;
+
   SwipeNestedAction({
     this.icon,
     this.title,
     this.nestedWidth,
+    this.curve = Curves.easeOutQuart,
   });
 }

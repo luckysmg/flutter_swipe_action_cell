@@ -7,9 +7,10 @@ class CellOpenEvent {
 }
 
 class PullLastButtonEvent {
-  PullLastButtonEvent({this.isPullingOut});
+  PullLastButtonEvent({this.key, this.isPullingOut});
 
-  bool isPullingOut;
+  final Key key;
+  final bool isPullingOut;
 }
 
 class CloseCellEvent {
@@ -31,9 +32,8 @@ class PullLastButtonToCoverCellEvent {
 }
 
 class IgnorePointerEvent {
-  IgnorePointerEvent({this.key, this.ignore});
+  IgnorePointerEvent({this.ignore});
 
-  final Key key;
   final bool ignore;
 }
 

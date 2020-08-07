@@ -4,17 +4,16 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'config.dart';
 import 'events.dart';
 import 'swipe_action_cell.dart';
+import 'swipe_data.dart';
 
 class SwipeActionButtonWidget extends StatefulWidget {
-  ///配置
-  final SwipeActionButtonConfig config;
+  final int actionIndex;
 
   const SwipeActionButtonWidget({
     Key key,
-    this.config,
+    this.actionIndex,
   }) : super(key: key);
 
   @override
@@ -24,9 +23,7 @@ class SwipeActionButtonWidget extends StatefulWidget {
 }
 
 class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
-    with SingleTickerProviderStateMixin {
-  final Duration animDuration = const Duration(milliseconds: 80);
-  Duration duration;
+    with TickerProviderStateMixin {
   double width;
   Alignment alignment;
   CompletionHandler handler;
@@ -35,45 +32,94 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   StreamSubscription pullLastButtonToCoverCellEventSubscription;
   StreamSubscription closeNestedActionEventSubscription;
 
-  bool isDeleting;
-  bool isNestedActionShowing;
+  bool whenNestedActionShowing;
+  bool whenFirstAction;
+  bool whenActiveToWidth;
+  bool whenPullingOut;
 
-  Alignment tempAlignment;
-  Duration tempDuration;
+  Alignment normalAlignment;
+
+  SwipeData data;
+  SwipeAction action;
+
+  AnimationController widthPullController;
+  AnimationController widthFillActionContentController;
+  Animation<double> widthPullCurve;
+  Animation<double> widthFillActionContentCurve;
+  Animation animation;
+
+  bool lockAnim;
 
   @override
   void initState() {
     super.initState();
-    isDeleting = false;
-
-    isNestedActionShowing = false;
-
-    alignment = widget.config.isTheOnlyOne && widget.config.fullDraggable
-        ? Alignment.centerRight
-        : Alignment.centerLeft;
-
-    if (widget.config.action.forceAlignmentLeft) {
-      alignment = Alignment.centerLeft;
-    }
-    duration = const Duration();
+    whenActiveToWidth = true;
+    lockAnim = false;
+    whenPullingOut = false;
+    whenNestedActionShowing = false;
+    whenFirstAction = widget.actionIndex == 0;
     width = 0;
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (action.forceAlignmentLeft) {
+        alignment = Alignment.centerLeft;
+      }
+      _initAnim();
+      _initCompletionHandler();
+    });
+
+    _listenEvent();
+  }
+
+  ///when full draggable,pull first action
+  void _pullActionButton(bool isPullingOut) {
+    _resetAnimationController(widthPullController);
+    whenActiveToWidth = false;
+    if (isPullingOut) {
+      animation = Tween<double>(begin: width, end: data.currentOffset)
+          .animate(widthPullCurve)
+        ..addListener(() {
+          if (lockAnim) return;
+          width = animation.value;
+          alignment = Alignment.lerp(
+              alignment, Alignment.centerLeft, widthPullController.value);
+          setState(() {});
+        });
+      widthPullController.forward().whenComplete(() {
+        whenActiveToWidth = true;
+        whenPullingOut = true;
+      });
+    } else {
+      final factor = data.currentOffset / data.totalActionWidth;
+      double sumWidth = 0.0;
+      for (int i = 0; i <= widget.actionIndex; i++) {
+        sumWidth += data.actions[i].widthSpace;
+      }
+      final currentWidth = sumWidth * factor;
+      animation = Tween<double>(begin: data.currentOffset, end: currentWidth)
+          .animate(widthPullCurve)
+        ..addListener(() {
+          if (lockAnim) return;
+          width = animation.value;
+          alignment = Alignment.lerp(
+              alignment, normalAlignment, widthPullController.value);
+          setState(() {});
+        });
+      widthPullController.forward().whenComplete(() {
+        whenActiveToWidth = true;
+        whenPullingOut = false;
+      });
+    }
+  }
+
+  void _listenEvent() {
+    ///Cell layer has judged the value of performsFirstActionWithFullSwipe
     pullLastButtonSubscription = SwipeActionStore.getInstance()
         .bus
         .on<PullLastButtonEvent>()
         .listen((event) async {
-      this.duration = animDuration;
-
-      ///avoid layout jumping so await
-      await Future.delayed(const Duration(milliseconds: 100));
-      this.duration = const Duration();
-      if (widget.config.isTheOnlyOne && widget.config.fullDraggable) {
-        alignment =
-            event.isPullingOut ? Alignment.centerLeft : Alignment.centerRight;
-      } else {
-        alignment = Alignment.centerLeft;
-      }
-      if (widget.config.action.forceAlignmentLeft) {
-        alignment = Alignment.centerLeft;
+      if (event.key == data.parentKey && whenFirstAction) {
+        _pullActionButton(event.isPullingOut);
       }
     });
 
@@ -81,7 +127,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
         .bus
         .on<PullLastButtonToCoverCellEvent>()
         .listen((event) {
-      if (event.key == widget.config.parentKey) {
+      if (event.key == data.parentKey) {
         _animToCoverCell();
       }
     });
@@ -90,37 +136,33 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
         .bus
         .on<CloseNestedActionEvent>()
         .listen((event) {
-      if (event.key == widget.config.parentKey &&
-          widget.config.action.nestedAction != null &&
-          isNestedActionShowing) {
+      if (event.key == data.parentKey &&
+          action.nestedAction != null &&
+          whenNestedActionShowing) {
         _resetNestedAction();
       }
-      if (event.key != widget.config.parentKey && isNestedActionShowing) {
+      if (event.key != data.parentKey && whenNestedActionShowing) {
         _resetNestedAction();
       }
     });
-
-    _initCompletionHandler();
   }
 
   void _resetNestedAction() {
-    isNestedActionShowing = false;
-    alignment = tempAlignment;
-    duration = tempDuration;
+    whenActiveToWidth = true;
+    whenNestedActionShowing = false;
+    alignment = normalAlignment;
     setState(() {});
   }
 
   void _initCompletionHandler() {
-    if (widget.config.action.onTap != null) {
+    if (action.onTap != null) {
       handler = (delete) async {
         if (delete) {
-          if (widget.config.isLastOne) {
-            SwipeActionStore.getInstance().bus.fire(IgnorePointerEvent(
-                key: this.widget.config.parentKey, ignore: true));
-          }
+          SwipeActionStore.getInstance()
+              .bus
+              .fire(IgnorePointerEvent(ignore: true));
 
-          if (widget.config.firstActionWillCoverAllSpaceOnDeleting) {
-            isDeleting = true;
+          if (data.firstActionWillCoverAllSpaceOnDeleting) {
             _animToCoverCell();
 
             ///and avoid layout jumping because of fast animation
@@ -128,15 +170,15 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
           }
           SwipeActionStore.getInstance()
               .bus
-              .fire((DeleteCellEvent(key: widget.config.parentKey)));
+              .fire((DeleteCellEvent(key: data.parentKey)));
 
           ///wait the animation to complete
-          await Future.delayed(const Duration(milliseconds: 501));
+          await Future.delayed(const Duration(milliseconds: 401));
         } else {
-          if (widget.config.action.closeOnTap) {
+          if (action.closeOnTap) {
             SwipeActionStore.getInstance()
                 .bus
-                .fire((CloseCellEvent(key: widget.config.parentKey)));
+                .fire((CloseCellEvent(key: data.parentKey)));
           }
         }
       };
@@ -144,129 +186,183 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   }
 
   void _animToCoverCell() {
-    if (mounted) {
-      setState(() {
-        isDeleting = true;
-        width = widget.config.contentWidth;
-        alignment = Alignment.centerLeft;
+    _resetAnimationController(widthPullController);
+    whenActiveToWidth = false;
+    animation = Tween<double>(begin: width, end: data.contentWidth)
+        .animate(widthPullCurve)
+      ..addListener(() {
+        if (lockAnim) return;
+        width = animation.value;
+        alignment = Alignment.lerp(
+            alignment, Alignment.centerLeft, widthPullController.value);
+        setState(() {});
       });
-    }
+    widthPullController.forward();
   }
 
   void _animToCoverPullActionContent() async {
-    if (mounted) {
-      tempDuration = duration;
-      tempAlignment = alignment;
-      setState(() {
-        duration = const Duration(milliseconds: 150);
-        isNestedActionShowing = true;
-        alignment = Alignment.center;
-        width = widget.config.action.nestedAction.nestedWidth ??
-            widget.config.totalActionWidth;
-      });
-    }
-  }
+    _resetAnimationController(widthFillActionContentController);
+    whenActiveToWidth = false;
+    whenNestedActionShowing = true;
+    alignment = Alignment.center;
 
-  @override
-  void dispose() {
-    pullLastButtonSubscription?.cancel();
-    pullLastButtonToCoverCellEventSubscription?.cancel();
-    closeNestedActionEventSubscription?.cancel();
-    super.dispose();
+    animation = Tween<double>(
+        begin: width,
+        end: action.nestedAction.nestedWidth ?? data.totalActionWidth)
+        .animate(widthFillActionContentCurve)
+      ..addListener(() {
+        if (lockAnim) return;
+        width = animation.value;
+        alignment = Alignment.lerp(alignment, Alignment.center,
+            widthFillActionContentController.value);
+        setState(() {});
+      });
+    widthFillActionContentController.forward();
   }
 
   @override
   Widget build(BuildContext context) {
-    bool shouldShowNestedActionInfo = widget.config.isLastOne &&
-        widget.config.action.nestedAction != null &&
-        isNestedActionShowing;
+    data = SwipeData.of(context);
+    action = data.actions[widget.actionIndex];
+    final bool willPull = data.willPull && whenFirstAction;
+    final bool isTheOnlyOne = data.actions.length == 1;
 
-    if (!isDeleting && !isNestedActionShowing) {
-      width = widget.config.width;
-    }
+    final bool shouldShowNestedActionInfo = widget.actionIndex == 0 &&
+        action.nestedAction != null &&
+        whenNestedActionShowing;
 
-    var duration =
-        widget.config.fullDraggable ? this.duration : const Duration();
-    if (isDeleting) {
-      duration = const Duration(milliseconds: 100);
+    if (whenActiveToWidth) {
+      if (!whenNestedActionShowing) {
+        ///compute alignment
+        alignment = data.actions.length == 1 && data.fullDraggable
+            ? Alignment.centerRight
+            : Alignment.centerLeft;
+
+        if (action.forceAlignmentLeft) {
+          alignment = Alignment.centerLeft;
+        }
+
+        ///save normal alignment
+        normalAlignment = alignment;
+        if (whenPullingOut) {
+          alignment = Alignment.centerLeft;
+        }
+
+        ///compute width
+        final currentPullWidth = data.currentOffset;
+        if (willPull) {
+          width = data.currentOffset;
+        } else {
+          final factor = currentPullWidth / data.totalActionWidth;
+          double sumWidth = 0.0;
+          for (int i = 0; i <= widget.actionIndex; i++) {
+            sumWidth += data.actions[i].widthSpace;
+          }
+          width = sumWidth * factor;
+        }
+      }
     }
 
     return GestureDetector(
       onTap: () {
-        if (widget.config.isLastOne &&
-            widget.config.action.nestedAction != null &&
-            !isNestedActionShowing) {
+        if (whenFirstAction &&
+            action.nestedAction != null &&
+            !whenNestedActionShowing) {
           _animToCoverPullActionContent();
           return;
         }
-        widget.config.action.onTap?.call(handler);
+        action.onTap?.call(handler);
       },
-      child: AnimatedContainer(
+      child: SizedBox(
         width: width,
-        duration: isNestedActionShowing
-            ? const Duration(milliseconds: 150)
-            : duration,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(widget.config.action.backgroundRadius),
-              bottomLeft:
-                  Radius.circular(widget.config.action.backgroundRadius)),
-          color: widget.config.action.color,
-        ),
-        padding: EdgeInsets.only(
-          left: alignment == Alignment.center
-              ? 0
-              : widget.config.action.leftPadding,
-          right: widget.config.isTheOnlyOne &&
-                  !(widget.config.action.forceAlignmentLeft) &&
-                  widget.config.fullDraggable
-              ? 16
-              : 0,
-        ),
-        child: AnimatedAlign(
-          duration: isNestedActionShowing
-              ? const Duration(milliseconds: 0)
-              : const Duration(milliseconds: 250),
-          curve: Curves.easeInOutQuart,
-          alignment: alignment,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _buildIcon(shouldShowNestedActionInfo),
-              _buildTitle(shouldShowNestedActionInfo),
-            ],
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(action.backgroundRadius),
+                bottomLeft: Radius.circular(action.backgroundRadius)),
+            color: action.color,
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: alignment == Alignment.center ? 0 : action.leftPadding,
+              right: isTheOnlyOne &&
+                  !(action.forceAlignmentLeft) &&
+                  data.fullDraggable
+                  ? 16
+                  : 0,
+            ),
+            child: Align(
+              alignment: alignment,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  _buildIcon(action, shouldShowNestedActionInfo),
+                  _buildTitle(action, shouldShowNestedActionInfo),
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildIcon(bool shouldShowNestedActionInfo) {
+  Widget _buildIcon(SwipeAction action, bool shouldShowNestedActionInfo) {
     return shouldShowNestedActionInfo
-        ? widget.config.action.nestedAction.icon ?? const SizedBox()
-        : widget.config.action.icon ?? const SizedBox();
+        ? action.nestedAction.icon ?? const SizedBox()
+        : action.icon ?? const SizedBox();
   }
 
-  Widget _buildTitle(bool shouldShowNestedActionInfo) {
+  Widget _buildTitle(SwipeAction action, bool shouldShowNestedActionInfo) {
     if (shouldShowNestedActionInfo) {
-      if (widget.config.action.nestedAction.title == null)
-        return const SizedBox();
-
+      if (action.nestedAction.title == null) return const SizedBox();
       return Text(
-        widget.config.action.nestedAction.title,
+        action.nestedAction.title,
         overflow: TextOverflow.clip,
         maxLines: 1,
-        style: widget.config.action.style,
+        style: action.style,
       );
     } else {
-      if (widget.config.action.title == null) return const SizedBox();
+      if (action.title == null) return const SizedBox();
       return Text(
-        widget.config.action.title,
+        action.title,
         overflow: TextOverflow.clip,
         maxLines: 1,
-        style: widget.config.action.style,
+        style: action.style,
       );
     }
+  }
+
+  @override
+  void dispose() {
+    widthPullController?.dispose();
+    widthFillActionContentController?.dispose();
+    pullLastButtonSubscription?.cancel();
+    pullLastButtonToCoverCellEventSubscription?.cancel();
+    closeNestedActionEventSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _initAnim() {
+    widthPullController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 80));
+
+    widthPullCurve =
+        CurvedAnimation(parent: widthPullController, curve: Curves.decelerate);
+
+    if (widget.actionIndex == 0) {
+      widthFillActionContentController = AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 250));
+      widthFillActionContentCurve = CurvedAnimation(
+          parent: widthFillActionContentController,
+          curve: action.nestedAction.curve);
+    }
+  }
+
+  void _resetAnimationController(AnimationController controller) {
+    lockAnim = true;
+    controller?.value = 0;
+    lockAnim = false;
   }
 }
 
