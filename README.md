@@ -29,11 +29,11 @@ Delete with animation | More than one action |
 
 Effect like WeChat(confirm delete) | 
 -------- | 
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="430"  alt=""/>|
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="430"  alt=""/> |
 
 Effect like WeChat(Adjust the width of button) | 
--------- | 
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/7.gif?raw=true" width="430"  alt=""/>|
+-------- |
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/7.gif?raw=true" width="430"  alt=""/> |
 
 
 
