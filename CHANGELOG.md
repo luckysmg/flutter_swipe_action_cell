@@ -1,3 +1,4 @@
+## [1.0.4+3] - doc fixed
 ## [1.0.4+2] - refactor code
 ## [1.0.4+1] - bug fixed
 ## [1.0.4] - add nestedAction and better performance
