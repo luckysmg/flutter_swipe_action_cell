@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'events.dart';
 import 'swipe_action_cell.dart';
@@ -168,17 +169,13 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
             ///and avoid layout jumping because of fast animation
             await Future.delayed(const Duration(milliseconds: 50));
           }
-          SwipeActionStore.getInstance()
-              .bus
-              .fire((DeleteCellEvent(key: data.parentKey)));
+          data.parentState.deleteWithAnim();
 
           ///wait the animation to complete
           await Future.delayed(const Duration(milliseconds: 401));
         } else {
           if (action.closeOnTap) {
-            SwipeActionStore.getInstance()
-                .bus
-                .fire((CloseCellEvent(key: data.parentKey)));
+            data.parentState.closeWithAnim();
           }
         }
       };
@@ -201,11 +198,28 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   }
 
   void _animToCoverPullActionContent() async {
+    if (action.nestedAction.nestedWidth != null) {
+      try {
+        assert(
+            action.nestedAction.nestedWidth >= data.totalActionWidth,
+            "Your nested width must be larger than the width of all action buttons"
+            "\n 你的nestedWidth必须要大于或者等于所有按钮的总长度，否则下面的按钮会显现出来");
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+
     _resetAnimationController(widthFillActionContentController);
     whenActiveToWidth = false;
     whenNestedActionShowing = true;
     alignment = Alignment.center;
 
+    if (action.nestedAction.nestedWidth != null &&
+        action.nestedAction.nestedWidth > data.totalActionWidth) {
+      data.parentState.adjustOffset(
+          offsetX: action.nestedAction.nestedWidth,
+          curve: action.nestedAction.curve);
+    }
     animation = Tween<double>(
             begin: width,
             end: action.nestedAction.nestedWidth ?? data.totalActionWidth)
@@ -268,6 +282,9 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
         if (whenFirstAction &&
             action.nestedAction != null &&
             !whenNestedActionShowing) {
+          if (action.nestedAction.impactWhenShowing) {
+            HapticFeedback.mediumImpact();
+          }
           _animToCoverPullActionContent();
           return;
         }

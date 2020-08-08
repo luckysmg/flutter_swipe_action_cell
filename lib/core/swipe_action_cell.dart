@@ -70,10 +70,10 @@ class SwipeActionCell extends StatefulWidget {
   ///flutter框架内部刷新。
 
   @override
-  _SwipeActionCellState createState() => _SwipeActionCellState();
+  SwipeActionCellState createState() => SwipeActionCellState();
 }
 
-class _SwipeActionCellState extends State<SwipeActionCell>
+class SwipeActionCellState extends State<SwipeActionCell>
     with TickerProviderStateMixin {
   double height;
   double width;
@@ -95,8 +95,6 @@ class _SwipeActionCellState extends State<SwipeActionCell>
   ScrollPosition scrollPosition;
 
   StreamSubscription otherCellOpenEventSubscription;
-  StreamSubscription closeActionEventSubscription;
-  StreamSubscription deleteCellEventSubscription;
   StreamSubscription ignorePointerSubscription;
 
   bool ignorePointer;
@@ -141,25 +139,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     otherCellOpenEventSubscription =
         SwipeActionStore.getInstance().bus.on<CellOpenEvent>().listen((event) {
       if (event.key != widget.key) {
-        _closeWithAnim();
-      }
-    });
-
-    closeActionEventSubscription =
-        SwipeActionStore.getInstance().bus.on<CloseCellEvent>().listen((event) {
-      ///For better performance,
-      ///avoid receiving this event when buttons are invisible.
-      if (event.key == widget.key && currentOffset.dx != 0.0) {
-        _closeWithAnim();
-      }
-    });
-
-    deleteCellEventSubscription = SwipeActionStore.getInstance()
-        .bus
-        .on<DeleteCellEvent>()
-        .listen((event) {
-      if (event.key == widget.key) {
-        _deleteWithAnim();
+        closeWithAnim();
       }
     });
 
@@ -178,8 +158,6 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     controller.dispose();
     deleteController.dispose();
     otherCellOpenEventSubscription?.cancel();
-    closeActionEventSubscription?.cancel();
-    deleteCellEventSubscription?.cancel();
     ignorePointerSubscription?.cancel();
     super.dispose();
   }
@@ -215,7 +193,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
 
   void _scrollListener() {
     if (scrollPosition?.isScrollingNotifier?.value ?? false) {
-      _closeWithAnim();
+      closeWithAnim();
     }
   }
 
@@ -301,13 +279,13 @@ class _SwipeActionCellState extends State<SwipeActionCell>
                 .bus
                 .fire(PullLastButtonToCoverCellEvent(key: widget.key));
           }
-          _deleteWithAnim();
+          deleteWithAnim();
 
           ///wait animation to complete
           await Future.delayed(const Duration(milliseconds: 500));
         } else {
           lastItemOut = false;
-          _closeWithAnim();
+          closeWithAnim();
         }
       };
       await widget.actions[0].onTap?.call(completionHandler);
@@ -316,12 +294,12 @@ class _SwipeActionCellState extends State<SwipeActionCell>
         _openWithAnim();
         return;
       } else if (details.velocity.pixelsPerSecond.dx > 0) {
-        _closeWithAnim();
+        closeWithAnim();
         return;
       }
 
       if (-currentOffset.dx < maxPullWidth / 4) {
-        _closeWithAnim();
+        closeWithAnim();
       } else {
         _openWithAnim();
       }
@@ -332,6 +310,26 @@ class _SwipeActionCellState extends State<SwipeActionCell>
             .fire(PullLastButtonEvent(isPullingOut: false));
       }
     }
+  }
+
+  ///when nestedAction is open ,adjust currentOffset if nestedWidth > currentOffset
+  void adjustOffset({double offsetX, Curve curve}) {
+    controller.stop();
+    final adjustOffsetAnimController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 150));
+    final curve = CurvedAnimation(
+        parent: adjustOffsetAnimController, curve: Curves.linear);
+
+    animation =
+        Tween<double>(begin: currentOffset.dx, end: -offsetX).animate(curve)
+          ..addListener(() {
+            if (lockAnim) return;
+            this.currentOffset = Offset(animation.value, 0);
+            setState(() {});
+          });
+    adjustOffsetAnimController.forward().whenCompleteOrCancel(() {
+      adjustOffsetAnimController?.dispose();
+    });
   }
 
   void _openWithAnim() {
@@ -348,7 +346,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     controller.forward();
   }
 
-  void _closeWithAnim() async {
+  void closeWithAnim() async {
     _resetAnimValue();
     if (mounted) {
       animation =
@@ -369,7 +367,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
     lockAnim = false;
   }
 
-  void _deleteWithAnim() async {
+  void deleteWithAnim() async {
     animation = Tween<double>(begin: 1.0, end: 0.01).animate(deleteCurvedAnim);
     deleteController.reverse().whenCompleteOrCancel(() {
       SwipeActionStore.getInstance()
@@ -431,6 +429,7 @@ class _SwipeActionCellState extends State<SwipeActionCell>
       contentWidth: width,
       currentOffset: currentOffset.dx.abs(),
       fullDraggable: widget.performsFirstActionWithFullSwipe,
+      parentState: this,
       child: SizedBox(
         height: height,
         width: double.infinity,
@@ -580,13 +579,18 @@ class SwipeNestedAction {
   ///
   final double nestedWidth;
 
+  ///The Animation Curve when pull the nestedAction
   ///弹出动画的曲线
   final Curve curve;
+
+  ///是否在弹出的时候有震动（知乎app 消息页面点击删除的效果）
+  final bool impactWhenShowing;
 
   SwipeNestedAction({
     this.icon,
     this.title,
     this.nestedWidth,
     this.curve = Curves.easeOutQuart,
+    this.impactWhenShowing = false,
   });
 }

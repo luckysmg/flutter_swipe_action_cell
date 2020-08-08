@@ -299,8 +299,8 @@ widthSpace|这个button在正常展开状态下的宽度大小|否（def=80）
 icon | 弹出的action的图标|否
 title | 弹出的action的标题 |否
 nestedWidth | 弹出的action的宽度|否（一般不需要设置，此宽度可以调整弹出的宽度）
-
-
+curve| 动画曲线|否
+impactWhenShowing|弹出的时候的震动（知乎app消息页面的删除效果）|否
  
 
 

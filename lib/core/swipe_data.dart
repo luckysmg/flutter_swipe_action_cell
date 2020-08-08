@@ -12,18 +12,20 @@ class SwipeData extends InheritedWidget {
   final double contentWidth;
   final double totalActionWidth;
   final bool willPull;
+  final SwipeActionCellState parentState;
 
-  SwipeData(
-      {@required this.child,
-      @required this.actions,
-      @required this.willPull,
-      @required this.currentOffset,
-      @required this.fullDraggable,
-      @required this.parentKey,
-      @required this.firstActionWillCoverAllSpaceOnDeleting,
-      @required this.contentWidth,
-      @required this.totalActionWidth})
-      : super(child: child);
+  SwipeData({
+    @required this.child,
+    @required this.actions,
+    @required this.willPull,
+    @required this.currentOffset,
+    @required this.fullDraggable,
+    @required this.parentKey,
+    @required this.firstActionWillCoverAllSpaceOnDeleting,
+    @required this.contentWidth,
+    @required this.totalActionWidth,
+    @required this.parentState,
+  }) : super(child: child);
 
   static SwipeData of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType(aspect: SwipeData);

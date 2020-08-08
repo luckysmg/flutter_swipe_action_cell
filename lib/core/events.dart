@@ -13,18 +13,6 @@ class PullLastButtonEvent {
   final bool isPullingOut;
 }
 
-class CloseCellEvent {
-  CloseCellEvent({this.key});
-
-  final Key key;
-}
-
-class DeleteCellEvent {
-  DeleteCellEvent({this.key});
-
-  final Key key;
-}
-
 class PullLastButtonToCoverCellEvent {
   PullLastButtonToCoverCellEvent({this.key});
 
