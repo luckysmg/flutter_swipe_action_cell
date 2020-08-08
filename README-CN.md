@@ -18,21 +18,20 @@ flutter_swipe_action_cell: ^1.0.4+3
 
 简单删除 | 拉满执行第一个action | 
 -------- | -----
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="200"  alt=""/> |<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="200"  alt=""/>
-  
+ <img src="http://m.qpic.cn/psc?/V5364DVv3UfW4C17Wia20tkeKY3cmcv2/ruAMsa53pVQWN7FLK88i5h.*7BVneOtpxj3LYvufrw8NYPR6cf5x89CCa1pMDww5rvCmATveCJM9Lz*U0u*6eK72wDk9lbp1JXhfBLSgNAY!/b&bo=gAK4AYACuAECCS0!&rf=viewer_4" width="250"  alt=""/> | <img src="http://m.qpic.cn/psc?/V5364DVv3UfW4C17Wia20tkeKY3cmcv2/45NBuzDIW489QBoVep5mcVpEBE0i6mlnIxLWpN8HR6mIBr8Pr1sLkD0itQSvmlKB6Bi4nPTAAk.Nb1OqqXWgjz6MKDc.X6NE7ohn9PDIXX0!/b&bo=IAOSASADkgECaU0!&rf=viewer_4" width="250"  alt=""/>
+
 
 伴随动画删除 | 多于一个action的样式 | 
 -------- | -----
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="200"  alt=""/> | <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true" width="200"  alt=""/>
+ <img src="http://m.qpic.cn/psc?/V5364DVv3UfW4C17Wia20tkeKY3cmcv2/45NBuzDIW489QBoVep5mcVpEBE0i6mlnIxLWpN8HR6kyzXqiQ9VczOliuBrz6kG39uPYErWkGVnoPxJKpHQ0On29z5D2I4ByFe1JiZ0Hezk!/b&bo=IAOSASADkgECaU0!&rf=viewer_4" width="250"  alt=""/> | <img src="http://m.qpic.cn/psc?/V5364DVv3UfW4C17Wia20tkeKY3cmcv2/45NBuzDIW489QBoVep5mcVpEBE0i6mlnIxLWpN8HR6kAOTOYw2uPaA*HMiYGYFmxXLD33iyhpbva05oVtzW8Qy3HCh3tgPnIToqJorwwYVA!/b&bo=IANYAiADWAICia0!&rf=viewer_4" width="250"  alt=""/>
 
-仿微信确认删除交互 | 
--------- | 
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="430"  alt=""/>|
+仿微信确认删除交互 | 仿微信确认删除自动调整按钮大小 
+-------- | -------- 
+<img src="http://m.qpic.cn/psc?/V5364DVv3UfW4C17Wia20tkeKY3cmcv2/45NBuzDIW489QBoVep5mcVpEBE0i6mlnIxLWpN8HR6lq1apyw6kHecKDHlgOTXcqK9izQ.4sQRSrdiyGNHET8Gip1avj7DgNuEa85FdIXp8!/b&bo=IAOQASADkAECeV0!&rf=viewer_4" width="250"  alt=""/>|<img src="http://m.qpic.cn/psc?/V5364DVv3UfW4C17Wia20tkeKY3cmcv2/45NBuzDIW489QBoVep5mca0jDIQc4w.HBa7McJyuMYtt6WqD3ZdXnlH8EhTYc.FXQSMyuLiKmfHqE8snjBI3ta0AGJSt*A0n.FxJEBa0rXs!/b&bo=IAOQASADkAECaU0!&rf=viewer_4" width="250"  alt=""/>|
 
 
-仿微信确认删除自动调整按钮大小 | 
--------- | 
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/7.gif?raw=true" width="430"  alt=""/>|
+
+
 
  - ## Example 1:最简单的例子---删除
  
