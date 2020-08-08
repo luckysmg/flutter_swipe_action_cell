@@ -12,11 +12,30 @@ So I try to create one.
 
 ## Get started
 
-### pub home page click here: [pub](https://pub.dev/packages/flutter_swipe_action_cell)
-### install:
+#### pub home page click here: [pub](https://pub.dev/packages/flutter_swipe_action_cell)
+
+## install:
 ```yaml
 flutter_swipe_action_cell: ^1.0.4+1
 ```  
+
+
+##Preview：
+
+Simple delete  | Perform first action when full swipe | 
+-------- | -----
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="200"  alt=""/> |<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="200"  alt=""/>
+  
+
+
+Delete with animation | More than one action | 
+-------- | -----
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="200"  alt=""/> | <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true" width="200"  alt=""/>
+
+Effect like WeChat(confirm delete) | 
+-------- | 
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="430"  alt=""/>|
+
 
 ## Example
 

@@ -6,12 +6,8 @@ Language:
 
 一个可以提供iOS原生效果的列表侧滑库
 
-## 为什么我想要这个库？
-我喜欢iOS原生的侧滑效果，很爽，但是flutter并没有提供官方的组件，所以我尝试写一个
 
-
-
-# 开始:
+#直接进入正题:
 
 ### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 ### 安装：
