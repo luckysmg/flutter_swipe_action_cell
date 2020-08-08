@@ -367,7 +367,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
     widthPullCurve =
         CurvedAnimation(parent: widthPullController, curve: Curves.decelerate);
 
-    if (widget.actionIndex == 0) {
+    if (widget.actionIndex == 0 && action.nestedAction != null) {
       widthFillActionContentController = AnimationController(
           vsync: this, duration: const Duration(milliseconds: 250));
       widthFillActionContentCurve = CurvedAnimation(
