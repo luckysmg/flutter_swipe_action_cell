@@ -1,18 +1,17 @@
-Language: 
-[English](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README.md)
-|[中文简体](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README-CN.md)
+ # flutter_swipe_action_cell
+ 一个强大的列表项侧滑库
+ 
+ ### Language: 
+ [English](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README.md)
+ | [中文简体](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README-CN.md)
+ 
 
-# flutter_swipe_action_cell
+## 直接进入正题:
 
-一个可以提供iOS原生效果的列表侧滑库
-
-
-#直接进入正题:
-
-### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
-### 安装：
+#### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
+#### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.0.4+1
+flutter_swipe_action_cell: ^1.0.4+2
 ```
 
 ##效果预览：
@@ -22,7 +21,6 @@ flutter_swipe_action_cell: ^1.0.4+1
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="200"  alt=""/> |<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="200"  alt=""/>
   
 
-
 伴随动画删除 | 多于一个action的样式 | 
 -------- | -----
  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="200"  alt=""/> | <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true" width="200"  alt=""/>
@@ -31,14 +29,13 @@ flutter_swipe_action_cell: ^1.0.4+1
 -------- | 
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="430"  alt=""/>|
 
-  
 
+仿微信确认删除自动调整按钮大小 | 
+-------- | 
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/7.gif?raw=true" width="430"  alt=""/>|
 
  - ## Example 1:最简单的例子---删除
  
- ### (友情提示：这里应该有gif显示，如果看不到去[HomePage](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README-CN.md))
-
-
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="200"  alt=""/>
 
 Tip：你把下面的放在你ListView的itemBuilder里面返回就行
