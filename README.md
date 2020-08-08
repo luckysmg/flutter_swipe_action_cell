@@ -6,20 +6,16 @@ Language:
 
 A package that can give you a cell that can be swiped ,effect is like iOS native
 
-## Why do I want to create this lib?
-I like iOS native 's swipe action ,but flutter doesn't give an official widget .
-So I try to create one.
-
 ## Get started
 
-#### pub home page click here: [pub](https://pub.dev/packages/flutter_swipe_action_cell)
+##### pub home page click here: [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 
-## install:
+##### install:
 ```yaml
 flutter_swipe_action_cell: ^1.0.4+2
 ```  
 
-##Preview：
+## Preview：
 
 Simple delete  | Perform first action when full swipe | 
 -------- | -----
@@ -45,10 +41,7 @@ Effect like WeChat(Adjust the width of button) |
 
 Tip:This widget should be put in the itemBuilder of your ListView
 
- - ##  Example 1:Simple delete the item in ListView
- 
- ### (Tip:There is a gif here,if it is unable to load,please go to [GitHub](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README.md))
- 
+ - ###  Example 1:Simple delete the item in ListView
 
  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true)
  
@@ -72,7 +65,7 @@ Tip:This widget should be put in the itemBuilder of your ListView
     );
 ```
 
- - ##  Example 2:Perform first action when full swipe
+ - ###  Example 2:Perform first action when full swipe
  
  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true)
 
@@ -100,7 +93,7 @@ Tip:This widget should be put in the itemBuilder of your ListView
      );
  ```
 
- - ##  Example 3:Delete with animation 
+ - ###  Example 3:Delete with animation 
  
   ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true)
 
@@ -133,7 +126,7 @@ SwipeActionCell(
     );
  ```
 
-  - ## Example 4:More than one action: 
+  - ### Example 4:More than one action: 
  
   ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true)
 
@@ -190,7 +183,7 @@ SwipeActionCell(
     );
  ```
 
-  - ## Example 5:Delete like wechat message page(need to confirm it:
+  - ### Example 5:Delete like wechat message page(need to confirm it:
     ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true)
     
 ```dart
