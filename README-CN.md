@@ -36,7 +36,7 @@ flutter_swipe_action_cell: ^1.0.4+2
 
  - ## Example 1:最简单的例子---删除
  
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="200"  alt=""/>
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="300"  alt=""/>
 
 Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```dart
@@ -63,7 +63,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
  
  - ## Example 2:拉满将会执行第一个action
  
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="200"  alt=""/>
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="300"  alt=""/>
 
  ```dart
  SwipeActionCell(
@@ -91,7 +91,7 @@ Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 
  - ## Example 3:伴随动画的删除（按照iOS原生动画做的）
  
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="200"  alt=""/>
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="300"  alt=""/>
  
  ```dart
 SwipeActionCell(
@@ -174,7 +174,6 @@ SwipeActionCell(
             style: TextStyle(fontSize: 40)),
       ),
     );
-
  ```
 
 - ## Example 5：仿微信iOS端消息删除效果
