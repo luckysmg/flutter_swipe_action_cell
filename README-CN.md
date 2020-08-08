@@ -19,6 +19,25 @@ Language:
 flutter_swipe_action_cell: ^1.0.4+1
 ```
 
+##效果预览：
+
+简单删除 | 拉满执行第一个action | 
+-------- | -----
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="200"  alt=""/> |<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="200"  alt=""/>
+  
+
+
+伴随动画删除 | 多于一个action的样式 | 
+-------- | -----
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="200"  alt=""/> | <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true" width="200"  alt=""/>
+
+仿微信确认删除交互 | 
+-------- | 
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="430"  alt=""/>|
+
+  
+
+
  - ## Example 1:最简单的例子---删除
  
  ### (友情提示：这里应该有gif显示，如果看不到去[HomePage](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README-CN.md))
@@ -204,7 +223,7 @@ return SwipeActionCell(
 
  - ## Example 6：仿美团iOS端订单页删除效果
  
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/5.gif?raw=true" width="300"  alt=""/>
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/5.gif?raw=true" width="250"  alt=""/>
 
  #### 根据gif图可以判断，删除逻辑应该是这样的：
  - 1.点击或者拉动到最后触发删除动作
@@ -289,7 +308,7 @@ leftPadding | button的内容距离左边界的padding|否（def=15)
 icon | action的图标|否（不填就不显示）
 closeOnTap | 点击此action是否关闭cell|否（def=true）
 backgroundRadius|拉出的button的左上和左下圆角大小|否（def=0.0）
-forceAlignmentLeft|当只有一个按钮的时候，让内容持续贴在左边|否（def=false
+forceAlignmentLeft|当只有一个按钮的时候，让内容持续贴在左边|否（def=false)
 widthSpace|这个button在正常展开状态下的宽度大小|否（def=80）
 
 
@@ -300,7 +319,7 @@ icon | 弹出的action的图标|否
 title | 弹出的action的标题 |否
 nestedWidth | 弹出的action的宽度|否（一般不需要设置，此宽度可以调整弹出的宽度）
 curve| 动画曲线|否
-impactWhenShowing|弹出的时候的震动（知乎app消息页面的删除效果）|否
+impactWhenShowing|弹出的时候的震动（知乎app消息页面的删除效果）|否(def=false)
  
 
 
