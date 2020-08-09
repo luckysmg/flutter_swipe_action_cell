@@ -12,38 +12,35 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 
 ##### install:
 ```yaml
-flutter_swipe_action_cell: ^1.0.4+3
+flutter_swipe_action_cell: ^1.0.4+4
 ```  
 
 ## Preview：
 
 Simple delete  | Perform first action when full swipe | 
 -------- | -----
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="200"  alt=""/> |<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="200"  alt=""/>
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="250"  alt=""/> |<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="250"  alt=""/>
   
 
 
 Delete with animation | More than one action | 
 -------- | -----
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="200"  alt=""/> | <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true" width="200"  alt=""/>
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="250"  alt=""/> | <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true" width="250"  alt=""/>
 
-Effect like WeChat(confirm delete) | 
--------- | 
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="430"  alt=""/> |
+Effect like WeChat(confirm delete) | Automatically adjust the button width
+-------- | -----
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="250"  alt=""/> | <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/7.gif?raw=true" width="250"  alt=""/> 
 
-Effect like WeChat(Adjust the width of button) | 
--------- |
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/7.gif?raw=true" width="430"  alt=""/> |
 
 
 
 ## Example
 
-Tip:This widget should be put in the itemBuilder of your ListView
-
- - ###  Example 1:Simple delete the item in ListView
+ - ##  Example 1:Simple delete the item in ListView
 
  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true)
+ 
+ - #### Tip:put the code in the itemBuilder of your ListView
  
 ```dart
  SwipeActionCell(
@@ -65,7 +62,7 @@ Tip:This widget should be put in the itemBuilder of your ListView
     );
 ```
 
- - ###  Example 2:Perform first action when full swipe
+ - ##  Example 2:Perform first action when full swipe
  
  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true)
 
@@ -93,7 +90,7 @@ Tip:This widget should be put in the itemBuilder of your ListView
      );
  ```
 
- - ###  Example 3:Delete with animation 
+ - ## Example 3:Delete with animation 
  
   ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true)
 
@@ -126,10 +123,9 @@ SwipeActionCell(
     );
  ```
 
-  - ### Example 4:More than one action: 
+  - ## Example 4:More than one action: 
  
   ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true)
-
 
  ```dart
 SwipeActionCell(
@@ -183,7 +179,8 @@ SwipeActionCell(
     );
  ```
 
-  - ### Example 5:Delete like wechat message page(need to confirm it:
+  - ## Example 5:Delete like wechat message page(need to confirm it:
+  
     ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true)
     
 ```dart

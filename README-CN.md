@@ -11,7 +11,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.0.4+3
+flutter_swipe_action_cell: ^1.0.4+4
 ```
 
 ### 效果预览（gif可能比较大，稍微等一下）：
@@ -37,7 +37,7 @@ flutter_swipe_action_cell: ^1.0.4+3
  
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="300"  alt=""/>
 
-Tip：你把下面的放在你ListView的itemBuilder里面返回就行
+ - ##### Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```dart
  SwipeActionCell(
       ///这个key是必要的
