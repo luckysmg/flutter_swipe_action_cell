@@ -372,6 +372,9 @@ impactWhenShowing|弹出的时候的震动（知乎app消息页面的删除效�
 -------- | --- |
 isEditing | 是否处于编辑模式
 getSelectedIndexes() | 获取选中的行的索引集合
+toggleEditingMode() | 切换编辑模式
+stopEditingMode()|暂停编辑模式
+startEditingMode()| 开始编辑
 
 
 

@@ -37,15 +37,12 @@ Edit mode |
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/> |   
  
 
-
-
-
 ## Example
 
  - ##  Example 1:Simple delete the item in ListView
 
- ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true)
- 
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="250"  alt=""/>
+  
  - #### Tip:put the code in the itemBuilder of your ListView
  
 ```dart
@@ -185,7 +182,7 @@ SwipeActionCell(
     );
  ```
 
-  - ## Example 5:Delete like wechat message page(need to confirm it:
+  - ## Example 5:Delete like WeChat message page(need to confirm it:
   
     ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true)
     
@@ -222,6 +219,57 @@ return SwipeActionCell(
             style: TextStyle(fontSize: 40)),
       ),
     );
+```
+
+- ## Example 6：Edit mode（just like iOS native effect）
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/>
+
+```dart
+/// To controller edit mode
+ SwipeActionEditController controller;
+
+///在initState
+@override
+  void initState() {
+    super.initState();
+    controller = SwipeActionController();
+  }
+///To get the selected rows index
+List<int> selectedIndexes = controller.getSelectedIndexes();
+
+ListView.builder(
+        itemBuilder: (c, index) {
+          return _item(index);
+        },
+        itemCount: list.length,
+      );
+
+
+ Widget _item(int index) {
+     return SwipeActionCell(
+       ///controller
+       controller: controller,
+       ///index is required if you want to enter edit mode
+       index: index,
+       performsFirstActionWithFullSwipe: true,
+       key: ValueKey(list[index]),
+       actions: [
+         SwipeAction(
+             onTap: (handler) async {
+               await handler(true);
+               list.removeAt(index);
+               setState(() {});
+             },
+             title: "delete"),
+       ],
+       child: Padding(
+         padding: const EdgeInsets.all(15.0),
+         child: Text("This is index of ${list[index]}",
+             style: TextStyle(fontSize: 35)),
+       ),
+     );
+   }
+
 ```
 
 
