@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -385,12 +384,12 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
 
 class SwipeActionStore {
   static SwipeActionStore _instance;
-  EventBus bus;
+  SwipeActionBus bus;
 
   static SwipeActionStore getInstance() {
     if (_instance == null) {
       _instance = SwipeActionStore();
-      _instance.bus = EventBus();
+      _instance.bus = SwipeActionBus();
     }
     return _instance;
   }

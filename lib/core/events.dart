@@ -30,3 +30,9 @@ class CloseNestedActionEvent {
 
   final Key key;
 }
+
+class EditingModeEvent {
+  final bool editing;
+
+  EditingModeEvent({this.editing});
+}

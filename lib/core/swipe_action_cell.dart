@@ -10,6 +10,7 @@ import 'package:flutter/widgets.dart';
 
 import 'events.dart';
 import 'swipe_action_button_widget.dart';
+import 'swipe_action_controller.dart';
 import 'swipe_data.dart';
 
 ///
@@ -23,7 +24,7 @@ import 'swipe_data.dart';
 class SwipeActionCell extends StatefulWidget {
   final List<SwipeAction> actions;
 
-  ///your content
+  ///Your content view
   ///无需多言
   final Widget child;
 
@@ -44,6 +45,22 @@ class SwipeActionCell extends StatefulWidget {
   ///当删除的时候，第一个按钮会在删除动画执行的时候覆盖整个cell（ 和iOS原生动画相似 ）
   final bool firstActionWillCoverAllSpaceOnDeleting;
 
+  ///The controller to control edit mode
+  ///用于编辑模式的控制器
+  final SwipeActionController controller;
+
+  ///The identifier of edit mode
+  ///如果你想用编辑模式，这个参数必传，他的值就是你列表的itemBuilder中的index，直接传进来即可
+  final int index;
+
+  ///When use edit mode,if you select this row,you will see this indicator on the left of the cell.
+  ///（可以不传，有默认组件）当你进入编辑模式的时候，如果你选择了这一行，那么你将会在cell左边看到这个组件
+  final Widget selectedIndicator;
+
+  ///It is contrary to [selectedIndicator]
+  ///（可以不传，有默认组件）和上面的相反，不说了
+  final Widget unselectedIndicator;
+
   const SwipeActionCell({
     Key key,
     @required this.actions,
@@ -51,6 +68,16 @@ class SwipeActionCell extends StatefulWidget {
     this.closeWhenScrolling = true,
     this.performsFirstActionWithFullSwipe = false,
     this.firstActionWillCoverAllSpaceOnDeleting = true,
+    this.controller,
+    this.index,
+    this.selectedIndicator = const Icon(
+      Icons.add_circle,
+      color: Colors.blue,
+    ),
+    this.unselectedIndicator = const Icon(
+      Icons.do_not_disturb_on,
+      color: Colors.red,
+    ),
   })  : assert(key != null,
             "You should pass a key like [ValueKey] or [ObjectKey]"),
 
@@ -88,16 +115,24 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   AnimationController controller;
   AnimationController deleteController;
+  AnimationController editController;
+
   Animation<double> animation;
   Animation<double> curvedAnim;
   Animation<double> deleteCurvedAnim;
+  Animation<double> editCurvedAnim;
 
   ScrollPosition scrollPosition;
 
   StreamSubscription otherCellOpenEventSubscription;
   StreamSubscription ignorePointerSubscription;
+  StreamSubscription changeEditingModeSubscription;
 
   bool ignorePointer;
+  bool editing;
+  bool selected;
+
+  static const double editingOffsetX = 60;
 
   @override
   void initState() {
@@ -107,8 +142,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
     ignorePointer = false;
     actionsCount = widget.actions.length;
     maxPullWidth = _getMaxPullWidth();
-
     currentOffset = Offset.zero;
+
     controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -119,12 +154,52 @@ class SwipeActionCellState extends State<SwipeActionCell>
       value: 1.0,
       duration: const Duration(milliseconds: 400),
     );
+    editController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
     curvedAnim =
         CurvedAnimation(parent: controller, curve: Curves.easeOutQuart);
     deleteCurvedAnim =
         CurvedAnimation(parent: deleteController, curve: Curves.easeInToLinear);
-
+    editCurvedAnim =
+        CurvedAnimation(parent: editController, curve: Curves.linear);
     _listenEvent();
+  }
+
+  void _startEditingWithAnim() {
+    lockAnim = true;
+    editController.value = 0.0;
+    lockAnim = false;
+    animation = Tween<double>(begin: currentOffset.dx, end: editingOffsetX)
+        .animate(editCurvedAnim)
+          ..addListener(() {
+            if (lockAnim) return;
+            currentOffset = Offset(animation.value, 0);
+            setState(() {});
+          });
+    editController.forward().whenCompleteOrCancel(() {
+      widget.controller.editing = true;
+      setState(() {});
+    });
+  }
+
+  void _stopEditingWithAnim() {
+    lockAnim = true;
+    editController.value = 0.0;
+    lockAnim = false;
+    widget.controller.selectedMap.remove(widget.index);
+    animation =
+        Tween<double>(begin: editingOffsetX, end: 0).animate(editCurvedAnim)
+          ..addListener(() {
+            if (lockAnim) return;
+            currentOffset = Offset(animation.value, 0);
+            setState(() {});
+          });
+    editController.forward().whenCompleteOrCancel(() {
+      widget.controller.editing = false;
+      setState(() {});
+    });
   }
 
   double _getMaxPullWidth() {
@@ -150,15 +225,27 @@ class SwipeActionCellState extends State<SwipeActionCell>
       this.ignorePointer = event.ignore;
       if (mounted) setState(() {});
     });
+
+    if (widget.controller == null) return;
+    changeEditingModeSubscription = SwipeActionStore.getInstance()
+        .bus
+        .on<EditingModeEvent>()
+        .listen((event) {
+      ///If it is animating,just return
+      if (editController.isAnimating) return;
+      event.editing ? _startEditingWithAnim() : _stopEditingWithAnim();
+    });
   }
 
   @override
   void dispose() {
     _removeScrollListener();
-    controller.dispose();
-    deleteController.dispose();
+    controller?.dispose();
+    deleteController?.dispose();
+    editController?.dispose();
     otherCellOpenEventSubscription?.cancel();
     ignorePointerSubscription?.cancel();
+    changeEditingModeSubscription?.cancel();
     super.dispose();
   }
 
@@ -178,6 +265,31 @@ class SwipeActionCellState extends State<SwipeActionCell>
       _removeScrollListener();
       _addScrollListener();
     }
+    _resetControllerWhenDidUpdate(oldWidget);
+  }
+
+  ///It mainly deal with hot reload
+  void _resetControllerWhenDidUpdate(SwipeActionCell oldWidget) {
+    if (oldWidget.controller != widget.controller) {
+      editing = false;
+      selected = false;
+      if (widget.controller == null) {
+        currentOffset = Offset.zero;
+
+        ///cancel event
+        changeEditingModeSubscription?.cancel();
+        setState(() {});
+      } else {
+        changeEditingModeSubscription = SwipeActionStore.getInstance()
+            .bus
+            .on<EditingModeEvent>()
+            .listen((event) {
+          ///If it is animating,just return
+          if (editController.isAnimating) return;
+          event.editing ? _startEditingWithAnim() : _stopEditingWithAnim();
+        });
+      }
+    }
   }
 
   void _addScrollListener() {
@@ -192,12 +304,13 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _scrollListener() {
-    if (scrollPosition?.isScrollingNotifier?.value ?? false) {
+    if ((scrollPosition?.isScrollingNotifier?.value ?? false) && !editing) {
       closeWithAnim();
     }
   }
 
   void _onHorizontalDragStart(DragStartDetails details) {
+    if (editing) return;
     SwipeActionStore.getInstance().bus?.fire(CellOpenEvent(key: widget.key));
 
     if (widget.actions.first.nestedAction == null) return;
@@ -207,6 +320,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
+    if (editing) return;
     if (widget.performsFirstActionWithFullSwipe) {
       _updateWithFullDraggableEffect(details);
     } else {
@@ -268,6 +382,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _onHorizontalDragEnd(DragEndDetails details) async {
+    if (editing) return;
     if (lastItemOut && widget.performsFirstActionWithFullSwipe) {
       CompletionHandler completionHandler = (delete) async {
         if (delete) {
@@ -312,7 +427,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     }
   }
 
-  ///when nestedAction is open ,adjust currentOffset if nestedWidth > currentOffset
+  ///When nestedAction is open ,adjust currentOffset if nestedWidth > currentOffset
   void adjustOffset({double offsetX, Curve curve}) {
     controller.stop();
     final adjustOffsetAnimController = AnimationController(
@@ -378,35 +493,85 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   @override
   Widget build(BuildContext context) {
+    editing = widget.controller != null && widget.controller.editing;
+
+    if (widget.controller != null) {
+      selected = widget.controller.selectedMap[widget.index] ?? false;
+    } else {
+      selected = false;
+    }
+
     return IgnorePointer(
       ignoring: ignorePointer,
       child: SizeTransition(
         sizeFactor: deleteCurvedAnim,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
+          onTap: editing && !editController.isAnimating
+              ? () {
+                  assert(
+                      widget.index != null,
+                      "From SwipeActionCell:\nIf you want to enter edit mode,please pass the 'index' parameter in SwipeActionCell\n"
+                      "=====================================================================================\n"
+                      "如果你要进入编辑模式，请在SwipeActionCell中传入index 参数，他的值就是你列表组件的itemBuilder中返回的index即可");
+
+                  if (selected) {
+                    widget.controller.selectedMap.remove(widget.index);
+                  } else {
+                    widget.controller.selectedMap.addAll({widget.index: true});
+                  }
+                  setState(() {});
+                }
+              : null,
           onHorizontalDragUpdate: _onHorizontalDragUpdate,
           onHorizontalDragStart: _onHorizontalDragStart,
           onHorizontalDragEnd: _onHorizontalDragEnd,
-          child: Stack(
-            children: <Widget>[
-              _ContentWidget(
-                onLayoutUpdate: (size) {
-                  this.width = size.width;
-                  this.height = size.height;
-                },
-                child: Transform.translate(
-                    offset: currentOffset,
+          child: DecoratedBox(
+            position: DecorationPosition.foreground,
+            decoration: BoxDecoration(
+              color: selected ? Colors.black.withAlpha(30) : Colors.transparent,
+            ),
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: <Widget>[
+                _buildSelectedButton(selected),
+                _ContentWidget(
+                  onLayoutUpdate: (size) {
+                    this.width = size.width;
+                    this.height = size.height;
+                  },
+                  child: Transform.translate(
+                    offset: editing && !editController.isAnimating
+                        ? const Offset(editingOffsetX, 0)
+                        : currentOffset,
                     transformHitTests: false,
-                    child: Container(
-                        width: double.infinity,
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        child: widget.child)),
-              ),
-              currentOffset.dx == 0 ? const SizedBox() : _buildActionButtons(),
-            ],
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                          ),
+                          child: IgnorePointer(
+                              ignoring: editController.isAnimating || editing,
+                              child: widget.child)),
+                    ),
+                  ),
+                ),
+                currentOffset.dx == 0 || editController.isAnimating || editing
+                    ? const SizedBox()
+                    : _buildActionButtons(),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSelectedButton(bool selected) {
+    return SizedBox(
+      width: editingOffsetX,
+      child: selected ? widget.selectedIndicator : widget.unselectedIndicator,
     );
   }
 
@@ -593,4 +758,29 @@ class SwipeNestedAction {
     this.curve = Curves.easeOutQuart,
     this.impactWhenShowing = false,
   });
+}
+
+class SwipeActionBus {
+  StreamController _streamController;
+
+  StreamController get streamController => _streamController;
+
+  SwipeActionBus({bool sync = false})
+      : _streamController = StreamController.broadcast(sync: sync);
+
+  Stream<T> on<T>() {
+    if (T == dynamic) {
+      return streamController.stream;
+    } else {
+      return streamController.stream.where((event) => event is T).cast<T>();
+    }
+  }
+
+  void fire(event) {
+    streamController.add(event);
+  }
+
+  void destroy() {
+    _streamController.close();
+  }
 }

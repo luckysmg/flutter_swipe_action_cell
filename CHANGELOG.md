@@ -1,4 +1,5 @@
-## [1.0.4+4] - doc fixed
+## [1.0.4+5] - Add edit mode
+## [1.0.4+5] - doc fixed
 ## [1.0.4+3] - doc fixed
 ## [1.0.4+2] - refactor code
 ## [1.0.4+1] - bug fixed
