@@ -229,6 +229,16 @@ return SwipeActionCell(
 ///如果你想获取你选中的行，那么请调用以下API
 List<int> selectedIndexes = controller.getSelectedIndexes();
 
+///切换编辑模式
+controller.toggleEditingMode()
+
+///开始编辑模式
+controller.startEditingMode()
+
+///停止编辑模式
+controller.stopEditingMode()
+
+
 ///在build中传入你的列表组件，这里用常用的ListView：
 ListView.builder(
         itemBuilder: (c, index) {

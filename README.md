@@ -67,7 +67,8 @@ Edit mode |
 
  - ##  Example 2:Perform first action when full swipe
  
- ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true)
+  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="250"  alt=""/>
+
 
  ```dart
  SwipeActionCell(
@@ -95,7 +96,9 @@ Edit mode |
 
  - ## Example 3:Delete with animation 
  
-  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true)
+  
+   <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="250"  alt=""/>
+
 
  ```dart
 SwipeActionCell(
@@ -128,7 +131,9 @@ SwipeActionCell(
 
   - ## Example 4:More than one action: 
  
-  ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true)
+  
+   <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true" width="250"  alt=""/>
+
 
  ```dart
 SwipeActionCell(
@@ -183,8 +188,11 @@ SwipeActionCell(
  ```
 
   - ## Example 5:Delete like WeChat message page(need to confirm it:
-  
-    ![](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true)
+    
+    
+   <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="250"  alt=""/>
+
+
     
 ```dart
 return SwipeActionCell(
@@ -236,6 +244,16 @@ return SwipeActionCell(
   }
 ///To get the selected rows index
 List<int> selectedIndexes = controller.getSelectedIndexes();
+
+///toggleEditingMode
+controller.toggleEditingMode()
+
+///startEditMode
+controller.startEditingMode()
+
+///stopEditMode
+controller.stopEditingMode()
+
 
 ListView.builder(
         itemBuilder: (c, index) {
