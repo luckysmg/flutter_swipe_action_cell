@@ -10,7 +10,7 @@ import 'package:flutter/widgets.dart';
 
 import 'events.dart';
 import 'swipe_action_button_widget.dart';
-import 'swipe_action_controller.dart';
+import 'swipe_action_edit_controller.dart';
 import 'swipe_data.dart';
 
 ///
@@ -47,7 +47,7 @@ class SwipeActionCell extends StatefulWidget {
 
   ///The controller to control edit mode
   ///用于编辑模式的控制器
-  final SwipeActionController controller;
+  final SwipeActionEditController controller;
 
   ///The identifier of edit mode
   ///如果你想用编辑模式，这个参数必传，他的值就是你列表的itemBuilder中的index，直接传进来即可

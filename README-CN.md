@@ -11,7 +11,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.0.4+4
+flutter_swipe_action_cell: ^1.0.4+5
 ```
 
 ### 效果预览（gif可能比较大，稍微等一下）：
@@ -30,7 +30,9 @@ flutter_swipe_action_cell: ^1.0.4+4
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="250"  alt=""/>|<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/7.gif?raw=true" width="250"  alt=""/>|
 
 
-
+编辑模式 (GIF 较大） | 
+-------- |
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/>|
 
 
  - ## Example 1:最简单的例子---删除
@@ -207,12 +209,64 @@ return SwipeActionCell(
             style: TextStyle(fontSize: 40)),
       ),
     );
-
 ```
 
 
 
- - ## Example 6：仿美团iOS端订单页删除效果
+- ## Example 6：编辑模式（类似iOS原生效果）
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="300"  alt=""/>
+
+```dart
+/// 控制器（目前就是控制编辑的）
+ SwipeActionEditController controller;
+
+///在init里面初始化
+@override
+  void initState() {
+    super.initState();
+    controller = SwipeActionController();
+  }
+///如果你想获取你选中的行，那么请调用以下API
+List<int> selectedIndexes = controller.getSelectedIndexes();
+
+///在build中传入你的列表组件，这里用常用的ListView：
+ListView.builder(
+        itemBuilder: (c, index) {
+          return _item(index);
+        },
+        itemCount: list.length,
+      );
+
+
+ Widget _item(int index) {
+     return SwipeActionCell(
+       ///在这传入controller
+       controller: controller,
+       ///这个index需要你传入，否则会报错
+       index: index,
+       performsFirstActionWithFullSwipe: true,
+       key: ValueKey(list[index]),
+       actions: [
+         SwipeAction(
+             onTap: (handler) async {
+               await handler(true);
+               list.removeAt(index);
+               setState(() {});
+             },
+             title: "删除"),
+       ],
+       child: Padding(
+         padding: const EdgeInsets.all(15.0),
+         child: Text("This is index of ${list[index]}",
+             style: TextStyle(fontSize: 35)),
+       ),
+     );
+   }
+
+```
+
+
+ - ## Example 7：仿美团iOS端订单页删除效果
  
  <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/5.gif?raw=true" width="250"  alt=""/>
 
@@ -311,6 +365,16 @@ title | 弹出的action的标题 |否
 nestedWidth | 弹出的action的宽度|否（一般不需要设置，此宽度可以调整弹出的宽度）
 curve| 动画曲线|否
 impactWhenShowing|弹出的时候的震动（知乎app消息页面的删除效果）|否(def=false)
+
+
+#### SwipeActionEditController：
+参数名（方法名） | 含义 |
+-------- | --- |
+isEditing | 是否处于编辑模式
+getSelectedIndexes() | 获取选中的行的索引集合
+
+
+
  
 
 
