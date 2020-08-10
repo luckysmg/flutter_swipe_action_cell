@@ -1,3 +1,4 @@
+## [1.0.4+7] - doc fixed
 ## [1.0.4+6] - doc fixed
 ## [1.0.4+5] - Add edit mode
 ## [1.0.4+5] - doc fixed
