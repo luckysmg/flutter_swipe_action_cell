@@ -1,5 +1,3 @@
-library flutter_swipe_action_cell;
-
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';

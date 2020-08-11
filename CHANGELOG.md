@@ -1,3 +1,4 @@
+## [1.0.5] - 基本bug测试完毕，优化import文件，1.0.5发布
 ## [1.0.4+7] - doc fixed
 ## [1.0.4+6] - doc fixed
 ## [1.0.4+5] - Add edit mode
