@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
+
 import 'events.dart';
 import 'swipe_action_button_widget.dart';
 
+///An controller to control the cell's behavior
+///一个可以控制cell行为的控制器
 class SwipeActionEditController {
   Map<int, bool> selectedMap = {};
 
@@ -15,27 +19,34 @@ class SwipeActionEditController {
   ///start editing
   void startEditingMode() {
     isEditing = true;
-    _fireEvent(editing: true);
+    _fireEditEvent(editing: true);
   }
 
   ///stop editing
   void stopEditingMode() {
     isEditing = false;
-    _fireEvent(editing: false);
+    _fireEditEvent(editing: false);
   }
 
   ///If it is editing,stop it.
   ///If it is not editing, start it
   void toggleEditingMode() {
     isEditing = !isEditing;
-    _fireEvent(editing: !this.editing);
+    _fireEditEvent(editing: !this.editing);
   }
 
   List<int> getSelectedIndexes() {
     return List.from(selectedMap.keys);
   }
 
-  void _fireEvent({bool editing}) {
+  ///You can call this method to close all opening cell without passing controller into cell
+  ///你可以不把controller传入cell就可以直接调用这个方法
+  ///用于关闭所有打开的cell
+  void closeAllOpenCell() {
+    SwipeActionStore.getInstance().bus.fire(CellOpenEvent(key: UniqueKey()));
+  }
+
+  void _fireEditEvent({bool editing}) {
     SwipeActionStore.getInstance().bus.fire(EditingModeEvent(editing: editing));
   }
 }

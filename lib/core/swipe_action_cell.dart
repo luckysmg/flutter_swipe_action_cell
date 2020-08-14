@@ -211,7 +211,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   void _listenEvent() {
     otherCellOpenEventSubscription =
         SwipeActionStore.getInstance().bus.on<CellOpenEvent>().listen((event) {
-      if (event.key != widget.key) {
+      if (event.key != widget.key && currentOffset.dx < 0.0) {
         closeWithAnim();
       }
     });
