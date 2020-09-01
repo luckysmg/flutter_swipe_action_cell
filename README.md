@@ -102,9 +102,7 @@ Edit mode |
 
  ```dart
 SwipeActionCell(
-      ///this key is necessary
       key: ObjectKey(list[index]),
-      ///this name is the same as iOS native
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
@@ -137,10 +135,8 @@ SwipeActionCell(
 
  ```dart
 SwipeActionCell(
-      ///this key is necessary
       key: ObjectKey(list[index]),
 
-      ///this name is the same as iOS native
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
@@ -196,13 +192,13 @@ SwipeActionCell(
     
 ```dart
 return SwipeActionCell(
-      ///this key is necessary
       key: ValueKey(list[index]),
-
-      ///this is the same as iOS native
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
+          ///
+          ///This attr should be passed to first action
+          ///
           nestedAction: SwipeNestedAction(title: "确认删除"),
           title: "删除",
           onTap: (CompletionHandler handler) async {

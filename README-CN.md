@@ -68,9 +68,8 @@ flutter_swipe_action_cell: ^1.0.5+1
 
  ```dart
  SwipeActionCell(
-        ///这个key需要
        key: ValueKey(list[index]),
- 
+
        ///参数名和iOS原生相同
        performsFirstActionWithFullSwipe: true,
        actions: <SwipeAction>[
@@ -96,7 +95,6 @@ flutter_swipe_action_cell: ^1.0.5+1
  
  ```dart
 SwipeActionCell(
-      ///这个key是必要的
       key: ValueKey(list[index]),
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
@@ -128,10 +126,7 @@ SwipeActionCell(
  
  ```dart
 SwipeActionCell(
-      ///这个key是必要的
       key: ValueKey(list[index]),
-
-      ///这个参数名以及其含义和iOS 原生的相同
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
@@ -182,10 +177,10 @@ SwipeActionCell(
 
 ```dart
 return SwipeActionCell(
-      ///this key is necessary
       key: ValueKey(list[index]),
       actions: <SwipeAction>[
         SwipeAction(
+
           ///这个参数只能给的第一个action设置哦
           nestedAction: SwipeNestedAction(title: "确认删除"),
           title: "删除",
@@ -291,10 +286,7 @@ ListView.builder(
 ```dart
 Widget _item(int index) {
     return SwipeActionCell(
-      ///this key is necessary
       key: ValueKey(list[index]),
-
-      ///this name is the same as iOS native
       performsFirstActionWithFullSwipe: true,
       actions: <SwipeAction>[
         SwipeAction(
