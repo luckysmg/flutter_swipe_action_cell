@@ -34,8 +34,6 @@ class _SwipeActionAlignButtonWidgetState
   bool whenFirstAction;
   bool whenDeleting;
 
-  Alignment normalAlignment;
-
   SwipeData data;
   SwipeAction action;
 
@@ -130,7 +128,7 @@ class _SwipeActionAlignButtonWidgetState
 
   void _resetNestedAction() {
     whenNestedActionShowing = false;
-    alignment = normalAlignment;
+    alignment = Alignment.centerRight;
     setState(() {});
   }
 
