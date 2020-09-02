@@ -10,7 +10,7 @@ import 'events.dart';
 import 'store.dart';
 import 'swipe_action_align_button_widget.dart';
 import 'swipe_action_button_widget.dart';
-import 'swipe_action_edit_controller.dart';
+import 'controller.dart';
 import 'swipe_data.dart';
 
 ///
