@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 
 import 'events.dart';
 import 'store.dart';
-import 'swipe_action_cell.dart';
+import 'cell.dart';
 import 'swipe_data.dart';
 
 class SwipeActionAlignButtonWidget extends StatefulWidget {

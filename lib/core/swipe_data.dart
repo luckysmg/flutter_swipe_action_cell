@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import 'swipe_action_cell.dart';
+import 'cell.dart';
 
 class SwipeData extends InheritedWidget {
   final List<SwipeAction> actions;
