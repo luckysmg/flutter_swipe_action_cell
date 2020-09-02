@@ -31,7 +31,7 @@ flutter_swipe_action_cell: ^1.0.5+2
 
 仿微信收藏页 自定义按钮形状交互 | 
 -------- |
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.GIF?raw=true" width="300"  alt=""/>
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.gif?raw=true" width="300"  alt=""/>
 
 
 编辑模式 (GIF 较大） | 
