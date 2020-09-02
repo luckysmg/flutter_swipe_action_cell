@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'events.dart';
+import 'store.dart';
+import 'swipe_action_align_button_widget.dart';
 import 'swipe_action_button_widget.dart';
 import 'swipe_action_edit_controller.dart';
 import 'swipe_data.dart';
@@ -592,9 +594,17 @@ class SwipeActionCellState extends State<SwipeActionCell>
     final List<Widget> actionButtons =
         List.generate(widget.actions.length, (index) {
       final actualIndex = actionsCount - 1 - index;
-      return SwipeActionButtonWidget(
-        actionIndex: actualIndex,
-      );
+      if (widget.actions.length == 1 &&
+          !widget.actions[0].forceAlignmentLeft &&
+          widget.performsFirstActionWithFullSwipe) {
+        return SwipeActionAlignButtonWidget(
+          actionIndex: actualIndex,
+        );
+      } else {
+        return SwipeActionButtonWidget(
+          actionIndex: actualIndex,
+        );
+      }
     });
 
     return SwipeData(
@@ -786,29 +796,4 @@ class SwipeNestedAction {
     this.curve = Curves.easeOutQuart,
     this.impactWhenShowing = false,
   });
-}
-
-class SwipeActionBus {
-  StreamController _streamController;
-
-  StreamController get streamController => _streamController;
-
-  SwipeActionBus({bool sync = false})
-      : _streamController = StreamController.broadcast(sync: sync);
-
-  Stream<T> on<T>() {
-    if (T == dynamic) {
-      return streamController.stream;
-    } else {
-      return streamController.stream.where((event) => event is T).cast<T>();
-    }
-  }
-
-  void fire(event) {
-    streamController.add(event);
-  }
-
-  void destroy() {
-    _streamController.close();
-  }
 }

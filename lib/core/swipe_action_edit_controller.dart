@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import 'events.dart';
-import 'swipe_action_button_widget.dart';
+import 'store.dart';
 
 ///An controller to control the cell's behavior
 ///一个可以控制cell行为的控制器
