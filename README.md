@@ -12,7 +12,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 
 ##### install:
 ```yaml
-flutter_swipe_action_cell: ^1.0.5+5
+flutter_swipe_action_cell: ^1.0.5+6
 ```  
 
 ## Preview：
