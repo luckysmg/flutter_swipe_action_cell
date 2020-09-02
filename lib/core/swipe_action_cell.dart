@@ -26,29 +26,30 @@ class SwipeActionCell extends StatefulWidget {
   ///无需多言
   final Widget child;
 
-  ///Close actions When you scroll the ListView . default value is true
+  ///Close actions When you scroll the ListView . default value = true
   ///当你滚动（比如ListView之类的时候，这个item将会关闭拉出的actions，默认为true
   final bool closeWhenScrolling;
 
-  ///Indicates the max width of per action button,def value is 60dp
-  ///代表每个action按钮最多能拉多长,默认80dp
-
   ///When drag cell a long distance,it will be dismissed，
   ///and it will execute the onTap  of the first [SwipeAction]
+  ///def value = false
   ///就像iOS一样，往左拉满会直接删除一样,拉满后会执行第一个 [SwipeAction] 的onTap方法
+  ///默认为false
   final bool performsFirstActionWithFullSwipe;
 
   ///When deleting the cell
   ///the first action will cover all content size with animation.(emm.. just like iOS native effect)
+  ///def value = true
   ///当删除的时候，第一个按钮会在删除动画执行的时候覆盖整个cell（ 和iOS原生动画相似 ）
+  ///默认为true
   final bool firstActionWillCoverAllSpaceOnDeleting;
 
   ///The controller to control edit mode
-  ///用于编辑模式的控制器
+  ///控制器 后续或将更名为 SwipeActionController
   final SwipeActionEditController controller;
 
   ///The identifier of edit mode
-  ///如果你想用编辑模式，这个参数必传，他的值就是你列表的itemBuilder中的index，直接传进来即可
+  ///如果你想用编辑模式，这个参数必传!!! 它的值就是你列表的itemBuilder中的index，直接传进来即可
   final int index;
 
   ///When use edit mode,if you select this row,you will see this indicator on the left of the cell.
@@ -351,6 +352,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
       }
     }
 
+    if (-currentOffset.dx >= width) {
+      currentOffset = Offset(-width, 0);
+    }
+
     ///Avoid layout jumping when scroll very fast
     if (currentOffset.dx > 0) {
       currentOffset = Offset.zero;
@@ -529,36 +534,46 @@ class SwipeActionCellState extends State<SwipeActionCell>
             decoration: BoxDecoration(
               color: selected ? Colors.black.withAlpha(30) : Colors.transparent,
             ),
-            child: Stack(
-              alignment: Alignment.centerLeft,
-              children: <Widget>[
-                _buildSelectedButton(selected),
-                _ContentWidget(
-                  onLayoutUpdate: (size) {
-                    this.width = size.width;
-                    this.height = size.height;
-                  },
-                  child: Transform.translate(
-                    offset: editing && !editController.isAnimating
-                        ? const Offset(editingOffsetX, 0)
-                        : currentOffset,
-                    transformHitTests: false,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                          ),
-                          child: IgnorePointer(
-                              ignoring: editController.isAnimating || editing,
-                              child: widget.child)),
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                width = constraints.maxWidth;
+                return Stack(
+                  alignment: Alignment.centerLeft,
+                  children: <Widget>[
+                    widget.controller != null
+                        ? _buildSelectedButton(selected)
+                        : const SizedBox(),
+                    _ContentWidget(
+                      onLayoutUpdate: (size) {
+                        this.height = size.height;
+                      },
+                      child: Transform.translate(
+                        offset: editing && !editController.isAnimating
+                            ? const Offset(editingOffsetX, 0)
+                            : currentOffset,
+                        transformHitTests: false,
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                              ),
+                              child: IgnorePointer(
+                                  ignoring:
+                                      editController.isAnimating || editing,
+                                  child: widget.child)),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                currentOffset.dx == 0 || editController.isAnimating || editing
-                    ? const SizedBox()
-                    : _buildActionButtons(),
-              ],
+                    currentOffset.dx == 0 ||
+                            editController.isAnimating ||
+                            editing
+                        ? const SizedBox()
+                        : _buildActionButtons(),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -590,7 +605,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
       totalActionWidth: maxPullWidth,
       actions: widget.actions,
       contentWidth: width,
-      currentOffset: currentOffset.dx.abs(),
+      contentHeight: height,
+      currentOffset: currentOffset.dx,
       fullDraggable: widget.performsFirstActionWithFullSwipe,
       parentState: this,
       child: SizedBox(
@@ -673,6 +689,12 @@ class SwipeAction {
   ///嵌套的action
   final SwipeNestedAction nestedAction;
 
+  ///If you want to customize your content,use this attr,
+  ///and don't set title and icon attrs
+  ///如果你想自定义你的按钮内容，那么就设置这个content参数
+  ///注意如果你设置了content，那么就不要设置title和icon，两个都必须为null
+  final Widget content;
+
   const SwipeAction({
     @required this.onTap,
     this.title,
@@ -685,6 +707,7 @@ class SwipeAction {
     this.forceAlignmentLeft = false,
     this.widthSpace = 80,
     this.nestedAction,
+    this.content,
   });
 }
 
@@ -749,9 +772,16 @@ class SwipeNestedAction {
   ///是否在弹出的时候有震动（知乎app 消息页面点击删除的效果）
   final bool impactWhenShowing;
 
+  ///You can customize your content using this attr
+  ///If you want to use this attr,please don't set title and icon
+  ///你可以通过这个参数来自定义你的nestAction的内容
+  ///如果你要使用这个参数，请不要设置title和icon
+  final Widget content;
+
   SwipeNestedAction({
     this.icon,
     this.title,
+    this.content,
     this.nestedWidth,
     this.curve = Curves.easeOutQuart,
     this.impactWhenShowing = false,

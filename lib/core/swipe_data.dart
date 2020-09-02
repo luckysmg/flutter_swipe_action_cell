@@ -10,6 +10,7 @@ class SwipeData extends InheritedWidget {
   final Key parentKey;
   final bool firstActionWillCoverAllSpaceOnDeleting;
   final double contentWidth;
+  final double contentHeight;
   final double totalActionWidth;
   final bool willPull;
   final SwipeActionCellState parentState;
@@ -17,6 +18,7 @@ class SwipeData extends InheritedWidget {
   SwipeData({
     @required this.child,
     @required this.actions,
+    @required this.contentHeight,
     @required this.willPull,
     @required this.currentOffset,
     @required this.fullDraggable,

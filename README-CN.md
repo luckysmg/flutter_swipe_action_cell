@@ -11,7 +11,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.0.5+1
+flutter_swipe_action_cell: ^1.0.5+2
 ```
 
 ### 效果预览（gif可能比较大，稍微等一下）：
@@ -28,6 +28,10 @@ flutter_swipe_action_cell: ^1.0.5+1
 仿微信确认删除交互 | 仿微信确认删除自动调整按钮大小 
 -------- | -------- 
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="250"  alt=""/>|<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/7.gif?raw=true" width="250"  alt=""/>|
+
+仿微信收藏页 自定义按钮形状交互 | 
+-------- |
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.GIF?raw=true" width="300"  alt=""/>
 
 
 编辑模式 (GIF 较大） | 
@@ -321,6 +325,86 @@ Widget _item(int index) {
   }
  ```
 
+- ## Example 8：仿微信ios端收藏列表效果（自定义形状按钮）
+
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.GIF?raw=true" width="250"  alt=""/>
+
+```dart
+
+Widget _item(int index) {
+    return SwipeActionCell(
+      key: ValueKey(list[index]),
+      actions: [
+        SwipeAction(
+            nestedAction: SwipeNestedAction(
+  
+              ///自定义你nestedAction 的内容
+              content: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.red,
+                ),
+                width: 130,
+                height: 60,
+                child: OverflowBox(
+                  maxWidth: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                      Text('确认删除',
+                          style: TextStyle(color: Colors.white, fontSize: 20)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            ///将原本的背景设置为透明，因为要用你自己的背景
+            color: Colors.transparent,
+
+            ///设置了content就不要设置title和icon了
+            content: _getIconButton(Colors.red, Icons.delete),
+            onTap: (handler) async {
+              list.removeAt(index);
+              setState(() {});
+            }),
+        SwipeAction(
+            content: _getIconButton(Colors.grey, Icons.vertical_align_top),
+            color: Colors.transparent,
+            onTap: (handler) {}),
+      ],
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Text(
+            "This is index of ${list[index]},Awesome Swipe Action Cell!! I like it very much!",
+            style: TextStyle(fontSize: 25)),
+      ),
+    );
+  }
+
+  Widget _getIconButton(color, icon) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+
+        ///设置你自己的背景
+        color: color,
+      ),
+      child: Icon(
+        icon,
+        color: Colors.white,
+      ),
+    );
+  }
+
+
+```
+
 
 ## 关于 CompletionHandler 
 它代表你在点击action之后如何操纵这个cell，如果你不想要任何动画，那么就不执行handler，而是直接更新你的数据，然后setState就行
@@ -357,6 +441,8 @@ closeOnTap | 点击此action是否关闭cell|否（def=true）
 backgroundRadius|拉出的button的左上和左下圆角大小|否（def=0.0）
 forceAlignmentLeft|当只有一个按钮的时候，让内容持续贴在左边|否（def=false)
 widthSpace|这个button在正常展开状态下的宽度大小|否（def=80）
+content| 自定义的内容视图|否（如果你需要这个参数，请保持title和icon都为null
+
 
 
 #### SwipeNestedAction：
@@ -366,6 +452,7 @@ icon | 弹出的action的图标|否
 title | 弹出的action的标题 |否
 nestedWidth | 弹出的action的宽度|否（一般不需要设置，此宽度可以调整弹出的宽度）
 curve| 动画曲线|否
+content| 自定义的内容视图|否（如果你需要这个参数，请保持title和icon都为null
 impactWhenShowing|弹出的时候的震动（知乎app消息页面的删除效果）|否(def=false)
 
 

@@ -12,7 +12,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 
 ##### install:
 ```yaml
-flutter_swipe_action_cell: ^1.0.5+1
+flutter_swipe_action_cell: ^1.0.5+2
 ```  
 
 ## Preview：
@@ -30,6 +30,11 @@ Delete with animation | More than one action |
 Effect like WeChat(confirm delete) | Automatically adjust the button width
 -------- | -----
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="250"  alt=""/> | <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/7.gif?raw=true" width="250"  alt=""/>
+ 
+ Effect like WeChat collection Page:Customize your button shape | 
+-------- |
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.GIF?raw=true" width="300"  alt=""/>
+
 
 
 Edit mode | 
@@ -284,6 +289,86 @@ ListView.builder(
        ),
      );
    }
+
+```
+
+
+- ## Example 7：customize shape 
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.GIF?raw=true" width="250"  alt=""/>
+
+```dart
+
+Widget _item(int index) {
+    return SwipeActionCell(
+      key: ValueKey(list[index]),
+      actions: [
+        SwipeAction(
+            nestedAction: SwipeNestedAction(
+              ///customize your nested action content
+
+              content: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.red,
+                ),
+                width: 130,
+                height: 60,
+                child: OverflowBox(
+                  maxWidth: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                      Text('确认删除',
+                          style: TextStyle(color: Colors.white, fontSize: 20)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            ///you should set the default  bg color to transparent
+            color: Colors.transparent,
+
+            ///set content instead of title of icon
+            content: _getIconButton(Colors.red, Icons.delete),
+            onTap: (handler) async {
+              list.removeAt(index);
+              setState(() {});
+            }),
+        SwipeAction(
+            content: _getIconButton(Colors.grey, Icons.vertical_align_top),
+            color: Colors.transparent,
+            onTap: (handler) {}),
+      ],
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Text(
+            "This is index of ${list[index]},Awesome Swipe Action Cell!! I like it very much!",
+            style: TextStyle(fontSize: 25)),
+      ),
+    );
+  }
+
+  Widget _getIconButton(color, icon) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+
+        ///set you real bg color in your content
+        color: color,
+      ),
+      child: Icon(
+        icon,
+        color: Colors.white,
+      ),
+    );
+  }
 
 ```
 

@@ -1,3 +1,4 @@
+## [1.0.5+2] - 给SwipeAction和SwipeNestedAction提供自定义内容的能力
 ## [1.0.5+1] - 1.SwipeActionEditController提供一个关闭已经打开cell的API。  2.性能优化
 ## [1.0.5] - 基本bug测试完毕，优化import文件，1.0.5发布
 ## [1.0.4+7] - doc fixed
