@@ -45,7 +45,6 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
 
   AnimationController offsetController;
   AnimationController widthFillActionContentController;
-  AnimationController pullLastController;
   Animation<double> widthPullCurve;
   Animation<double> widthFillActionContentCurve;
 
