@@ -327,7 +327,7 @@ Widget _item(int index) {
 
 - ## Example 8：仿微信ios端收藏列表效果（自定义形状按钮）
 
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.GIF?raw=true" width="250"  alt=""/>
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.gif?raw=true" width="250"  alt=""/>
 
 ```dart
 

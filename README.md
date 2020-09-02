@@ -33,7 +33,7 @@ Effect like WeChat(confirm delete) | Automatically adjust the button width
  
  Effect like WeChat collection Page:Customize your button shape | 
 -------- |
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.GIF?raw=true" width="300"  alt=""/>
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.gif?raw=true" width="300"  alt=""/>
 
 
 
@@ -294,7 +294,7 @@ ListView.builder(
 
 
 - ## Example 7：customize shape 
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.GIF?raw=true" width="250"  alt=""/>
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.gif?raw=true" width="250"  alt=""/>
 
 ```dart
 
