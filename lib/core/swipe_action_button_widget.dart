@@ -36,6 +36,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   bool whenFirstAction;
   bool whenActiveToOffset;
   bool whenPullingOut;
+  bool whenDeleting;
 
   Alignment normalAlignment;
 
@@ -55,6 +56,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   @override
   void initState() {
     super.initState();
+    whenDeleting = false;
     whenActiveToOffset = true;
     lockAnim = false;
     whenPullingOut = false;
@@ -181,6 +183,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   }
 
   void _animToCoverCell() {
+    whenDeleting = true;
     _resetAnimationController(offsetController);
     whenActiveToOffset = false;
     animation = Tween<double>(begin: offsetX, end: -data.contentWidth)
@@ -209,7 +212,6 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
 
     _resetAnimationController(widthFillActionContentController);
     whenNestedActionShowing = true;
-    data.parentState.setState(() {});
     alignment = Alignment.center;
 
     if (action.nestedAction?.nestedWidth != null &&
@@ -328,6 +330,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   }
 
   Widget _buildButtonContent(bool shouldShowNestedActionInfo) {
+    if (whenDeleting) return const SizedBox();
     if (shouldShowNestedActionInfo && action.nestedAction?.content != null) {
       return action.nestedAction.content;
     }
@@ -344,35 +347,29 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   }
 
   Widget _buildIcon(SwipeAction action, bool shouldShowNestedActionInfo) {
-    if (whenActiveToOffset) {
-      return shouldShowNestedActionInfo
-          ? action.nestedAction.icon ?? const SizedBox()
-          : action.icon ?? const SizedBox();
-    }
-    return const SizedBox();
+    return shouldShowNestedActionInfo
+        ? action.nestedAction.icon ?? const SizedBox()
+        : action.icon ?? const SizedBox();
   }
 
   Widget _buildTitle(SwipeAction action, bool shouldShowNestedActionInfo) {
-    if (whenActiveToOffset) {
-      if (shouldShowNestedActionInfo) {
-        if (action.nestedAction.title == null) return const SizedBox();
-        return Text(
-          action.nestedAction.title,
-          overflow: TextOverflow.clip,
-          maxLines: 1,
-          style: action.style,
-        );
-      } else {
-        if (action.title == null) return const SizedBox();
-        return Text(
-          action.title,
-          overflow: TextOverflow.clip,
-          maxLines: 1,
-          style: action.style,
-        );
-      }
+    if (shouldShowNestedActionInfo) {
+      if (action.nestedAction.title == null) return const SizedBox();
+      return Text(
+        action.nestedAction.title,
+        overflow: TextOverflow.clip,
+        maxLines: 1,
+        style: action.style,
+      );
+    } else {
+      if (action.title == null) return const SizedBox();
+      return Text(
+        action.title,
+        overflow: TextOverflow.clip,
+        maxLines: 1,
+        style: action.style,
+      );
     }
-    return const SizedBox();
   }
 
   @override
