@@ -62,10 +62,15 @@ class SwipeActionCell extends StatefulWidget {
   ///（可以不传，有默认组件）和上面的相反，不说了
   final Widget unselectedIndicator;
 
+  ///Indicates that you can swipe the cell or not
+  ///代表是否能够侧滑交互
+  final bool isDraggable;
+
   const SwipeActionCell({
-    Key key,
-    @required this.actions,
+    @required Key key,
     @required this.child,
+    this.actions = defaultActions,
+    this.isDraggable = true,
     this.closeWhenScrolling = true,
     this.performsFirstActionWithFullSwipe = false,
     this.firstActionWillCoverAllSpaceOnDeleting = true,
@@ -528,9 +533,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
                   setState(() {});
                 }
               : null,
-          onHorizontalDragUpdate: _onHorizontalDragUpdate,
-          onHorizontalDragStart: _onHorizontalDragStart,
-          onHorizontalDragEnd: _onHorizontalDragEnd,
+          onHorizontalDragUpdate:
+              widget.isDraggable ? _onHorizontalDragUpdate : null,
+          onHorizontalDragStart:
+              widget.isDraggable ? _onHorizontalDragStart : null,
+          onHorizontalDragEnd: widget.isDraggable ? _onHorizontalDragEnd : null,
           child: DecoratedBox(
             position: DecorationPosition.foreground,
             decoration: BoxDecoration(
@@ -720,6 +727,8 @@ class SwipeAction {
     this.content,
   });
 }
+
+const List<SwipeAction> defaultActions = [const SwipeAction(onTap: null)];
 
 class _ContentWidget extends StatefulWidget {
   final Widget child;
