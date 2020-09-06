@@ -11,7 +11,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.0.5+8
+flutter_swipe_action_cell: ^1.0.5+9
 ```
 
 ### 效果预览（gif可能比较大，稍微等一下）：
