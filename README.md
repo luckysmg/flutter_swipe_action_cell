@@ -12,7 +12,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 
 ##### install:
 ```yaml
-flutter_swipe_action_cell: ^1.0.6
+flutter_swipe_action_cell: ^1.0.6+1
 ```  
 
 ## Preview：
@@ -256,6 +256,16 @@ controller.startEditingMode()
 ///stopEditMode
 controller.stopEditingMode()
 
+///select cell
+controller.selectCellAt(indexPaths:[1,2,3])
+
+controller.deselectCellAt(indexPaths:[1,2,3])
+
+///pass your data length to selectedAll
+controller.selectAll(30)
+
+///deselect all cell
+controller deselectAll()
 
 ListView.builder(
         itemBuilder: (c, index) {

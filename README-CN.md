@@ -11,7 +11,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.0.6
+flutter_swipe_action_cell: ^1.0.6+1
 ```
 
 ### 效果预览（gif可能比较大，稍微等一下）：
@@ -464,6 +464,10 @@ getSelectedIndexes() | 获取选中的行的索引集合
 toggleEditingMode() | 切换编辑模式
 stopEditingMode()|暂停编辑模式
 startEditingMode()| 开始编辑
+selectCellAt (indexPaths)|选中一些行
+deselectCellAt (indexPaths)|取消选择一些行
+selectAll (length)|全选（需要你提供你数据集合的长度
+deselectAll()|取消全选
 
 
 

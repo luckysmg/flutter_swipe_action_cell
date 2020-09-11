@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'controller.dart';
 import 'events.dart';
 import 'store.dart';
 import 'swipe_action_align_button_widget.dart';
 import 'swipe_action_button_widget.dart';
-import 'controller.dart';
 import 'swipe_data.dart';
 
 ///
@@ -133,6 +133,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   StreamSubscription otherCellOpenEventSubscription;
   StreamSubscription ignorePointerSubscription;
   StreamSubscription changeEditingModeSubscription;
+  StreamSubscription selectedSubscription;
 
   bool ignorePointer;
   bool editing;
@@ -217,6 +218,22 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _listenEvent() {
+    selectedSubscription = SwipeActionStore.getInstance()
+        .bus
+        .on<CellSelectedEvent>()
+        .listen((event) {
+      assert(widget.controller != null && widget.index != null);
+
+      if (event.selected &&
+          widget.controller.selectedMap.containsKey(widget.index)) {
+        setState(() {});
+      } else if (!event.selected) {
+        if (selected) {
+          setState(() {});
+        }
+      }
+    });
+
     otherCellOpenEventSubscription =
         SwipeActionStore.getInstance().bus.on<CellOpenEvent>().listen((event) {
       if (event.key != widget.key && currentOffset.dx < 0.0) {
@@ -247,6 +264,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   void dispose() {
     _removeScrollListener();
     controller?.dispose();
+    selectedSubscription?.cancel();
     deleteController?.dispose();
     editController?.dispose();
     otherCellOpenEventSubscription?.cancel();

@@ -36,3 +36,9 @@ class EditingModeEvent {
 
   EditingModeEvent({this.editing});
 }
+
+class CellSelectedEvent {
+  CellSelectedEvent({this.selected});
+
+  final bool selected;
+}

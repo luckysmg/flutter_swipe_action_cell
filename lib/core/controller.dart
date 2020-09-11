@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import 'events.dart';
 import 'store.dart';
@@ -44,6 +45,57 @@ class SwipeActionEditController {
   ///用于关闭所有打开的cell
   void closeAllOpenCell() {
     SwipeActionStore.getInstance().bus.fire(CellOpenEvent(key: UniqueKey()));
+  }
+
+  ///Select a cell (You must pass [SwipeActionCell.index] attr to your [SwipeActionCell]
+  ///选中cell （注意！！！你必须把 index 参数传入cell
+  void selectCellAt({@required List<int> indexPaths}) {
+    assert(
+        editing,
+        "Please call method :selectCellAt(index)  when you are in edit mode\n"
+        "请在编辑模式打开的情况下调用 selectCellAt(index)");
+    indexPaths.forEach((element) {
+      selectedMap.addAll({element: true});
+    });
+    SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: true));
+  }
+
+  ///Deselect  cells  (You must pass [SwipeActionCell.index] attr to your [SwipeActionCell]
+  ///选中一个cell （注意！！！你必须把 index 参数传入cell
+  void deselectCellAt({@required List<int> indexPaths}) {
+    assert(
+        editing,
+        "Please call method :selectCellAt(index)  when you are in edit mode\n"
+        "请在编辑模式打开的情况下调用 selectCellAt(index)");
+
+    indexPaths.forEach((element) {
+      selectedMap.remove(element);
+    });
+    SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false));
+  }
+
+  ///select all cell
+  ///选择所有的cell
+  void selectAll(int dataLength) {
+    assert(
+        editing,
+        "Please call method :selectCellAt(index)  when you are in edit mode\n"
+        "请在编辑模式打开的情况下调用 selectCellAt(index)");
+    for (int i = 0; i < dataLength; i++) {
+      selectedMap.addAll({i: true});
+    }
+    SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: true));
+  }
+
+  ///deselect all cell
+  ///取消选择所有的cell
+  void deselectAll() {
+    assert(
+        editing,
+        "Please call method :selectCellAt(index)  when you are in edit mode\n"
+        "请在编辑模式打开的情况下调用 selectCellAt(index)");
+    selectedMap.clear();
+    SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false));
   }
 
   void _fireEditEvent({bool editing}) {
