@@ -76,7 +76,7 @@ class SwipeActionEditController {
 
   ///select all cell
   ///选择所有的cell
-  void selectAll(int dataLength) {
+  void selectAll({@required int dataLength}) {
     assert(
         editing,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
