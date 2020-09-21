@@ -1,3 +1,4 @@
+## [1.1.0] - 修复编辑模式下的bug
 ## [1.0.9] - 兼容1.22，取消overflow参数
 ## [1.0.8] - 规范controller.selectAll的API
 ## [1.0.7] - 给controller添加选择，取消选择，全选，取消全选功能
