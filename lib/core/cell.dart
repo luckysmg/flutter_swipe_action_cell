@@ -648,8 +648,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
         height: height,
         width: double.infinity,
         child: Stack(
-          overflow: Overflow.visible,
-          alignment: Alignment.centerRight,
           children: actionButtons,
         ),
       ),
