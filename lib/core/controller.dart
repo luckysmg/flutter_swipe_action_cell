@@ -36,8 +36,25 @@ class SwipeActionEditController {
     _fireEditEvent(editing: !this.editing);
   }
 
+  @Deprecated('Use getSelectedIndexPaths()')
   List<int> getSelectedIndexes() {
     return List.from(selectedMap.keys);
+  }
+
+  ///Get the list of selected cell 's index
+  ///拿到选择的cell的索引集合
+  List<int> getSelectedIndexPaths() {
+    return List.from(selectedMap.keys);
+  }
+
+  ///This method is called of sync internal data model.
+  ///You still need to call [setState] after calling this method
+  ///这个方法只是为了更新内部数据源，你仍然需要在调用这个方法之后
+  ///去调用 [setState] 来更新你自己的数据源
+  void deleteCellAt({@required List<int> indexPaths}) {
+    indexPaths.forEach((element) {
+      selectedMap.remove(element);
+    });
   }
 
   ///You can call this method to close all opening cell without passing controller into cell
