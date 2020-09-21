@@ -42,6 +42,8 @@ Edit mode |
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/> |   
  
 
+####  [Previous Bug List with related issues](#Previous Bug List with related issues)
+
 ## Example
 
  - ##  Example 1:Simple delete the item in ListView
@@ -399,6 +401,10 @@ If you want some animation:
 # About all parameter:
 I wrote them in my code with dart doc comments.You can read them in
 source code.
+
+
+# Previous Bug List with related issues
+-  [issue7](https://github.com/luckysmg/flutter_swipe_action_cell/issues/7) (SwipeActionEditController can't delete cells correctly) --> fixed after v1.1.0
 
  
 

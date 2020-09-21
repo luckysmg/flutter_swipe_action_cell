@@ -58,6 +58,9 @@ flutter_swipe_action_cell: ^1.1.0
 - [ ] 拉出时多个按钮提供不同的offset计算方式，不同的叠放方式 
 
 
+#### [如果你遇到bug点这里来确认](#之前遇到的bug（附上关联的issue）)
+
+
  - ## Example 1:最简单的例子---删除
  
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="300"  alt=""/>
@@ -490,6 +493,11 @@ deselectAll()|取消全选
 
 
 
+
+# 之前遇到的bug（附上关联的issue）
+-  [issue7](https://github.com/luckysmg/flutter_swipe_action_cell/issues/7) (SwipeActionEditController 不能正确的删除数据) --> fixed after v1.1.0
+
+ 
  
 
 
