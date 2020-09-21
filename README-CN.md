@@ -38,7 +38,7 @@ flutter_swipe_action_cell: ^1.1.0
 -------- |
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/>|
 
-###  目前已经实现的内容 ：
+###  1.目前已经实现的内容 ：
 
 - [x] 拉出按钮，顺滑的拉出动画和回弹动画
 - [x] 支持iOS原生的弹出按钮触发第一个动作交互
@@ -52,14 +52,14 @@ flutter_swipe_action_cell: ^1.1.0
 
  
 
-###  下一步可能要实现的内容 (不保证一定实现)：
+###  2.下一步可能要实现的内容 (不保证一定实现)：
 
 - [ ] 支持左边拉出的按钮  >> (此项正尝试开发中）
-- [ ] 拉出时多个按钮提供不同的offset计算方式，不同的叠放方式 
+- [ ] 拉出时多个按钮提供不同的offset计算方式，不同的叠放方式
 
+### 3. 如果你开发中遇到bug请滚动到此页面最下面来确认 ！！
 
-#### [如果你遇到bug点这里来确认](#之前遇到的bug（附上关联的issue）)
-
+### 下面是例子
 
  - ## Example 1:最简单的例子---删除
  

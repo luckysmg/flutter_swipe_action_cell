@@ -15,7 +15,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 flutter_swipe_action_cell: ^1.1.0
 ```  
 
-## Preview：
+## 1.Preview：
 
 Simple delete  | Perform first action when full swipe | 
 -------- | -----
@@ -41,8 +41,6 @@ Edit mode |
 -------- |
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/> |   
  
-
-####  [Previous Bug List with related issues](#Previous Bug List with related issues)
 
 ## Example
 
