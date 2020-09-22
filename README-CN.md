@@ -63,7 +63,7 @@ flutter_swipe_action_cell: ^1.1.1
 
 
 ## 最完整的例子（几乎涵盖所有常用api）:
-[完整效果预览 （西瓜视频）]()
+[完整效果预览 （西瓜视频）](https://v.ixigua.com/JAqWvNM/)
 你可以点击 [example page](https://pub.dev/packages/flutter_swipe_action_cell/example) 来看实现full example的完整代码
 
 
