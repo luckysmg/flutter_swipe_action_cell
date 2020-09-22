@@ -16,8 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: SwipeActionPage(
-      ),
+      home: SwipeActionPage(),
     );
   }
 }
@@ -33,7 +32,6 @@ class Model {
 }
 
 class SwipeActionPage extends StatefulWidget {
-
   @override
   _SwipeActionPageState createState() => _SwipeActionPageState();
 }
