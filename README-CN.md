@@ -459,7 +459,8 @@ Widget _item(int index) {
 #### SwipeActionCell：
 参数名 | 含义 | 是否必填
 -------- | --- |-----
-actions | 这个cell下的所有action|是
+actions | 这个cell下的所有右侧action|否
+leadingActions | 这个cell下的所有左侧action|否
 child| cell内容 | 是
 closeWhenScrolling | 滚动时关闭打开的cell|否（def=true）
 performsFirstActionWithFullSwipe|往左拉满时执行第一个action|否（def=false)
@@ -479,7 +480,6 @@ backgroundRadius|拉出的button的左上和左下圆角大小|否（def=0.0）
 forceAlignmentLeft|当只有一个按钮的时候，让内容持续贴在左边|否（def=false)
 widthSpace|这个button在正常展开状态下的宽度大小|否（def=80）
 content| 自定义的内容视图|否（如果你需要这个参数，请保持title和icon都为null
-
 
 
 #### SwipeNestedAction：
@@ -505,6 +505,7 @@ selectCellAt (indexPaths)|选中一些行
 deselectCellAt (indexPaths)|取消选择一些行
 selectAll (length)|全选（需要你提供你数据集合的长度
 deselectAll()|取消全选
+deleteCellAt(indexPaths)|删除所在index的cell（只是同步内部数据，并不会刷新UI）
 
 
 
