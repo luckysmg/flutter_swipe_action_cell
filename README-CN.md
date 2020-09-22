@@ -34,6 +34,10 @@ flutter_swipe_action_cell: ^1.1.2
 -------- |
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.gif?raw=true" width="300"  alt=""/>
 
+With leading Action and trailing action | 
+-------- |
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/> |
+
 
 编辑模式 (GIF 较大） | 
 -------- |
