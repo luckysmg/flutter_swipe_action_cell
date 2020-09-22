@@ -66,14 +66,15 @@ flutter_swipe_action_cell: ^1.1.2
 
 ### 4. 如果你开发中遇到bug请滚动到此页面最下面来确认 ！！
 
+<br/>
 
 ## 最完整的例子（几乎涵盖所有常用api）:
 [完整效果预览 （西瓜视频）](https://v.ixigua.com/JAqWvNM/)
 你可以点击 [example page](https://pub.dev/packages/flutter_swipe_action_cell/example) 来看实现full example的完整代码
 
+<br/>
 
-
-### 下面是例子
+### 下面分隔出来的小例子
 
  - ## Example 1:最简单的例子---删除
  
