@@ -12,7 +12,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 
 ##### install:
 ```yaml
-flutter_swipe_action_cell: ^1.1.0
+flutter_swipe_action_cell: ^1.1.1
 ```  
 
 ## 1.Preview：
@@ -39,8 +39,15 @@ Effect like WeChat(confirm delete) | Automatically adjust the button width
 
 Edit mode | 
 -------- |
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/> |   
- 
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/> |
+
+
+## Full example:
+[Preview (YouTobe video)](https://youtu.be/LWuHas8Zspw)
+
+And you can find full example code in [example page](https://pub.dev/packages/flutter_swipe_action_cell/example)
+
+
 
 ## Example
 

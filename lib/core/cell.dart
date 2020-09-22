@@ -11,6 +11,8 @@ import 'events.dart';
 import 'store.dart';
 import 'swipe_action_align_button_widget.dart';
 import 'swipe_action_button_widget.dart';
+import 'swipe_action_leading_align_button_widget.dart';
+import 'swipe_action_leading_button_widget.dart';
 import 'swipe_data.dart';
 
 ///
@@ -23,6 +25,8 @@ import 'swipe_data.dart';
 ///由于大部分应用的列表cell菜单都在右边，就做了一个从右边的拉出的，就不支持左边了（我懒^_^）
 class SwipeActionCell extends StatefulWidget {
   final List<SwipeAction> actions;
+
+  final List<SwipeAction> leadingActions;
 
   ///Your content view
   ///无需多言
@@ -70,6 +74,7 @@ class SwipeActionCell extends StatefulWidget {
     @required Key key,
     @required this.child,
     this.actions = defaultActions,
+    this.leadingActions = defaultActions,
     this.isDraggable = true,
     this.closeWhenScrolling = true,
     this.performsFirstActionWithFullSwipe = false,
@@ -112,9 +117,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
   double width;
 
   int actionsCount;
+  int leadingActionsCount;
 
   Offset currentOffset;
   double maxPullWidth;
+  double maxLeadingPullWidth;
 
   bool lockAnim;
   bool lastItemOut;
@@ -141,14 +148,23 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   static const double editingOffsetX = 60;
 
+  bool hasAction;
+  bool hasLeadingAction;
+  bool whenActionShowing;
+  bool whenLeadingActionShowing;
+
   @override
   void initState() {
     super.initState();
+    hasAction = widget.actions != defaultActions;
+    hasLeadingAction = widget.leadingActions != defaultActions;
     lastItemOut = false;
     lockAnim = false;
     ignorePointer = false;
     actionsCount = widget.actions.length;
+    leadingActionsCount = widget.leadingActions.length;
     maxPullWidth = _getMaxPullWidth();
+    maxLeadingPullWidth = _getLeadingMaxPullWidth();
     currentOffset = Offset.zero;
 
     controller = AnimationController(
@@ -217,6 +233,14 @@ class SwipeActionCellState extends State<SwipeActionCell>
     return sum;
   }
 
+  double _getLeadingMaxPullWidth() {
+    double sum = 0.0;
+    for (final action in widget.leadingActions) {
+      sum += action.widthSpace;
+    }
+    return sum;
+  }
+
   void _listenEvent() {
     selectedSubscription = SwipeActionStore.getInstance()
         .bus
@@ -236,7 +260,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
     otherCellOpenEventSubscription =
         SwipeActionStore.getInstance().bus.on<CellOpenEvent>().listen((event) {
-      if (event.key != widget.key && currentOffset.dx < 0.0) {
+      if (event.key != widget.key && currentOffset.dx != 0.0) {
         closeWithAnim();
       }
     });
@@ -283,8 +307,12 @@ class SwipeActionCellState extends State<SwipeActionCell>
   @override
   void didUpdateWidget(SwipeActionCell oldWidget) {
     super.didUpdateWidget(oldWidget);
+    hasAction = widget.actions != defaultActions;
+    hasLeadingAction = widget.leadingActions != defaultActions;
     actionsCount = widget.actions.length;
+    leadingActionsCount = widget.leadingActions.length;
     maxPullWidth = _getMaxPullWidth();
+    maxLeadingPullWidth = _getLeadingMaxPullWidth();
     if (widget.closeWhenScrolling != oldWidget.closeWhenScrolling) {
       _removeScrollListener();
       _addScrollListener();
@@ -337,14 +365,22 @@ class SwipeActionCellState extends State<SwipeActionCell>
     if (editing) return;
     SwipeActionStore.getInstance().bus?.fire(CellOpenEvent(key: widget.key));
 
-    if (widget.actions.first.nestedAction == null) return;
-    SwipeActionStore.getInstance()
-        .bus
-        ?.fire(CloseNestedActionEvent(key: widget.key));
+    if (widget.actions.first.nestedAction != null ||
+        widget.leadingActions.first.nestedAction != null) {
+      SwipeActionStore.getInstance()
+          .bus
+          ?.fire(CloseNestedActionEvent(key: widget.key));
+    }
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
     if (editing) return;
+    if (!hasLeadingAction && details.delta.dx >= 0 && currentOffset.dx >= 0.0) {
+      return;
+    }
+    if (!hasAction && details.delta.dx <= 0 && currentOffset.dx <= 0.0) {
+      return;
+    }
     if (widget.performsFirstActionWithFullSwipe) {
       _updateWithFullDraggableEffect(details);
     } else {
@@ -353,12 +389,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _updateWithFullDraggableEffect(DragUpdateDetails details) {
-    if (details.delta.dx >= 0 && currentOffset.dx >= 0.0) return;
     currentOffset += Offset(details.delta.dx, 0);
 
     ///set performsFirstActionWithFullSwipe
     if (widget.performsFirstActionWithFullSwipe) {
-      if (currentOffset.dx < -0.75 * width) {
+      if (currentOffset.dx.abs() > 0.75 * width) {
         if (!lastItemOut) {
           SwipeActionStore.getInstance()
               .bus
@@ -377,33 +412,53 @@ class SwipeActionCellState extends State<SwipeActionCell>
       }
     }
 
-    if (-currentOffset.dx >= width) {
-      currentOffset = Offset(-width, 0);
+    if (currentOffset.dx.abs() > width) {
+      if (currentOffset.dx < 0) {
+        currentOffset = Offset(-width, 0);
+      } else {
+        currentOffset = Offset(width, 0);
+      }
     }
 
-    ///Avoid layout jumping when scroll very fast
-    if (currentOffset.dx > 0) {
+    ///check offset position
+    if ((!hasLeadingAction && currentOffset.dx > 0.0) ||
+        (!hasAction && currentOffset.dx < 0.0)) {
       currentOffset = Offset.zero;
     }
+
     setState(() {});
   }
 
   void _updateWithNormalEffect(DragUpdateDetails details) {
-    if (details.delta.dx >= 0 && currentOffset.dx >= 0.0) return;
-
-    if (-currentOffset.dx > maxPullWidth && details.delta.dx < 0) {
-      currentOffset += Offset(details.delta.dx / 8, 0);
-    } else {
-      currentOffset += Offset(details.delta.dx, 0);
+    ///When currentOffset.dx == 0,need to exec this code to judge which direction
+    if (currentOffset.dx == 0.0) {
+      if (details.delta.dx < 0) {
+        whenActionShowing = true;
+      } else if (details.delta.dx > 0) {
+        whenLeadingActionShowing = true;
+      }
     }
 
-    if (currentOffset.dx < -maxPullWidth - 100) {
-      currentOffset = Offset(-maxPullWidth - 100, 0);
-    }
+    if (whenActionShowing) {
+      if (-currentOffset.dx > maxPullWidth && details.delta.dx < 0) {
+        currentOffset += Offset(details.delta.dx / 9, 0);
+      } else {
+        currentOffset += Offset(details.delta.dx, 0);
+      }
 
-    ///Avoid layout jumping when scroll very fast
-    if (currentOffset.dx > 0) {
-      currentOffset = Offset.zero;
+      if (currentOffset.dx < -maxPullWidth - 100) {
+        currentOffset = Offset(-maxPullWidth - 100, 0);
+      }
+    } else if (whenLeadingActionShowing) {
+      if (currentOffset.dx > maxLeadingPullWidth && details.delta.dx > 0) {
+        currentOffset += Offset(details.delta.dx / 9, 0);
+      } else {
+        currentOffset += Offset(details.delta.dx, 0);
+      }
+
+      if (currentOffset.dx > maxLeadingPullWidth + 100) {
+        currentOffset = Offset(maxLeadingPullWidth + 100, 0);
+      }
     }
 
     setState(() {});
@@ -411,6 +466,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   void _onHorizontalDragEnd(DragEndDetails details) async {
     if (editing) return;
+
     if (lastItemOut && widget.performsFirstActionWithFullSwipe) {
       CompletionHandler completionHandler = (delete) async {
         if (delete) {
@@ -431,23 +487,45 @@ class SwipeActionCellState extends State<SwipeActionCell>
           closeWithAnim();
         }
       };
-      await widget.actions[0].onTap?.call(completionHandler);
+
+      if (whenActionShowing) {
+        await widget.actions[0].onTap?.call(completionHandler);
+      } else if (whenLeadingActionShowing) {
+        await widget.leadingActions[0].onTap?.call(completionHandler);
+      }
     } else {
+      ///normal dragging update
       if (details.velocity.pixelsPerSecond.dx < 0) {
-        _openWithAnim();
+        if (!whenLeadingActionShowing && hasAction) {
+          _openWithAnim(trailing: true);
+        } else {
+          closeWithAnim();
+        }
         return;
       } else if (details.velocity.pixelsPerSecond.dx > 0) {
-        closeWithAnim();
+        if (!whenActionShowing && hasLeadingAction) {
+          _openWithAnim(trailing: false);
+        } else {
+          closeWithAnim();
+        }
         return;
       }
 
-      if (-currentOffset.dx < maxPullWidth / 4) {
-        closeWithAnim();
-      } else {
-        _openWithAnim();
+      if (whenActionShowing) {
+        if (-currentOffset.dx < maxPullWidth / 4) {
+          closeWithAnim();
+        } else {
+          _openWithAnim(trailing: true);
+        }
+      } else if (whenLeadingActionShowing) {
+        if (currentOffset.dx < maxLeadingPullWidth / 4) {
+          closeWithAnim();
+        } else {
+          _openWithAnim(trailing: false);
+        }
       }
 
-      if (widget.actions.length == 1) {
+      if (widget.actions.length == 1 || widget.leadingActions.length == 1) {
         SwipeActionStore.getInstance()
             .bus
             .fire(PullLastButtonEvent(isPullingOut: false));
@@ -456,15 +534,16 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   ///When nestedAction is open ,adjust currentOffset if nestedWidth > currentOffset
-  void adjustOffset({double offsetX, Curve curve}) {
+  void adjustOffset({double offsetX, Curve curve, bool trailing}) {
     controller.stop();
     final adjustOffsetAnimController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 150));
-    final curve = CurvedAnimation(
-        parent: adjustOffsetAnimController, curve: Curves.linear);
+    final curveAnim =
+        CurvedAnimation(parent: adjustOffsetAnimController, curve: curve);
 
-    animation =
-        Tween<double>(begin: currentOffset.dx, end: -offsetX).animate(curve)
+    final endOffset = trailing ? -offsetX : offsetX;
+    animation = Tween<double>(begin: currentOffset.dx, end: endOffset)
+        .animate(curveAnim)
           ..addListener(() {
             if (lockAnim) return;
             this.currentOffset = Offset(animation.value, 0);
@@ -475,10 +554,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
     });
   }
 
-  void _openWithAnim() {
+  void _openWithAnim({@required bool trailing}) {
     _resetAnimValue();
-    final double startOffset = currentOffset.dx;
-    animation = Tween<double>(begin: startOffset, end: -maxPullWidth)
+    animation = Tween<double>(
+            begin: currentOffset.dx,
+            end: trailing ? -maxPullWidth : maxLeadingPullWidth)
         .animate(curvedAnim)
           ..addListener(() {
             if (lockAnim) return;
@@ -511,7 +591,17 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void deleteWithAnim() async {
-    animation = Tween<double>(begin: 1.0, end: 0.01).animate(deleteCurvedAnim);
+    animation = Tween<double>(begin: 1.0, end: 0.01).animate(deleteCurvedAnim)
+      ..addListener(() {
+        ///When quickly click the delete button,the animation will not be seen
+        ///so the code below is to solve this problem....
+        if (whenActionShowing) {
+          currentOffset = Offset(-maxPullWidth, 0);
+        } else if (whenLeadingActionShowing) {
+          currentOffset = Offset(maxLeadingPullWidth, 0);
+        }
+      });
+
     deleteController.reverse().whenCompleteOrCancel(() {
       SwipeActionStore.getInstance()
           .bus
@@ -528,6 +618,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
     } else {
       selected = false;
     }
+
+    whenActionShowing = currentOffset.dx < 0;
+    whenLeadingActionShowing = currentOffset.dx > 0;
 
     return IgnorePointer(
       ignoring: ignorePointer,
@@ -593,11 +686,16 @@ class SwipeActionCellState extends State<SwipeActionCell>
                         ),
                       ),
                     ),
-                    currentOffset.dx == 0 ||
+                    currentOffset.dx == 0.0 ||
                             editController.isAnimating ||
                             editing
                         ? const SizedBox()
                         : _buildActionButtons(),
+                    currentOffset.dx == 0.0 ||
+                            editController.isAnimating ||
+                            editing
+                        ? const SizedBox()
+                        : _buildLeadingActionButtons(),
                   ],
                 );
               },
@@ -615,7 +713,52 @@ class SwipeActionCellState extends State<SwipeActionCell>
     );
   }
 
+  Widget _buildLeadingActionButtons() {
+    if (currentOffset.dx < 0) {
+      return const SizedBox();
+    }
+    final List<Widget> actionButtons =
+        List.generate(leadingActionsCount, (index) {
+      final actualIndex = leadingActionsCount - 1 - index;
+      if (widget.leadingActions.length == 1 &&
+          !widget.leadingActions[0].forceAlignmentLeft &&
+          widget.performsFirstActionWithFullSwipe) {
+        return SwipeActionLeadingAlignButtonWidget(
+          actionIndex: actualIndex,
+        );
+      } else {
+        return SwipeActionLeadingButtonWidget(
+          actionIndex: actualIndex,
+        );
+      }
+    });
+
+    return SwipeData(
+      willPull: lastItemOut && widget.performsFirstActionWithFullSwipe,
+      firstActionWillCoverAllSpaceOnDeleting:
+          widget.firstActionWillCoverAllSpaceOnDeleting,
+      parentKey: widget.key,
+      totalActionWidth: maxLeadingPullWidth,
+      actions: widget.leadingActions,
+      contentWidth: width,
+      contentHeight: height,
+      currentOffset: currentOffset.dx,
+      fullDraggable: widget.performsFirstActionWithFullSwipe,
+      parentState: this,
+      child: SizedBox(
+        height: height,
+        width: double.infinity,
+        child: Stack(
+          children: actionButtons,
+        ),
+      ),
+    );
+  }
+
   Widget _buildActionButtons() {
+    if (currentOffset.dx > 0) {
+      return const SizedBox();
+    }
     final List<Widget> actionButtons =
         List.generate(widget.actions.length, (index) {
       final actualIndex = actionsCount - 1 - index;
@@ -744,7 +887,9 @@ class SwipeAction {
   });
 }
 
-const List<SwipeAction> defaultActions = [const SwipeAction(onTap: null)];
+const List<SwipeAction> defaultActions = [
+  const SwipeAction(title: " ", onTap: null)
+];
 
 class _ContentWidget extends StatefulWidget {
   final Widget child;

@@ -4,15 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'cell.dart';
 import 'events.dart';
 import 'store.dart';
-import 'cell.dart';
 import 'swipe_data.dart';
 
-class SwipeActionAlignButtonWidget extends StatefulWidget {
+class SwipeActionLeadingAlignButtonWidget extends StatefulWidget {
   final int actionIndex;
 
-  const SwipeActionAlignButtonWidget({Key key, this.actionIndex})
+  const SwipeActionLeadingAlignButtonWidget({Key key, this.actionIndex})
       : super(key: key);
 
   @override
@@ -21,7 +21,8 @@ class SwipeActionAlignButtonWidget extends StatefulWidget {
 }
 
 class _SwipeActionAlignButtonWidgetState
-    extends State<SwipeActionAlignButtonWidget> with TickerProviderStateMixin {
+    extends State<SwipeActionLeadingAlignButtonWidget>
+    with TickerProviderStateMixin {
   double offsetX;
   Alignment alignment;
   CompletionHandler handler;
@@ -55,7 +56,7 @@ class _SwipeActionAlignButtonWidgetState
     lockAnim = false;
     whenNestedActionShowing = false;
     whenFirstAction = widget.actionIndex == 0;
-    alignment = Alignment.centerRight;
+    alignment = Alignment.centerLeft;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (action.forceAlignmentLeft) {
         alignment = Alignment.centerLeft;
@@ -70,7 +71,7 @@ class _SwipeActionAlignButtonWidgetState
   void _pullActionButton(bool isPullingOut) {
     _resetAnimationController(alignController);
     if (isPullingOut) {
-      var tween = AlignmentTween(begin: alignment, end: Alignment.centerLeft)
+      var tween = AlignmentTween(begin: alignment, end: Alignment.centerRight)
           .animate(alignCurve);
       tween.addListener(() {
         if (lockAnim) return;
@@ -80,7 +81,7 @@ class _SwipeActionAlignButtonWidgetState
 
       alignController.forward();
     } else {
-      var tween = AlignmentTween(begin: alignment, end: Alignment.centerRight)
+      var tween = AlignmentTween(begin: alignment, end: Alignment.centerLeft)
           .animate(alignCurve);
       tween.addListener(() {
         if (lockAnim) return;
@@ -128,7 +129,7 @@ class _SwipeActionAlignButtonWidgetState
 
   void _resetNestedAction() {
     whenNestedActionShowing = false;
-    alignment = Alignment.centerRight;
+    alignment = Alignment.centerLeft;
     setState(() {});
   }
 
@@ -162,7 +163,7 @@ class _SwipeActionAlignButtonWidgetState
   void _animToCoverCell() {
     whenDeleting = true;
     _resetAnimationController(offsetController);
-    animation = Tween<double>(begin: offsetX, end: -data.contentWidth)
+    animation = Tween<double>(begin: offsetX, end: data.contentWidth)
         .animate(offsetCurve)
           ..addListener(() {
             if (lockAnim) return;
@@ -193,14 +194,14 @@ class _SwipeActionAlignButtonWidgetState
       data.parentState.adjustOffset(
           offsetX: action.nestedAction.nestedWidth,
           curve: action.nestedAction.curve,
-          trailing: true);
+          trailing: false);
     }
 
     double endOffset;
     if (action.nestedAction?.nestedWidth != null) {
-      endOffset = -action.nestedAction.nestedWidth;
+      endOffset = action.nestedAction.nestedWidth;
     } else {
-      endOffset = -data.totalActionWidth;
+      endOffset = data.totalActionWidth;
     }
 
     animation = Tween<double>(begin: offsetX, end: endOffset)
@@ -242,20 +243,20 @@ class _SwipeActionAlignButtonWidgetState
         action.onTap?.call(handler);
       },
       child: Transform.translate(
-        offset: Offset(data.contentWidth + offsetX, 0),
+        offset: Offset(-data.contentWidth + offsetX, 0),
         child: DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(action.backgroundRadius),
-                bottomLeft: Radius.circular(action.backgroundRadius)),
+                topRight: Radius.circular(action.backgroundRadius),
+                bottomRight: Radius.circular(action.backgroundRadius)),
             color: action.color,
           ),
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.centerRight,
             child: Container(
               padding: const EdgeInsets.only(left: 16, right: 16),
               alignment: alignment,
-              width: -offsetX,
+              width: offsetX,
               child: _buildButtonContent(shouldShowNestedActionInfo),
             ),
           ),

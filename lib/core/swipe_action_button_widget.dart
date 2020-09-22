@@ -208,7 +208,8 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
         action.nestedAction.nestedWidth > data.totalActionWidth) {
       data.parentState.adjustOffset(
           offsetX: action.nestedAction.nestedWidth,
-          curve: action.nestedAction.curve);
+          curve: action.nestedAction.curve,
+          trailing: true);
     }
 
     double endOffset;

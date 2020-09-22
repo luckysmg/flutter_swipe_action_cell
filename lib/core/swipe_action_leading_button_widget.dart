@@ -4,24 +4,28 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'cell.dart';
 import 'events.dart';
 import 'store.dart';
-import 'cell.dart';
 import 'swipe_data.dart';
 
-class SwipeActionAlignButtonWidget extends StatefulWidget {
+class SwipeActionLeadingButtonWidget extends StatefulWidget {
   final int actionIndex;
 
-  const SwipeActionAlignButtonWidget({Key key, this.actionIndex})
-      : super(key: key);
+  const SwipeActionLeadingButtonWidget({
+    Key key,
+    this.actionIndex,
+  }) : super(key: key);
 
   @override
-  _SwipeActionAlignButtonWidgetState createState() =>
-      _SwipeActionAlignButtonWidgetState();
+  _SwipeActionButtonWidgetState createState() {
+    return _SwipeActionButtonWidgetState();
+  }
 }
 
-class _SwipeActionAlignButtonWidgetState
-    extends State<SwipeActionAlignButtonWidget> with TickerProviderStateMixin {
+class _SwipeActionButtonWidgetState
+    extends State<SwipeActionLeadingButtonWidget>
+    with TickerProviderStateMixin {
   double offsetX;
   Alignment alignment;
   CompletionHandler handler;
@@ -32,17 +36,17 @@ class _SwipeActionAlignButtonWidgetState
 
   bool whenNestedActionShowing;
   bool whenFirstAction;
+  bool whenActiveToOffset;
+  bool whenPullingOut;
   bool whenDeleting;
 
   SwipeData data;
   SwipeAction action;
 
   AnimationController offsetController;
-  AnimationController widthFillActionContentController;
-  AnimationController alignController;
-  Animation<double> alignCurve;
-  Animation<double> offsetCurve;
-  Animation<double> widthFillActionContentCurve;
+  AnimationController offsetFillActionContentController;
+  Animation<double> widthPullCurve;
+  Animation<double> offsetFillActionContentCurve;
 
   Animation animation;
 
@@ -52,14 +56,13 @@ class _SwipeActionAlignButtonWidgetState
   void initState() {
     super.initState();
     whenDeleting = false;
+    whenActiveToOffset = true;
     lockAnim = false;
+    whenPullingOut = false;
     whenNestedActionShowing = false;
     whenFirstAction = widget.actionIndex == 0;
     alignment = Alignment.centerRight;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (action.forceAlignmentLeft) {
-        alignment = Alignment.centerLeft;
-      }
       _initAnim();
       _initCompletionHandler();
     });
@@ -68,26 +71,38 @@ class _SwipeActionAlignButtonWidgetState
   }
 
   void _pullActionButton(bool isPullingOut) {
-    _resetAnimationController(alignController);
+    _resetAnimationController(offsetController);
+    whenActiveToOffset = false;
     if (isPullingOut) {
-      var tween = AlignmentTween(begin: alignment, end: Alignment.centerLeft)
-          .animate(alignCurve);
-      tween.addListener(() {
-        if (lockAnim) return;
-        alignment = tween.value;
-        setState(() {});
+      animation = Tween<double>(begin: offsetX, end: data.currentOffset)
+          .animate(widthPullCurve)
+            ..addListener(() {
+              if (lockAnim) return;
+              offsetX = animation.value;
+              setState(() {});
+            });
+      offsetController.forward().whenComplete(() {
+        whenActiveToOffset = true;
+        whenPullingOut = true;
       });
-
-      alignController.forward();
     } else {
-      var tween = AlignmentTween(begin: alignment, end: Alignment.centerRight)
-          .animate(alignCurve);
-      tween.addListener(() {
-        if (lockAnim) return;
-        alignment = tween.value;
-        setState(() {});
+      final factor = data.currentOffset / data.totalActionWidth;
+      double sumWidth = 0.0;
+      for (int i = 0; i <= widget.actionIndex; i++) {
+        sumWidth += data.actions[i].widthSpace;
+      }
+      final currentOffset = sumWidth * factor;
+      animation = Tween<double>(begin: data.currentOffset, end: currentOffset)
+          .animate(widthPullCurve)
+            ..addListener(() {
+              if (lockAnim) return;
+              offsetX = animation.value;
+              setState(() {});
+            });
+      offsetController.forward().whenComplete(() {
+        whenActiveToOffset = true;
+        whenPullingOut = false;
       });
-      alignController.forward();
     }
   }
 
@@ -127,6 +142,7 @@ class _SwipeActionAlignButtonWidgetState
   }
 
   void _resetNestedAction() {
+    whenActiveToOffset = true;
     whenNestedActionShowing = false;
     alignment = Alignment.centerRight;
     setState(() {});
@@ -162,8 +178,9 @@ class _SwipeActionAlignButtonWidgetState
   void _animToCoverCell() {
     whenDeleting = true;
     _resetAnimationController(offsetController);
-    animation = Tween<double>(begin: offsetX, end: -data.contentWidth)
-        .animate(offsetCurve)
+    whenActiveToOffset = false;
+    animation = Tween<double>(begin: offsetX, end: data.contentWidth)
+        .animate(widthPullCurve)
           ..addListener(() {
             if (lockAnim) return;
             offsetX = animation.value;
@@ -184,7 +201,7 @@ class _SwipeActionAlignButtonWidgetState
       }
     }
 
-    _resetAnimationController(widthFillActionContentController);
+    _resetAnimationController(offsetFillActionContentController);
     whenNestedActionShowing = true;
     alignment = Alignment.center;
 
@@ -193,39 +210,49 @@ class _SwipeActionAlignButtonWidgetState
       data.parentState.adjustOffset(
           offsetX: action.nestedAction.nestedWidth,
           curve: action.nestedAction.curve,
-          trailing: true);
+          trailing: false);
     }
 
     double endOffset;
     if (action.nestedAction?.nestedWidth != null) {
-      endOffset = -action.nestedAction.nestedWidth;
+      endOffset = action.nestedAction.nestedWidth;
     } else {
-      endOffset = -data.totalActionWidth;
+      endOffset = data.totalActionWidth;
     }
 
     animation = Tween<double>(begin: offsetX, end: endOffset)
-        .animate(widthFillActionContentCurve)
+        .animate(offsetFillActionContentCurve)
           ..addListener(() {
             if (lockAnim) return;
             offsetX = animation.value;
-            alignment = Alignment.lerp(alignment, Alignment.center,
-                widthFillActionContentController.value);
             setState(() {});
           });
-    widthFillActionContentController.forward();
+    offsetFillActionContentController.forward();
   }
 
   @override
   Widget build(BuildContext context) {
     data = SwipeData.of(context);
     action = data.actions[widget.actionIndex];
+    final bool willPull = data.willPull && whenFirstAction;
 
     final bool shouldShowNestedActionInfo = widget.actionIndex == 0 &&
         action.nestedAction != null &&
         whenNestedActionShowing;
 
-    if (!whenNestedActionShowing && !whenDeleting) {
-      offsetX = data.currentOffset;
+    if (whenActiveToOffset && !whenNestedActionShowing) {
+      ///compute offset
+      final currentPullOffset = data.currentOffset;
+      if (willPull) {
+        offsetX = data.currentOffset;
+      } else {
+        final factor = currentPullOffset / data.totalActionWidth;
+        double sumWidth = 0.0;
+        for (int i = 0; i <= widget.actionIndex; i++) {
+          sumWidth += data.actions[i].widthSpace;
+        }
+        offsetX = sumWidth * factor;
+      }
     }
 
     return GestureDetector(
@@ -242,20 +269,22 @@ class _SwipeActionAlignButtonWidgetState
         action.onTap?.call(handler);
       },
       child: Transform.translate(
-        offset: Offset(data.contentWidth + offsetX, 0),
+        offset: Offset(-data.contentWidth + offsetX, 0),
         child: DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(action.backgroundRadius),
-                bottomLeft: Radius.circular(action.backgroundRadius)),
+                topRight: Radius.circular(action.backgroundRadius),
+                bottomRight: Radius.circular(action.backgroundRadius)),
             color: action.color,
           ),
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.centerRight,
             child: Container(
-              padding: const EdgeInsets.only(left: 16, right: 16),
+              padding: alignment == Alignment.center
+                  ? const EdgeInsets.only()
+                  : EdgeInsets.only(right: action.leftPadding ?? 16),
               alignment: alignment,
-              width: -offsetX,
+              width: alignment == Alignment.center ? offsetX : null,
               child: _buildButtonContent(shouldShowNestedActionInfo),
             ),
           ),
@@ -310,8 +339,7 @@ class _SwipeActionAlignButtonWidgetState
   @override
   void dispose() {
     offsetController?.dispose();
-    alignController?.dispose();
-    widthFillActionContentController?.dispose();
+    offsetFillActionContentController?.dispose();
     pullLastButtonSubscription?.cancel();
     pullLastButtonToCoverCellEventSubscription?.cancel();
     closeNestedActionEventSubscription?.cancel();
@@ -321,20 +349,15 @@ class _SwipeActionAlignButtonWidgetState
   void _initAnim() {
     offsetController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 60));
-    alignController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
 
-    alignCurve =
-        CurvedAnimation(parent: alignController, curve: Curves.easeOutCirc);
-
-    offsetCurve =
+    widthPullCurve =
         CurvedAnimation(parent: offsetController, curve: Curves.easeInToLinear);
 
     if (widget.actionIndex == 0 && action.nestedAction != null) {
-      widthFillActionContentController = AnimationController(
+      offsetFillActionContentController = AnimationController(
           vsync: this, duration: const Duration(milliseconds: 350));
-      widthFillActionContentCurve = CurvedAnimation(
-          parent: widthFillActionContentController,
+      offsetFillActionContentCurve = CurvedAnimation(
+          parent: offsetFillActionContentController,
           curve: action.nestedAction.curve);
     }
   }

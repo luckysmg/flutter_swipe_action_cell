@@ -11,8 +11,9 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.1.0
+flutter_swipe_action_cell: ^1.1.1
 ```
+
 
 ### 效果预览（gif可能比较大，稍微等一下）：
 
@@ -50,14 +51,22 @@ flutter_swipe_action_cell: ^1.1.0
 - [x] 支持仿iOS原生列表编辑模式交互，多选，全选，取消全选，获取选中项等多种操作
 - [x] 支持只使用编辑模式，通过设置取消侧滑参数，防止和TabView或PageView手势冲突
 
- 
 
-###  2.下一步可能要实现的内容 (不保证一定实现)：
+###  2.已经在版本中实现但是未稳定的内容： 
+- [x] 支持左边拉出的按钮 -> v1.1.1 (使用cell的leadingActions即可配置左边的拉出按钮）
 
-- [ ] 支持左边拉出的按钮  >> (此项正尝试开发中）
+###  3.下一步可能要实现的内容 (不保证一定实现)：
 - [ ] 拉出时多个按钮提供不同的offset计算方式，不同的叠放方式
 
-### 3. 如果你开发中遇到bug请滚动到此页面最下面来确认 ！！
+
+### 4. 如果你开发中遇到bug请滚动到此页面最下面来确认 ！！
+
+
+## 最完整的例子（几乎涵盖所有常用api）:
+[完整效果预览 （西瓜视频）]()
+你可以点击 [example page](https://pub.dev/packages/flutter_swipe_action_cell/example) 来看实现full example的完整代码
+
+
 
 ### 下面是例子
 
