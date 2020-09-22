@@ -11,7 +11,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.1.1
+flutter_swipe_action_cell: ^1.1.2
 ```
 
 
@@ -53,7 +53,7 @@ flutter_swipe_action_cell: ^1.1.1
 
 
 ###  2.已经在版本中实现但是未稳定的内容： 
-- [x] 支持左边拉出的按钮 -> v1.1.1 (使用cell的leadingActions即可配置左边的拉出按钮）
+- [x] 支持左边拉出的按钮 -> v1.1.2 (使用cell的leadingActions即可配置左边的拉出按钮）
 
 ###  3.下一步可能要实现的内容 (不保证一定实现)：
 - [ ] 拉出时多个按钮提供不同的offset计算方式，不同的叠放方式
