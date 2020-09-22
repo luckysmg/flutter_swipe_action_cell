@@ -128,12 +128,10 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
         SwipeAction(
             title: "action3", color: Colors.orange, onTap: (handler) {}),
       ],
-      child: SizedBox(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Text("This is index of ${list[index]}",
-              style: TextStyle(fontSize: 25)),
-        ),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Text("This is index of ${list[index]}",
+            style: TextStyle(fontSize: 25)),
       ),
     );
   }
