@@ -38,7 +38,7 @@ Effect like WeChat(confirm delete) | Automatically adjust the button width
 
 With leading Action and trailing action | 
 -------- |
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/> |
+<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/10.GIF?raw=true" width="300"  alt=""/> |
 
 Edit mode | 
 -------- |
