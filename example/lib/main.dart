@@ -16,40 +16,86 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Page1(
-        title: "haha",
+      home: SwipeActionPage(
       ),
     );
   }
 }
 
-class Page1 extends StatefulWidget {
-  Page1({Key key, this.title}) : super(key: key);
-  final String title;
+class Model {
+  String id = UniqueKey().toString();
+  int index;
 
   @override
-  _Page1State createState() => _Page1State();
+  String toString() {
+    return index.toString();
+  }
 }
 
-class _Page1State extends State<Page1> {
-  List list;
+class SwipeActionPage extends StatefulWidget {
+
+  @override
+  _SwipeActionPageState createState() => _SwipeActionPageState();
+}
+
+class _SwipeActionPageState extends State<SwipeActionPage> {
+  List<Model> list = List.generate(15, (index) {
+    return Model()..index = index;
+  });
+
+  SwipeActionEditController controller;
 
   @override
   void initState() {
     super.initState();
-    list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    controller = SwipeActionEditController();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+      floatingActionButton: CupertinoButton.filled(
+          child: Text('switch'),
+          onPressed: () {
+            controller.toggleEditingMode();
+          }),
+      appBar: CupertinoNavigationBar(
+        leading: CupertinoButton.filled(
+            padding: EdgeInsets.only(),
+            minSize: 0,
+            child: Text('delete cells', style: TextStyle(color: Colors.white)),
+            onPressed: () {
+              ///获取选取的索引集合
+              List<int> selectedIndexes = controller.getSelectedIndexPaths();
+
+              List<String> idList = [];
+              selectedIndexes.forEach((element) {
+                idList.add(list[element].id);
+              });
+
+              ///遍历id集合，并且在原来的list中删除这些id所对应的数据
+              idList.forEach((itemId) {
+                list.removeWhere((element) {
+                  return element.id == itemId;
+                });
+              });
+
+              ///更新内部数据，这句话一定要写哦
+              controller.deleteCellAt(indexPaths: selectedIndexes);
+              setState(() {});
+            }),
+        trailing: CupertinoButton.filled(
+            minSize: 0,
+            padding: EdgeInsets.all(10),
+            child: Text('select all'),
+            onPressed: () {
+              controller.selectAll(dataLength: list.length);
+            }),
       ),
       body: ListView.builder(
         physics: BouncingScrollPhysics(),
         itemCount: list.length,
-        itemBuilder: (c, index) {
+        itemBuilder: (context, index) {
           return _item(index);
         },
       ),
@@ -58,50 +104,38 @@ class _Page1State extends State<Page1> {
 
   Widget _item(int index) {
     return SwipeActionCell(
-      ///this key is necessary
-      key: ObjectKey(list[index]),
-
-      ///this is the same as iOS native
+      controller: controller,
+      index: index,
+      key: ValueKey(list[index]),
       performsFirstActionWithFullSwipe: true,
-      actions: <SwipeAction>[
+      actions: [
         SwipeAction(
             title: "delete",
-            onTap: (CompletionHandler handler) async {
+            nestedAction: SwipeNestedAction(title: "confirm"),
+            onTap: (handler) async {
               await handler(true);
               list.removeAt(index);
               setState(() {});
-            },
-            color: Colors.red),
-        SwipeAction(
-            widthSpace: 120,
-            title: "popAlert",
-            onTap: (CompletionHandler handler) async {
-              ///false means that you just do nothing,it will close
-              /// action buttons by default
-              handler(false);
-              showCupertinoDialog(
-                  context: context,
-                  builder: (c) {
-                    return CupertinoAlertDialog(
-                      title: Text('ok'),
-                      actions: <Widget>[
-                        CupertinoDialogAction(
-                          child: Text('confirm'),
-                          isDestructiveAction: true,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                    );
-                  });
-            },
-            color: Colors.orange),
+            }),
+        SwipeAction(title: "action2", color: Colors.grey, onTap: (handler) {}),
       ],
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text("this is index of ${list[index]}",
-            style: TextStyle(fontSize: 40)),
+      leadingActions: [
+        SwipeAction(
+            title: "delete",
+            onTap: (handler) async {
+              await handler(true);
+              list.removeAt(index);
+              setState(() {});
+            }),
+        SwipeAction(
+            title: "action3", color: Colors.orange, onTap: (handler) {}),
+      ],
+      child: SizedBox(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text("This is index of ${list[index]}",
+              style: TextStyle(fontSize: 25)),
+        ),
       ),
     );
   }
