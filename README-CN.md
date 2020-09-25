@@ -11,9 +11,8 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.1.2
+flutter_swipe_action_cell: ^1.2.0
 ```
-
 
 ### 效果预览（gif可能比较大，稍微等一下）：
 
@@ -65,6 +64,17 @@ flutter_swipe_action_cell: ^1.1.2
 
 
 ### 4. 如果你开发中遇到bug请滚动到此页面最下面来确认 ！！
+
+<br/>
+
+### 注意！！如果你正在使用1.2.0以下的版本并且要升级到1.2.0或者以上版本，请注意变量更名以及类名更名
+ 
+ 涉及的类| 1.2.0之前的命名 | 现在的命名| 
+ -------- |  -------- | --------
+  SwipeActionCell | actions | trailingActions |
+  SwipeActionCell | (类名） SwipeActionEditController| (类名) SwipeActionController |
+  SwipeAction | leftPadding | paddingToBoundary
+  SwipeAction | forceAlignmentLeft | forceAlignmentToBoundary
 
 <br/>
 

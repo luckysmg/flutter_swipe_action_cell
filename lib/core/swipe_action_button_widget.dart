@@ -281,7 +281,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
             child: Container(
               padding: alignment == Alignment.center
                   ? const EdgeInsets.only()
-                  : EdgeInsets.only(left: action.leftPadding ?? 16),
+                  : EdgeInsets.only(left: action.paddingToBoundary ?? 16),
               alignment: alignment,
               width: alignment == Alignment.center ? -offsetX : null,
               child: _buildButtonContent(shouldShowNestedActionInfo),

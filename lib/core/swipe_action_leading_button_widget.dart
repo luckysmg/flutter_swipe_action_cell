@@ -282,7 +282,7 @@ class _SwipeActionButtonWidgetState
             child: Container(
               padding: alignment == Alignment.center
                   ? const EdgeInsets.only()
-                  : EdgeInsets.only(right: action.leftPadding ?? 16),
+                  : EdgeInsets.only(right: action.paddingToBoundary ?? 16),
               alignment: alignment,
               width: alignment == Alignment.center ? offsetX : null,
               child: _buildButtonContent(shouldShowNestedActionInfo),

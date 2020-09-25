@@ -57,7 +57,7 @@ class _SwipeActionAlignButtonWidgetState
     whenFirstAction = widget.actionIndex == 0;
     alignment = Alignment.centerRight;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (action.forceAlignmentLeft) {
+      if (action.forceAlignmentToBoundary) {
         alignment = Alignment.centerLeft;
       }
       _initAnim();

@@ -6,8 +6,8 @@ import 'store.dart';
 
 ///An controller to control the cell's behavior
 ///一个可以控制cell行为的控制器
-class SwipeActionEditController {
-  Map<int, bool> selectedMap = {};
+class SwipeActionController {
+  Set selectedSet = Set();
 
   /// edit mode or not
   ///获取是否正处于编辑模式
@@ -38,13 +38,13 @@ class SwipeActionEditController {
 
   @Deprecated('Use getSelectedIndexPaths()')
   List<int> getSelectedIndexes() {
-    return List.from(selectedMap.keys);
+    return List.from(selectedSet);
   }
 
   ///Get the list of selected cell 's index
   ///拿到选择的cell的索引集合
   List<int> getSelectedIndexPaths() {
-    return List.from(selectedMap.keys);
+    return List.from(selectedSet);
   }
 
   ///This method is called of sync internal data model.
@@ -53,7 +53,7 @@ class SwipeActionEditController {
   ///去调用 [setState] 来更新你自己的数据源
   void deleteCellAt({@required List<int> indexPaths}) {
     indexPaths.forEach((element) {
-      selectedMap.remove(element);
+      selectedSet.remove(element);
     });
   }
 
@@ -72,7 +72,7 @@ class SwipeActionEditController {
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
     indexPaths.forEach((element) {
-      selectedMap.addAll({element: true});
+      selectedSet.add(element);
     });
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: true));
   }
@@ -86,7 +86,7 @@ class SwipeActionEditController {
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
 
     indexPaths.forEach((element) {
-      selectedMap.remove(element);
+      selectedSet.remove(element);
     });
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false));
   }
@@ -98,9 +98,9 @@ class SwipeActionEditController {
         editing,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
-    for (int i = 0; i < dataLength; i++) {
-      selectedMap.addAll({i: true});
-    }
+
+    List<int> selectedList = List.generate(dataLength, (index) => index);
+    selectedSet.addAll(selectedList);
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: true));
   }
 
@@ -111,7 +111,7 @@ class SwipeActionEditController {
         editing,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
-    selectedMap.clear();
+    selectedSet.clear();
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false));
   }
 

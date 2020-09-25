@@ -20,11 +20,8 @@ import 'swipe_data.dart';
 /// 2020 年 7月13日
 ///
 
-///Because the cell actions buttons are always on the right side.
-///So this widget only supports to pull actions from the right side
-///由于大部分应用的列表cell菜单都在右边，就做了一个从右边的拉出的，就不支持左边了（我懒^_^）
 class SwipeActionCell extends StatefulWidget {
-  final List<SwipeAction> actions;
+  final List<SwipeAction> trailingActions;
 
   final List<SwipeAction> leadingActions;
 
@@ -52,7 +49,7 @@ class SwipeActionCell extends StatefulWidget {
 
   ///The controller to control edit mode
   ///控制器 后续或将更名为 SwipeActionController
-  final SwipeActionEditController controller;
+  final SwipeActionController controller;
 
   ///The identifier of edit mode
   ///如果你想用编辑模式，这个参数必传!!! 它的值就是你列表的itemBuilder中的index，直接传进来即可
@@ -73,7 +70,7 @@ class SwipeActionCell extends StatefulWidget {
   const SwipeActionCell({
     @required Key key,
     @required this.child,
-    this.actions = defaultActions,
+    this.trailingActions = defaultActions,
     this.leadingActions = defaultActions,
     this.isDraggable = true,
     this.closeWhenScrolling = true,
@@ -156,14 +153,14 @@ class SwipeActionCellState extends State<SwipeActionCell>
   @override
   void initState() {
     super.initState();
-    hasAction = widget.actions != defaultActions;
+    hasAction = widget.trailingActions != defaultActions;
     hasLeadingAction = widget.leadingActions != defaultActions;
     lastItemOut = false;
     lockAnim = false;
     ignorePointer = false;
-    actionsCount = widget.actions.length;
+    actionsCount = widget.trailingActions.length;
     leadingActionsCount = widget.leadingActions.length;
-    maxPullWidth = _getMaxPullWidth();
+    maxPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
     currentOffset = Offset.zero;
 
@@ -211,7 +208,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     lockAnim = true;
     editController.value = 0.0;
     lockAnim = false;
-    widget.controller.selectedMap.remove(widget.index);
+    widget.controller.selectedSet.remove(widget.index);
     animation =
         Tween<double>(begin: editingOffsetX, end: 0).animate(editCurvedAnim)
           ..addListener(() {
@@ -225,9 +222,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
     });
   }
 
-  double _getMaxPullWidth() {
+  double _getTrailingMaxPullWidth() {
     double sum = 0.0;
-    for (final action in widget.actions) {
+    for (final action in widget.trailingActions) {
       sum += action.widthSpace;
     }
     return sum;
@@ -249,7 +246,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
       assert(widget.controller != null && widget.index != null);
 
       if (event.selected &&
-          widget.controller.selectedMap.containsKey(widget.index)) {
+          widget.controller.selectedSet.contains(widget.index)) {
         setState(() {});
       } else if (!event.selected) {
         if (selected) {
@@ -307,11 +304,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
   @override
   void didUpdateWidget(SwipeActionCell oldWidget) {
     super.didUpdateWidget(oldWidget);
-    hasAction = widget.actions != defaultActions;
+    hasAction = widget.trailingActions != defaultActions;
     hasLeadingAction = widget.leadingActions != defaultActions;
-    actionsCount = widget.actions.length;
+    actionsCount = widget.trailingActions.length;
     leadingActionsCount = widget.leadingActions.length;
-    maxPullWidth = _getMaxPullWidth();
+    maxPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
     if (widget.closeWhenScrolling != oldWidget.closeWhenScrolling) {
       _removeScrollListener();
@@ -365,7 +362,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     if (editing) return;
     SwipeActionStore.getInstance().bus?.fire(CellOpenEvent(key: widget.key));
 
-    if (widget.actions.first.nestedAction != null ||
+    if (widget.trailingActions.first.nestedAction != null ||
         widget.leadingActions.first.nestedAction != null) {
       SwipeActionStore.getInstance()
           .bus
@@ -489,7 +486,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
       };
 
       if (whenActionShowing) {
-        await widget.actions[0].onTap?.call(completionHandler);
+        await widget.trailingActions[0].onTap?.call(completionHandler);
       } else if (whenLeadingActionShowing) {
         await widget.leadingActions[0].onTap?.call(completionHandler);
       }
@@ -525,7 +522,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
         }
       }
 
-      if (widget.actions.length == 1 || widget.leadingActions.length == 1) {
+      if (widget.trailingActions.length == 1 ||
+          widget.leadingActions.length == 1) {
         SwipeActionStore.getInstance()
             .bus
             .fire(PullLastButtonEvent(isPullingOut: false));
@@ -614,7 +612,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
     editing = widget.controller != null && widget.controller.editing;
 
     if (widget.controller != null) {
-      selected = widget.controller.selectedMap[widget.index] ?? false;
+      // selected = widget.controller.selectedMap[widget.index] ?? false;
+      selected = widget.controller.selectedSet.contains(widget.index) ?? false;
     } else {
       selected = false;
     }
@@ -637,9 +636,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
                       "如果你要进入编辑模式，请在SwipeActionCell中传入index 参数，他的值就是你列表组件的itemBuilder中返回的index即可");
 
                   if (selected) {
-                    widget.controller.selectedMap.remove(widget.index);
+                    widget.controller.selectedSet.remove(widget.index);
                   } else {
-                    widget.controller.selectedMap.addAll({widget.index: true});
+                    widget.controller.selectedSet.add(widget.index);
                   }
                   setState(() {});
                 }
@@ -721,7 +720,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
         List.generate(leadingActionsCount, (index) {
       final actualIndex = leadingActionsCount - 1 - index;
       if (widget.leadingActions.length == 1 &&
-          !widget.leadingActions[0].forceAlignmentLeft &&
+          !widget.leadingActions[0].forceAlignmentToBoundary &&
           widget.performsFirstActionWithFullSwipe) {
         return SwipeActionLeadingAlignButtonWidget(
           actionIndex: actualIndex,
@@ -760,10 +759,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
       return const SizedBox();
     }
     final List<Widget> actionButtons =
-        List.generate(widget.actions.length, (index) {
+        List.generate(widget.trailingActions.length, (index) {
       final actualIndex = actionsCount - 1 - index;
-      if (widget.actions.length == 1 &&
-          !widget.actions[0].forceAlignmentLeft &&
+      if (widget.trailingActions.length == 1 &&
+          !widget.trailingActions[0].forceAlignmentToBoundary &&
           widget.performsFirstActionWithFullSwipe) {
         return SwipeActionAlignButtonWidget(
           actionIndex: actualIndex,
@@ -781,7 +780,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
           widget.firstActionWillCoverAllSpaceOnDeleting,
       parentKey: widget.key,
       totalActionWidth: maxPullWidth,
-      actions: widget.actions,
+      actions: widget.trailingActions,
       contentWidth: width,
       contentHeight: height,
       currentOffset: currentOffset.dx,
@@ -832,24 +831,23 @@ class SwipeAction {
   ///点击这个按钮的时候，是否关闭actions 默认为true
   final bool closeOnTap;
 
-  ///the distance between the title content and left boundary,default value is 15
-  ///标题内容与action button左边界的距离，方便自定义，默认为15
-  final double leftPadding;
+  ///the distance between the title content and boundary,default value is 16
+  ///标题内容与action button左/右边界的距离，方便自定义，默认为16
+  final double paddingToBoundary;
 
-  ///When There is one action button in menu,the alignment of content in button will be [Alignment.centerRight]
-  ///If you don't want ,you can set this value to true to make it become [Alignment.centerLeft]
-  ///This parameter only works when it is the first [SwipeAction]!!!!
-  ///当只有一个按钮时，里面的内容会默认在右边（和iOS原生相同），但是你如果需要内容贴在左边，可以设置这个属性为true
-  ///这个属性只对第一个  [SwipeAction]有用!!!!
-  final bool forceAlignmentLeft;
+  ///When you have just one button,if it is on leading/trailing,set this param to true will
+  ///make the content inside button [Alignment.centerRight] / [Alignment.centerLeft]
+  final bool forceAlignmentToBoundary;
 
   ///The width space this action button will take when opening.
   ///当处于打开状态下这个按钮所占的宽度
   final double widthSpace;
 
+  ///bg color
   ///背景颜色
   final Color color;
 
+  ///onTap callback
   ///点击事件回调
   final Function(CompletionHandler) onTap;
 
@@ -859,14 +857,14 @@ class SwipeAction {
   ///标题
   final String title;
 
-  ///背景左上和左下的圆角
+  ///背景左上(右上）和左下（左上）的圆角
   final double backgroundRadius;
 
   ///嵌套的action
   final SwipeNestedAction nestedAction;
 
-  ///If you want to customize your content,use this attr,
-  ///and don't set title and icon attrs
+  ///If you want to customize your content,you can use this attr.
+  ///And don't set [title] and [icon] attrs
   ///如果你想自定义你的按钮内容，那么就设置这个content参数
   ///注意如果你设置了content，那么就不要设置title和icon，两个都必须为null
   final Widget content;
@@ -876,11 +874,11 @@ class SwipeAction {
     this.title,
     this.style = const TextStyle(fontSize: 18, color: Colors.white),
     this.color = Colors.red,
-    this.leftPadding = 15,
+    this.paddingToBoundary = 16,
     this.icon,
     this.closeOnTap = true,
     this.backgroundRadius = 0.0,
-    this.forceAlignmentLeft = false,
+    this.forceAlignmentToBoundary = false,
     this.widthSpace = 80,
     this.nestedAction,
     this.content,
