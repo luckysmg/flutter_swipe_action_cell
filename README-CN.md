@@ -11,15 +11,18 @@
  和框架有关问题发群里，我很乐意解答(*^▽^*)
  
  <br/>
+ 
 
 ## 直接进入正题:
 
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.2.0
+flutter_swipe_action_cell: ^1.2.1
 ```
+
  <br/>
+ 
 
 ### 效果预览（gif可能比较大，稍微等一下）：
 
@@ -102,7 +105,7 @@ flutter_swipe_action_cell: ^1.2.0
  SwipeActionCell(
       ///这个key是必要的
       key: ValueKey(list[index]),
-      actions: <SwipeAction>[
+      trailingActions: <SwipeAction>[
         SwipeAction(
             title: "delete",
             onTap: (CompletionHandler handler) async {
@@ -130,7 +133,7 @@ flutter_swipe_action_cell: ^1.2.0
 
        ///参数名和iOS原生相同
        performsFirstActionWithFullSwipe: true,
-       actions: <SwipeAction>[
+       trailingActions: <SwipeAction>[
          SwipeAction(
              title: "delete",
              onTap: (CompletionHandler handler) async {
@@ -155,7 +158,7 @@ flutter_swipe_action_cell: ^1.2.0
 SwipeActionCell(
       key: ValueKey(list[index]),
       performsFirstActionWithFullSwipe: true,
-      actions: <SwipeAction>[
+      trailingActions: <SwipeAction>[
         SwipeAction(
             title: "delete",
             onTap: (CompletionHandler handler) async {
@@ -186,7 +189,7 @@ SwipeActionCell(
 SwipeActionCell(
       key: ValueKey(list[index]),
       performsFirstActionWithFullSwipe: true,
-      actions: <SwipeAction>[
+      trailingActions: <SwipeAction>[
         SwipeAction(
             title: "delete",
             onTap: (CompletionHandler handler) async {
@@ -235,8 +238,8 @@ SwipeActionCell(
 
 ```dart
 return SwipeActionCell(
-      key: ValueKey(list[index]),
-      actions: <SwipeAction>[
+      key: vValueKey(list[index]),
+      trailingActions: <SwipeAction>[
         SwipeAction(
 
           ///这个参数只能给的第一个action设置哦
@@ -309,7 +312,7 @@ ListView.builder(
        index: index,
        performsFirstActionWithFullSwipe: true,
        key: ValueKey(list[index]),
-       actions: [
+       trailingActions: [
          SwipeAction(
              onTap: (handler) async {
                await handler(true);
@@ -346,7 +349,7 @@ Widget _item(int index) {
     return SwipeActionCell(
       key: ValueKey(list[index]),
       performsFirstActionWithFullSwipe: true,
-      actions: <SwipeAction>[
+      trailingActions: <SwipeAction>[
         SwipeAction(
             icon: Icon(Icons.add),
             title: "delete",
@@ -388,7 +391,7 @@ Widget _item(int index) {
 Widget _item(int index) {
     return SwipeActionCell(
       key: ValueKey(list[index]),
-      actions: [
+      trailingActions: [
         SwipeAction(
             nestedAction: SwipeNestedAction(
   
@@ -476,7 +479,7 @@ Widget _item(int index) {
 #### SwipeActionCell：
 参数名 | 含义 | 是否必填
 -------- | --- |-----
-actions | 这个cell下的所有右侧action|否
+trailingActions | 这个cell下的所有右侧action|否
 leadingActions | 这个cell下的所有左侧action|否
 child| cell内容 | 是
 closeWhenScrolling | 滚动时关闭打开的cell|否（def=true）

@@ -12,7 +12,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 
 ##### install:
 ```yaml
-flutter_swipe_action_cell: ^1.2.0
+flutter_swipe_action_cell: ^1.2.1
 ```  
 
 ## 1.Preview：
@@ -53,6 +53,7 @@ And you can find full example code in [example page](https://pub.dev/packages/fl
 
 <br/>
 
+
 ### Attention !! After V1.2.0，many attrs' (name) are changed because of the publishment of leading action button
  if you are using this package and you will upgrade to v1.2.0,you should know this.
  
@@ -63,7 +64,9 @@ And you can find full example code in [example page](https://pub.dev/packages/fl
   SwipeAction | leftPadding | paddingToBoundary
   SwipeAction | forceAlignmentLeft | forceAlignmentToBoundary
 
+
 <br/>
+
 
 ## Examples
 
@@ -76,7 +79,7 @@ And you can find full example code in [example page](https://pub.dev/packages/fl
 ```dart
  SwipeActionCell(
       key: ObjectKey(list[index]),///this key is necessary
-      actions: <SwipeAction>[
+      trailingActions: <SwipeAction>[
         SwipeAction(
             title: "delete",
             onTap: (CompletionHandler handler) async {
@@ -105,7 +108,7 @@ And you can find full example code in [example page](https://pub.dev/packages/fl
  
        ///this is the same as iOS native
        performsFirstActionWithFullSwipe: true,
-       actions: <SwipeAction>[
+       trailingActions: <SwipeAction>[
          SwipeAction(
              title: "delete",
              onTap: (CompletionHandler handler) async {
@@ -132,7 +135,7 @@ And you can find full example code in [example page](https://pub.dev/packages/fl
 SwipeActionCell(
       key: ObjectKey(list[index]),
       performsFirstActionWithFullSwipe: true,
-      actions: <SwipeAction>[
+      trailingActions: <SwipeAction>[
         SwipeAction(
             title: "delete",
             onTap: (CompletionHandler handler) async {
@@ -166,7 +169,7 @@ SwipeActionCell(
       key: ObjectKey(list[index]),
 
       performsFirstActionWithFullSwipe: true,
-      actions: <SwipeAction>[
+      trailingActions: <SwipeAction>[
         SwipeAction(
             title: "delete",
             onTap: (CompletionHandler handler) async {
@@ -222,7 +225,7 @@ SwipeActionCell(
 return SwipeActionCell(
       key: ValueKey(list[index]),
       performsFirstActionWithFullSwipe: true,
-      actions: <SwipeAction>[
+      trailingActions: <SwipeAction>[
         SwipeAction(
           ///
           ///This attr should be passed to first action
@@ -306,7 +309,7 @@ ListView.builder(
        index: index,
        performsFirstActionWithFullSwipe: true,
        key: ValueKey(list[index]),
-       actions: [
+       trailingActions: [
          SwipeAction(
              onTap: (handler) async {
                await handler(true);
@@ -334,7 +337,7 @@ ListView.builder(
 Widget _item(int index) {
     return SwipeActionCell(
       key: ValueKey(list[index]),
-      actions: [
+      trailingActions: [
         SwipeAction(
             nestedAction: SwipeNestedAction(
               ///customize your nested action content

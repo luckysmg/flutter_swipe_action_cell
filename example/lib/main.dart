@@ -41,12 +41,12 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
     return Model()..index = index;
   });
 
-  SwipeActionEditController controller;
+  SwipeActionController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = SwipeActionEditController();
+    controller = SwipeActionController();
   }
 
   @override
@@ -106,7 +106,7 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
       index: index,
       key: ValueKey(list[index]),
       performsFirstActionWithFullSwipe: true,
-      actions: [
+      trailingActions: [
         SwipeAction(
             title: "delete",
             nestedAction: SwipeNestedAction(title: "confirm"),
