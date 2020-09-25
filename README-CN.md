@@ -5,9 +5,13 @@
  [English](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README.md)
  | [中文简体](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README-CN.md)
  
+ <br/>
+ 
  #### QQ交流群（估计还没什么人）：892912160
  和框架有关问题发群里，我很乐意解答(*^▽^*)
  
+ <br/>
+
 ## 直接进入正题:
 
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
@@ -15,6 +19,7 @@
 ```yaml
 flutter_swipe_action_cell: ^1.2.0
 ```
+ <br/>
 
 ### 效果预览（gif可能比较大，稍微等一下）：
 
