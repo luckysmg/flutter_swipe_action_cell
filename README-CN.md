@@ -517,6 +517,7 @@ impactWhenShowing|弹出的时候的震动（知乎app消息页面的删除效�
 参数名（方法名） | 含义 |
 -------- | --- |
 isEditing | 是否处于编辑模式
+selectedIndexPathsChangeCallback|获取选择/取消选择cell的回调
 getSelectedIndexes() | 获取选中的行的索引集合
 toggleEditingMode() | 切换编辑模式
 stopEditingMode()|暂停编辑模式
