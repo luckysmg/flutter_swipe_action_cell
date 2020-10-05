@@ -37,7 +37,7 @@ class SwipeActionPage extends StatefulWidget {
 }
 
 class _SwipeActionPageState extends State<SwipeActionPage> {
-  List<Model> list = List.generate(15, (index) {
+  List<Model> list = List.generate(30, (index) {
     return Model()..index = index;
   });
 
@@ -46,7 +46,18 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
   @override
   void initState() {
     super.initState();
-    controller = SwipeActionController();
+    controller = SwipeActionController(selectedIndexPathsChangeCallback:
+        (changedIndexPaths, selected, currentCount) {
+      print(
+          'cell at ${changedIndexPaths.toString()} is/are ${selected ? 'selected' : 'unselected'} ,current selected count is $currentCount');
+
+      ///I just call setState() to update simply in this example.
+      ///But the whole page will be rebuilt.
+      ///So when you are developing,you'd better update a little piece
+      ///of UI sub tree for best performance....
+
+      setState(() {});
+    });
   }
 
   @override
@@ -58,10 +69,19 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
             controller.toggleEditingMode();
           }),
       appBar: CupertinoNavigationBar(
-        leading: CupertinoButton.filled(
-            padding: EdgeInsets.only(),
+        middle: CupertinoButton.filled(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             minSize: 0,
-            child: Text('delete cells', style: TextStyle(color: Colors.white)),
+            child: Text('deselect all', style: TextStyle(fontSize: 22)),
+            onPressed: () {
+              controller.deselectAll();
+            }),
+        leading: CupertinoButton.filled(
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+            minSize: 0,
+            child: Text(
+                'delete cells (${controller.getSelectedIndexPaths().length})',
+                style: TextStyle(color: Colors.white)),
             onPressed: () {
               ///获取选取的索引集合
               List<int> selectedIndexes = controller.getSelectedIndexPaths();

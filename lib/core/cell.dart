@@ -281,6 +281,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
     });
   }
 
+  void _updateControllerSelectedIndexChangedCallback({bool selected}) {
+    widget.controller.selectedIndexPathsChangeCallback
+        ?.call([widget.index], selected, widget.controller.selectedSet.length);
+  }
+
   @override
   void dispose() {
     _removeScrollListener();
@@ -637,8 +642,12 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
                   if (selected) {
                     widget.controller.selectedSet.remove(widget.index);
+                    _updateControllerSelectedIndexChangedCallback(
+                        selected: false);
                   } else {
                     widget.controller.selectedSet.add(widget.index);
+                    _updateControllerSelectedIndexChangedCallback(
+                        selected: true);
                   }
                   setState(() {});
                 }

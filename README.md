@@ -12,7 +12,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 
 ##### install:
 ```yaml
-flutter_swipe_action_cell: ^1.2.1
+flutter_swipe_action_cell: ^1.2.2
 ```  
 
 ## 1.Preview：
@@ -44,14 +44,12 @@ Edit mode |
 -------- |
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/> |
 
-<br/>
+
 
 ## Full example:
 [Preview (YouTobe video)](https://youtu.be/LWuHas8Zspw)
 
 And you can find full example code in [example page](https://pub.dev/packages/flutter_swipe_action_cell/example)
-
-<br/>
 
 
 ### Attention !! After V1.2.0，many attrs' (name) are changed because of the publishment of leading action button

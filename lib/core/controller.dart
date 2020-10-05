@@ -4,10 +4,24 @@ import 'package:flutter/material.dart';
 import 'events.dart';
 import 'store.dart';
 
+///When you tap cell under edit mode, or call the method below,this callback func will be called once:
+///[SwipeActionController.selectCellAt]
+///[SwipeActionController.deselectCellAt]
+///[SwipeActionController.selectAll]
+///[SwipeActionController.deselectAll]
+///[SwipeActionController.stopEditingMode]
+///
+typedef SelectedIndexPathsChangeCallback = Function(
+    List<int> changedIndexPaths, bool selected, int currentSelectedCount);
+
 ///An controller to control the cell's behavior
 ///一个可以控制cell行为的控制器
 class SwipeActionController {
-  Set selectedSet = Set();
+  SwipeActionController({this.selectedIndexPathsChangeCallback});
+
+  Set<int> selectedSet = Set<int>();
+
+  SelectedIndexPathsChangeCallback selectedIndexPathsChangeCallback;
 
   /// edit mode or not
   ///获取是否正处于编辑模式
@@ -32,6 +46,9 @@ class SwipeActionController {
   ///If it is editing,stop it.
   ///If it is not editing, start it
   void toggleEditingMode() {
+    if (isEditing) {
+      selectedIndexPathsChangeCallback?.call(selectedSet.toList(), false, 0);
+    }
     isEditing = !isEditing;
     _fireEditEvent(editing: !this.editing);
   }
@@ -74,6 +91,8 @@ class SwipeActionController {
     indexPaths.forEach((element) {
       selectedSet.add(element);
     });
+    selectedIndexPathsChangeCallback?.call(
+        indexPaths, true, selectedSet.length);
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: true));
   }
 
@@ -88,6 +107,8 @@ class SwipeActionController {
     indexPaths.forEach((element) {
       selectedSet.remove(element);
     });
+    selectedIndexPathsChangeCallback?.call(
+        indexPaths, false, selectedSet.length);
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false));
   }
 
@@ -101,6 +122,7 @@ class SwipeActionController {
 
     List<int> selectedList = List.generate(dataLength, (index) => index);
     selectedSet.addAll(selectedList);
+    selectedIndexPathsChangeCallback?.call(selectedList, true, dataLength);
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: true));
   }
 
@@ -111,7 +133,11 @@ class SwipeActionController {
         editing,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
+
+    final List<int> deselectedList = selectedSet.toList();
     selectedSet.clear();
+    selectedIndexPathsChangeCallback?.call(
+        deselectedList, false, selectedSet.length);
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false));
   }
 
