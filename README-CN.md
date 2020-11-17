@@ -7,18 +7,13 @@
  
  <br/>
  
- #### QQ交流群（估计还没什么人）：892912160
- 和框架有关问题发群里，我很乐意解答(*^▽^*)
- 
- <br/>
- 
 
 ## 直接进入正题:
 
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.2.2
+flutter_swipe_action_cell: ^1.2.3
 ```
 
  <br/>

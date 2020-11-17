@@ -67,6 +67,10 @@ class SwipeActionCell extends StatefulWidget {
   ///代表是否能够侧滑交互
   final bool isDraggable;
 
+  ///Background color for cell and def value = Theme.of(context).scaffoldBackgroundColor)
+  ///整个cell控件的背景色 默认是Theme.of(context).scaffoldBackgroundColor
+  final Color backgroundColor;
+
   const SwipeActionCell({
     @required Key key,
     @required this.child,
@@ -86,6 +90,7 @@ class SwipeActionCell extends StatefulWidget {
       Icons.do_not_disturb_on,
       color: Colors.red,
     ),
+    this.backgroundColor,
   })  : assert(key != null,
             "You should pass a key like [ValueKey] or [ObjectKey]"),
 
@@ -617,7 +622,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
     editing = widget.controller != null && widget.controller.editing;
 
     if (widget.controller != null) {
-      // selected = widget.controller.selectedMap[widget.index] ?? false;
       selected = widget.controller.selectedSet.contains(widget.index) ?? false;
     } else {
       selected = false;
@@ -684,7 +688,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
                           width: double.infinity,
                           child: DecoratedBox(
                               decoration: BoxDecoration(
-                                color:
+                                color: widget.backgroundColor ??
                                     Theme.of(context).scaffoldBackgroundColor,
                               ),
                               child: IgnorePointer(
