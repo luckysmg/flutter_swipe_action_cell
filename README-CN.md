@@ -17,7 +17,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^1.2.3
+flutter_swipe_action_cell: ^1.2.4
 ```
 
  <br/>
@@ -484,6 +484,9 @@ child| cell内容 | 是
 closeWhenScrolling | 滚动时关闭打开的cell|否（def=true）
 performsFirstActionWithFullSwipe|往左拉满时执行第一个action|否（def=false)
 firstActionWillCoverAllSpaceOnDeleting|执行动画删除时是否让第一个覆盖cell|否（def=true)
+editModeOffset|进入编辑模式的cell偏移|否（def=60)
+backgroundColor|cell的背景颜色|否（def=Theme.of(context).scaffoldBackgroundColor)
+
 
 #### SwipeAction：
 参数名 | 含义 | 是否必填

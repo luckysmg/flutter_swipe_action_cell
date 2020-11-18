@@ -71,6 +71,11 @@ class SwipeActionCell extends StatefulWidget {
   ///整个cell控件的背景色 默认是Theme.of(context).scaffoldBackgroundColor
   final Color backgroundColor;
 
+  ///The offset that cell will move when entering the edit mode
+  ///当你进入编辑模式的时候，cell的content向右边移动的距离
+  ///def value = 60
+  final double editModeOffset;
+
   const SwipeActionCell({
     @required Key key,
     @required this.child,
@@ -91,6 +96,7 @@ class SwipeActionCell extends StatefulWidget {
       color: Colors.red,
     ),
     this.backgroundColor,
+    this.editModeOffset = 60,
   })  : assert(key != null,
             "You should pass a key like [ValueKey] or [ObjectKey]"),
 
@@ -148,8 +154,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
   bool editing;
   bool selected;
 
-  static const double editingOffsetX = 60;
-
   bool hasAction;
   bool hasLeadingAction;
   bool whenActionShowing;
@@ -196,13 +200,14 @@ class SwipeActionCellState extends State<SwipeActionCell>
     lockAnim = true;
     editController.value = 0.0;
     lockAnim = false;
-    animation = Tween<double>(begin: currentOffset.dx, end: editingOffsetX)
-        .animate(editCurvedAnim)
-          ..addListener(() {
-            if (lockAnim) return;
-            currentOffset = Offset(animation.value, 0);
-            setState(() {});
-          });
+    animation =
+        Tween<double>(begin: currentOffset.dx, end: widget.editModeOffset)
+            .animate(editCurvedAnim)
+              ..addListener(() {
+                if (lockAnim) return;
+                currentOffset = Offset(animation.value, 0);
+                setState(() {});
+              });
     editController.forward().whenCompleteOrCancel(() {
       widget.controller.editing = true;
       setState(() {});
@@ -214,8 +219,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
     editController.value = 0.0;
     lockAnim = false;
     widget.controller.selectedSet.remove(widget.index);
-    animation =
-        Tween<double>(begin: editingOffsetX, end: 0).animate(editCurvedAnim)
+    animation = Tween<double>(begin: widget.editModeOffset, end: 0)
+        .animate(editCurvedAnim)
           ..addListener(() {
             if (lockAnim) return;
             currentOffset = Offset(animation.value, 0);
@@ -681,7 +686,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
                       },
                       child: Transform.translate(
                         offset: editing && !editController.isAnimating
-                            ? const Offset(editingOffsetX, 0)
+                            ? Offset(widget.editModeOffset, 0)
                             : currentOffset,
                         transformHitTests: false,
                         child: SizedBox(
@@ -720,7 +725,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   Widget _buildSelectedButton(bool selected) {
     return SizedBox(
-      width: editingOffsetX,
+      width: widget.editModeOffset,
       child: selected ? widget.selectedIndicator : widget.unselectedIndicator,
     );
   }
