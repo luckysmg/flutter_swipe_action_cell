@@ -123,7 +123,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
     with TickerProviderStateMixin {
   double height;
   double width;
-
   int actionsCount;
   int leadingActionsCount;
 
