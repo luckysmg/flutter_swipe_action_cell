@@ -27,10 +27,6 @@ class SwipeActionController {
   ///获取是否正处于编辑模式
   bool isEditing = false;
 
-  ///Use [isEditing],Please don' t use this value to get the edit mode 's state,
-  ///请用[isEditing]！！不可以通过此参数来获取编辑状态！这个是用于框架内部判断的。
-  bool editing = false;
-
   ///start editing
   void startEditingMode() {
     isEditing = true;
@@ -50,7 +46,7 @@ class SwipeActionController {
       selectedIndexPathsChangeCallback?.call(selectedSet.toList(), false, 0);
     }
     isEditing = !isEditing;
-    _fireEditEvent(editing: !this.editing);
+    _fireEditEvent(editing: isEditing);
   }
 
   @Deprecated('Use getSelectedIndexPaths()')
@@ -85,7 +81,7 @@ class SwipeActionController {
   ///选中cell （注意！！！你必须把 index 参数传入cell
   void selectCellAt({@required List<int> indexPaths}) {
     assert(
-        editing,
+        isEditing,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
     indexPaths.forEach((element) {
@@ -100,7 +96,7 @@ class SwipeActionController {
   ///选中一个cell （注意！！！你必须把 index 参数传入cell
   void deselectCellAt({@required List<int> indexPaths}) {
     assert(
-        editing,
+        isEditing,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
 
@@ -116,7 +112,7 @@ class SwipeActionController {
   ///选择所有的cell
   void selectAll({@required int dataLength}) {
     assert(
-        editing,
+        isEditing,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
 
@@ -130,7 +126,7 @@ class SwipeActionController {
   ///取消选择所有的cell
   void deselectAll() {
     assert(
-        editing,
+        isEditing,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
 

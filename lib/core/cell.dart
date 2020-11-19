@@ -123,6 +123,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     with TickerProviderStateMixin {
   double height;
   double width;
+
   int actionsCount;
   int leadingActionsCount;
 
@@ -207,10 +208,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
                 currentOffset = Offset(animation.value, 0);
                 setState(() {});
               });
-    editController.forward().whenCompleteOrCancel(() {
-      widget.controller.editing = true;
-      setState(() {});
-    });
+    editController.forward();
   }
 
   void _stopEditingWithAnim() {
@@ -225,10 +223,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
             currentOffset = Offset(animation.value, 0);
             setState(() {});
           });
-    editController.forward().whenCompleteOrCancel(() {
-      widget.controller.editing = false;
-      setState(() {});
-    });
+    editController.forward();
   }
 
   double _getTrailingMaxPullWidth() {
@@ -284,8 +279,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
         .bus
         .on<EditingModeEvent>()
         .listen((event) {
-      ///If it is animating,just return
-      if (editController.isAnimating) return;
       event.editing ? _startEditingWithAnim() : _stopEditingWithAnim();
     });
   }
@@ -347,8 +340,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
             .bus
             .on<EditingModeEvent>()
             .listen((event) {
-          ///If it is animating,just return
-          if (editController.isAnimating) return;
           event.editing ? _startEditingWithAnim() : _stopEditingWithAnim();
         });
       }
@@ -623,7 +614,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   @override
   Widget build(BuildContext context) {
-    editing = widget.controller != null && widget.controller.editing;
+    editing = widget.controller != null && widget.controller.isEditing;
 
     if (widget.controller != null) {
       selected = widget.controller.selectedSet.contains(widget.index) ?? false;
