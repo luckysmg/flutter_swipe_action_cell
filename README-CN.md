@@ -56,7 +56,7 @@ flutter_swipe_action_cell: ^1.2.7
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/>|
 
 ###  1.目前已经实现的内容 ：
-
+- [x] 支持左右两边拉出的按钮
 - [x] 拉出按钮，顺滑的拉出动画和回弹动画
 - [x] 支持iOS原生的弹出按钮触发第一个动作交互
 - [x] 支持拉出另外一个按钮时关闭已经打开的按钮
@@ -69,7 +69,8 @@ flutter_swipe_action_cell: ^1.2.7
 
 
 ###  2.已经在版本中实现但是未稳定的内容： 
-- [x] 支持左边拉出的按钮 -> v1.1.2 (使用cell的leadingActions即可配置左边的拉出按钮）
+无
+
 
 ###  3.下一步可能要实现的内容 (不保证一定实现)：
 - [ ] 拉出时多个按钮提供不同的offset计算方式，不同的叠放方式
