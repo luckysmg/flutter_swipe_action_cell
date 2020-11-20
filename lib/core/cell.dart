@@ -428,12 +428,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
       }
     }
 
-    ///check offset position
-    if ((!hasLeadingAction && currentOffset.dx > 0.0) ||
-        (!hasAction && currentOffset.dx < 0.0)) {
-      currentOffset = Offset.zero;
-    }
-
+    modifyOffsetIfOverScrolled();
     setState(() {});
   }
 
@@ -469,7 +464,16 @@ class SwipeActionCellState extends State<SwipeActionCell>
       }
     }
 
+    modifyOffsetIfOverScrolled();
     setState(() {});
+  }
+
+  ///modify the offset if over scrolled
+  void modifyOffsetIfOverScrolled() {
+    if ((!hasLeadingAction && currentOffset.dx > 0.0) ||
+        (!hasAction && currentOffset.dx < 0.0)) {
+      currentOffset = Offset.zero;
+    }
   }
 
   void _onHorizontalDragEnd(DragEndDetails details) async {

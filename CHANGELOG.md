@@ -1,3 +1,4 @@
+## [1.2.7] - 修复在overscroll时候的offset边界处理
 ## [1.2.6] - 允许两个action传入null
 ## [1.2.5] - 修复编辑模式狂点状态不统一的bug
 ## [1.2.4] - 增加自定义editModeOffset功能
