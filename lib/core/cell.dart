@@ -48,7 +48,7 @@ class SwipeActionCell extends StatefulWidget {
   final bool firstActionWillCoverAllSpaceOnDeleting;
 
   ///The controller to control edit mode
-  ///控制器 后续或将更名为 SwipeActionController
+  ///控制器
   final SwipeActionController controller;
 
   ///The identifier of edit mode
@@ -64,7 +64,7 @@ class SwipeActionCell extends StatefulWidget {
   final Widget unselectedIndicator;
 
   ///Indicates that you can swipe the cell or not
-  ///代表是否能够侧滑交互
+  ///代表是否能够侧滑交互(如果你只想用编辑模式而不需要侧滑）
   final bool isDraggable;
 
   ///Background color for cell and def value = Theme.of(context).scaffoldBackgroundColor)
@@ -79,8 +79,8 @@ class SwipeActionCell extends StatefulWidget {
   const SwipeActionCell({
     @required Key key,
     @required this.child,
-    this.trailingActions = defaultActions,
-    this.leadingActions = defaultActions,
+    this.trailingActions,
+    this.leadingActions,
     this.isDraggable = true,
     this.closeWhenScrolling = true,
     this.performsFirstActionWithFullSwipe = false,
@@ -162,13 +162,13 @@ class SwipeActionCellState extends State<SwipeActionCell>
   @override
   void initState() {
     super.initState();
-    hasAction = widget.trailingActions != defaultActions;
-    hasLeadingAction = widget.leadingActions != defaultActions;
+    hasAction = widget.trailingActions != null;
+    hasLeadingAction = widget.leadingActions != null;
     lastItemOut = false;
     lockAnim = false;
     ignorePointer = false;
-    actionsCount = widget.trailingActions.length;
-    leadingActionsCount = widget.leadingActions.length;
+    actionsCount = widget.trailingActions?.length ?? 0;
+    leadingActionsCount = widget.leadingActions?.length ?? 0;
     maxPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
     currentOffset = Offset.zero;
@@ -227,6 +227,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   double _getTrailingMaxPullWidth() {
+    if (widget.trailingActions == null) {
+      return 0.0;
+    }
     double sum = 0.0;
     for (final action in widget.trailingActions) {
       sum += action.widthSpace;
@@ -235,6 +238,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   double _getLeadingMaxPullWidth() {
+    if (widget.leadingActions == null) {
+      return 0.0;
+    }
     double sum = 0.0;
     for (final action in widget.leadingActions) {
       sum += action.widthSpace;
@@ -311,10 +317,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
   @override
   void didUpdateWidget(SwipeActionCell oldWidget) {
     super.didUpdateWidget(oldWidget);
-    hasAction = widget.trailingActions != defaultActions;
-    hasLeadingAction = widget.leadingActions != defaultActions;
-    actionsCount = widget.trailingActions.length;
-    leadingActionsCount = widget.leadingActions.length;
+    hasAction = widget.trailingActions != null;
+    hasLeadingAction = widget.leadingActions != null;
+    actionsCount = widget.trailingActions?.length ?? 0;
+    leadingActionsCount = widget.leadingActions?.length ?? 0;
     maxPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
     if (widget.closeWhenScrolling != oldWidget.closeWhenScrolling) {
@@ -367,8 +373,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
     if (editing) return;
     SwipeActionStore.getInstance().bus?.fire(CellOpenEvent(key: widget.key));
 
-    if (widget.trailingActions.first.nestedAction != null ||
-        widget.leadingActions.first.nestedAction != null) {
+    if (widget.trailingActions?.first?.nestedAction != null ||
+        widget.leadingActions?.first?.nestedAction != null) {
       SwipeActionStore.getInstance()
           .bus
           ?.fire(CloseNestedActionEvent(key: widget.key));
@@ -490,9 +496,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
         }
       };
 
-      if (whenActionShowing) {
+      if (whenActionShowing && widget.trailingActions != null) {
         await widget.trailingActions[0].onTap?.call(completionHandler);
-      } else if (whenLeadingActionShowing) {
+      } else if (whenLeadingActionShowing && widget.leadingActions != null) {
         await widget.leadingActions[0].onTap?.call(completionHandler);
       }
     } else {
@@ -527,8 +533,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
         }
       }
 
-      if (widget.trailingActions.length == 1 ||
-          widget.leadingActions.length == 1) {
+      if (actionsCount == 1 || leadingActionsCount == 1) {
         SwipeActionStore.getInstance()
             .bus
             .fire(PullLastButtonEvent(isPullingOut: false));
@@ -714,9 +719,13 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   Widget _buildSelectedButton(bool selected) {
-    return SizedBox(
-      width: widget.editModeOffset,
-      child: selected ? widget.selectedIndicator : widget.unselectedIndicator,
+    return DecoratedBox(
+      decoration: BoxDecoration(color: widget.backgroundColor),
+      child: SizedBox(
+        width: widget.editModeOffset,
+        height: height,
+        child: selected ? widget.selectedIndicator : widget.unselectedIndicator,
+      ),
     );
   }
 
@@ -766,10 +775,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
     if (currentOffset.dx > 0) {
       return const SizedBox();
     }
-    final List<Widget> actionButtons =
-        List.generate(widget.trailingActions.length, (index) {
+    final List<Widget> actionButtons = List.generate(actionsCount, (index) {
       final actualIndex = actionsCount - 1 - index;
-      if (widget.trailingActions.length == 1 &&
+      if (actionsCount == 1 &&
           !widget.trailingActions[0].forceAlignmentToBoundary &&
           widget.performsFirstActionWithFullSwipe) {
         return SwipeActionAlignButtonWidget(
@@ -892,10 +900,6 @@ class SwipeAction {
     this.content,
   });
 }
-
-const List<SwipeAction> defaultActions = [
-  const SwipeAction(title: " ", onTap: null)
-];
 
 class _ContentWidget extends StatefulWidget {
   final Widget child;
