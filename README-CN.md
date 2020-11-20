@@ -10,7 +10,7 @@
  #### QQ交流群（估计还没什么人）：892912160 
  
  #### 微信交流群：
-  
+ <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/wx_qr.jpg?raw=true" width="150"  alt=""/>
  
  和框架有关问题,无论是新功能探索，开发，bug提出，还是有关建议都可以发群里交流，只要我有时间，我很乐意帮助大家(^▽^)
  
