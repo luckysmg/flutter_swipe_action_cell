@@ -676,7 +676,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
                 return Stack(
                   alignment: Alignment.centerLeft,
                   children: <Widget>[
-                    widget.controller != null
+                    widget.controller != null &&
+                            (widget.controller.isEditing ||
+                                editController.isAnimating)
                         ? _buildSelectedButton(selected)
                         : const SizedBox(),
                     _ContentWidget(
