@@ -56,8 +56,14 @@ class SwipeActionController {
 
   ///Get the list of selected cell 's index
   ///拿到选择的cell的索引集合
-  List<int> getSelectedIndexPaths() {
-    return List.from(selectedSet);
+  List<int> getSelectedIndexPaths({bool sorted = false}) {
+    final List<int> res = List.from(selectedSet);
+    if (sorted) {
+      res.sort((d1, d2) {
+        return d1.compareTo(d2);
+      });
+    }
+    return res;
   }
 
   ///This method is called of sync internal data model.
