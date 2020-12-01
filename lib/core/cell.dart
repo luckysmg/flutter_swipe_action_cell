@@ -725,13 +725,12 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   Widget _buildSelectedButton(bool selected) {
-    return DecoratedBox(
+    return Container(
       decoration: BoxDecoration(color: widget.backgroundColor),
-      child: SizedBox(
-        width: widget.editModeOffset,
-        height: height,
-        child: selected ? widget.selectedIndicator : widget.unselectedIndicator,
-      ),
+      alignment: Alignment.center,
+      width: widget.editModeOffset,
+      height: height,
+      child: selected ? widget.selectedIndicator : widget.unselectedIndicator,
     );
   }
 
