@@ -373,6 +373,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   void _onHorizontalDragStart(DragStartDetails details) {
     if (editing) return;
     SwipeActionStore.getInstance().bus?.fire(CellOpenEvent(key: widget.key));
+    _closeNestedAction();
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
