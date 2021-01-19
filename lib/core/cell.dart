@@ -269,6 +269,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
         SwipeActionStore.getInstance().bus.on<CellOpenEvent>().listen((event) {
       if (event.key != widget.key && currentOffset.dx != 0.0) {
         closeWithAnim();
+        _closeNestedAction();
       }
     });
 
@@ -372,13 +373,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   void _onHorizontalDragStart(DragStartDetails details) {
     if (editing) return;
     SwipeActionStore.getInstance().bus?.fire(CellOpenEvent(key: widget.key));
-
-    if (widget.trailingActions?.first?.nestedAction != null ||
-        widget.leadingActions?.first?.nestedAction != null) {
-      SwipeActionStore.getInstance()
-          .bus
-          ?.fire(CloseNestedActionEvent(key: widget.key));
-    }
+    _closeNestedAction();
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
@@ -593,6 +588,15 @@ class SwipeActionCellState extends State<SwipeActionCell>
             });
 
       controller.forward();
+    }
+  }
+
+  void _closeNestedAction() {
+    if (widget.trailingActions?.first?.nestedAction != null ||
+        widget.leadingActions?.first?.nestedAction != null) {
+      SwipeActionStore.getInstance()
+          .bus
+          ?.fire(CloseNestedActionEvent(key: widget.key));
     }
   }
 
