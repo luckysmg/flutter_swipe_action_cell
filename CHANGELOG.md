@@ -1,3 +1,4 @@
+## [1.3.4] - 优化：在cell打开的时候，点击内容会关闭cell而不是响应内部事件
 ## [1.3.3] - 修复在利用controller关闭cell时nestedAction显示
 ## [1.3.2] - 修复在编辑模式下自定义indicator大小不正常的bug
 ## [1.3.1] - 在利用controller获取选取的集合的时候允许获取排序后的集合

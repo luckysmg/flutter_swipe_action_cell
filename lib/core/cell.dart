@@ -644,24 +644,30 @@ class SwipeActionCellState extends State<SwipeActionCell>
         sizeFactor: deleteCurvedAnim,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: editing && !editController.isAnimating
+          onTap: editing && !editController.isAnimating ||
+                  currentOffset.dx != 0.0
               ? () {
-                  assert(
-                      widget.index != null,
-                      "From SwipeActionCell:\nIf you want to enter edit mode,please pass the 'index' parameter in SwipeActionCell\n"
-                      "=====================================================================================\n"
-                      "如果你要进入编辑模式，请在SwipeActionCell中传入index 参数，他的值就是你列表组件的itemBuilder中返回的index即可");
+                  if (editing && !editController.isAnimating) {
+                    assert(
+                        widget.index != null,
+                        "From SwipeActionCell:\nIf you want to enter edit mode,please pass the 'index' parameter in SwipeActionCell\n"
+                        "=====================================================================================\n"
+                        "如果你要进入编辑模式，请在SwipeActionCell中传入index 参数，他的值就是你列表组件的itemBuilder中返回的index即可");
 
-                  if (selected) {
-                    widget.controller.selectedSet.remove(widget.index);
-                    _updateControllerSelectedIndexChangedCallback(
-                        selected: false);
-                  } else {
-                    widget.controller.selectedSet.add(widget.index);
-                    _updateControllerSelectedIndexChangedCallback(
-                        selected: true);
+                    if (selected) {
+                      widget.controller.selectedSet.remove(widget.index);
+                      _updateControllerSelectedIndexChangedCallback(
+                          selected: false);
+                    } else {
+                      widget.controller.selectedSet.add(widget.index);
+                      _updateControllerSelectedIndexChangedCallback(
+                          selected: true);
+                    }
+                    setState(() {});
+                  } else if (currentOffset.dx != 0 && !controller.isAnimating) {
+                    closeWithAnim();
+                    _closeNestedAction();
                   }
-                  setState(() {});
                 }
               : null,
           onHorizontalDragUpdate:
@@ -702,8 +708,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
                                     Theme.of(context).scaffoldBackgroundColor,
                               ),
                               child: IgnorePointer(
-                                  ignoring:
-                                      editController.isAnimating || editing,
+                                  ignoring: editController.isAnimating ||
+                                      editing ||
+                                      currentOffset.dx.abs() > 20,
                                   child: widget.child)),
                         ),
                       ),
