@@ -13,8 +13,8 @@ class SwipeActionLeadingButtonWidget extends StatefulWidget {
   final int actionIndex;
 
   const SwipeActionLeadingButtonWidget({
-    Key key,
-    this.actionIndex,
+    Key? key,
+    required this.actionIndex,
   }) : super(key: key);
 
   @override
@@ -26,43 +26,38 @@ class SwipeActionLeadingButtonWidget extends StatefulWidget {
 class _SwipeActionButtonWidgetState
     extends State<SwipeActionLeadingButtonWidget>
     with TickerProviderStateMixin {
-  double offsetX;
-  Alignment alignment;
-  CompletionHandler handler;
+  late double offsetX;
+  late Alignment alignment;
+  late CompletionHandler handler;
 
-  StreamSubscription pullLastButtonSubscription;
-  StreamSubscription pullLastButtonToCoverCellEventSubscription;
-  StreamSubscription closeNestedActionEventSubscription;
+  StreamSubscription? pullLastButtonSubscription;
+  StreamSubscription? pullLastButtonToCoverCellEventSubscription;
+  StreamSubscription? closeNestedActionEventSubscription;
 
-  bool whenNestedActionShowing;
-  bool whenFirstAction;
-  bool whenActiveToOffset;
-  bool whenPullingOut;
-  bool whenDeleting;
+  bool whenNestedActionShowing = false;
+  late bool whenFirstAction;
+  bool whenActiveToOffset = false;
+  bool whenPullingOut = false;
+  bool whenDeleting = false;
 
-  SwipeData data;
-  SwipeAction action;
+  late SwipeData data;
+  late SwipeAction action;
 
-  AnimationController offsetController;
-  AnimationController offsetFillActionContentController;
-  Animation<double> widthPullCurve;
-  Animation<double> offsetFillActionContentCurve;
+  late AnimationController offsetController;
+  late AnimationController offsetFillActionContentController;
+  late Animation<double> widthPullCurve;
+  late Animation<double> offsetFillActionContentCurve;
 
-  Animation animation;
+  late Animation animation;
 
-  bool lockAnim;
+  bool lockAnim = false;
 
   @override
   void initState() {
     super.initState();
-    whenDeleting = false;
-    whenActiveToOffset = true;
-    lockAnim = false;
-    whenPullingOut = false;
-    whenNestedActionShowing = false;
     whenFirstAction = widget.actionIndex == 0;
     alignment = Alignment.centerRight;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       _initAnim();
       _initCompletionHandler();
     });
@@ -190,10 +185,10 @@ class _SwipeActionButtonWidgetState
   }
 
   void _animToCoverPullActionContent() async {
-    if (action.nestedAction.nestedWidth != null) {
+    if (action.nestedAction?.nestedWidth != null) {
       try {
         assert(
-            action.nestedAction.nestedWidth >= data.totalActionWidth,
+            action.nestedAction!.nestedWidth! >= data.totalActionWidth,
             "Your nested width must be larger than the width of all action buttons"
             "\n 你的nestedWidth必须要大于或者等于所有按钮的总长度，否则下面的按钮会显现出来");
       } catch (e) {
@@ -206,16 +201,16 @@ class _SwipeActionButtonWidgetState
     alignment = Alignment.center;
 
     if (action.nestedAction?.nestedWidth != null &&
-        action.nestedAction.nestedWidth > data.totalActionWidth) {
+        action.nestedAction!.nestedWidth! > data.totalActionWidth) {
       data.parentState.adjustOffset(
-          offsetX: action.nestedAction.nestedWidth,
-          curve: action.nestedAction.curve,
+          offsetX: action.nestedAction!.nestedWidth!,
+          curve: action.nestedAction!.curve,
           trailing: false);
     }
 
     double endOffset;
     if (action.nestedAction?.nestedWidth != null) {
-      endOffset = action.nestedAction.nestedWidth;
+      endOffset = action.nestedAction!.nestedWidth!;
     } else {
       endOffset = data.totalActionWidth;
     }
@@ -260,13 +255,13 @@ class _SwipeActionButtonWidgetState
         if (whenFirstAction &&
             action.nestedAction != null &&
             !whenNestedActionShowing) {
-          if (action.nestedAction.impactWhenShowing) {
+          if (action.nestedAction!.impactWhenShowing) {
             HapticFeedback.mediumImpact();
           }
           _animToCoverPullActionContent();
           return;
         }
-        action.onTap?.call(handler);
+        action.onTap.call(handler);
       },
       child: Transform.translate(
         offset: Offset(-data.contentWidth + offsetX, 0),
@@ -282,7 +277,7 @@ class _SwipeActionButtonWidgetState
             child: Container(
               padding: alignment == Alignment.center
                   ? const EdgeInsets.only()
-                  : EdgeInsets.only(right: action.paddingToBoundary ?? 16),
+                  : EdgeInsets.only(right: action.paddingToBoundary),
               alignment: alignment,
               width: alignment == Alignment.center ? offsetX : null,
               child: _buildButtonContent(shouldShowNestedActionInfo),
@@ -296,7 +291,7 @@ class _SwipeActionButtonWidgetState
   Widget _buildButtonContent(bool shouldShowNestedActionInfo) {
     if (whenDeleting) return const SizedBox();
     if (shouldShowNestedActionInfo && action.nestedAction?.content != null) {
-      return action.nestedAction.content;
+      return action.nestedAction!.content!;
     }
 
     return action.title != null || action.icon != null
@@ -307,20 +302,20 @@ class _SwipeActionButtonWidgetState
               _buildTitle(action, shouldShowNestedActionInfo),
             ],
           )
-        : action.content;
+        : action.content!;
   }
 
   Widget _buildIcon(SwipeAction action, bool shouldShowNestedActionInfo) {
     return shouldShowNestedActionInfo
-        ? action.nestedAction.icon ?? const SizedBox()
+        ? action.nestedAction?.icon ?? const SizedBox()
         : action.icon ?? const SizedBox();
   }
 
   Widget _buildTitle(SwipeAction action, bool shouldShowNestedActionInfo) {
     if (shouldShowNestedActionInfo) {
-      if (action.nestedAction.title == null) return const SizedBox();
+      if (action.nestedAction?.title == null) return const SizedBox();
       return Text(
-        action.nestedAction.title,
+        action.nestedAction!.title!,
         overflow: TextOverflow.clip,
         maxLines: 1,
         style: action.style,
@@ -328,7 +323,7 @@ class _SwipeActionButtonWidgetState
     } else {
       if (action.title == null) return const SizedBox();
       return Text(
-        action.title,
+        action.title!,
         overflow: TextOverflow.clip,
         maxLines: 1,
         style: action.style,
@@ -338,8 +333,8 @@ class _SwipeActionButtonWidgetState
 
   @override
   void dispose() {
-    offsetController?.dispose();
-    offsetFillActionContentController?.dispose();
+    offsetController.dispose();
+    offsetFillActionContentController.dispose();
     pullLastButtonSubscription?.cancel();
     pullLastButtonToCoverCellEventSubscription?.cancel();
     closeNestedActionEventSubscription?.cancel();
@@ -358,13 +353,13 @@ class _SwipeActionButtonWidgetState
           vsync: this, duration: const Duration(milliseconds: 350));
       offsetFillActionContentCurve = CurvedAnimation(
           parent: offsetFillActionContentController,
-          curve: action.nestedAction.curve);
+          curve: action.nestedAction!.curve);
     }
   }
 
   void _resetAnimationController(AnimationController controller) {
     lockAnim = true;
-    controller?.value = 0;
+    controller.value = 0;
     lockAnim = false;
   }
 }

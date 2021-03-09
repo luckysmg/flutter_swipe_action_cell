@@ -21,9 +21,9 @@ import 'swipe_data.dart';
 ///
 
 class SwipeActionCell extends StatefulWidget {
-  final List<SwipeAction> trailingActions;
+  final List<SwipeAction>? trailingActions;
 
-  final List<SwipeAction> leadingActions;
+  final List<SwipeAction>? leadingActions;
 
   ///Your content view
   ///无需多言
@@ -49,11 +49,11 @@ class SwipeActionCell extends StatefulWidget {
 
   ///The controller to control edit mode
   ///控制器
-  final SwipeActionController controller;
+  final SwipeActionController? controller;
 
   ///The identifier of edit mode
   ///如果你想用编辑模式，这个参数必传!!! 它的值就是你列表的itemBuilder中的index，直接传进来即可
-  final int index;
+  final int? index;
 
   ///When use edit mode,if you select this row,you will see this indicator on the left of the cell.
   ///（可以不传，有默认组件）当你进入编辑模式的时候，如果你选择了这一行，那么你将会在cell左边看到这个组件
@@ -69,7 +69,7 @@ class SwipeActionCell extends StatefulWidget {
 
   ///Background color for cell and def value = Theme.of(context).scaffoldBackgroundColor)
   ///整个cell控件的背景色 默认是Theme.of(context).scaffoldBackgroundColor
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   ///The offset that cell will move when entering the edit mode
   ///当你进入编辑模式的时候，cell的content向右边移动的距离
@@ -77,15 +77,23 @@ class SwipeActionCell extends StatefulWidget {
   final double editModeOffset;
 
   const SwipeActionCell({
-    @required Key key,
-    @required this.child,
+    required Key key,
+    required this.child,
+
+    ///nullable
     this.trailingActions,
+
+    ///nullable
     this.leadingActions,
     this.isDraggable = true,
     this.closeWhenScrolling = true,
     this.performsFirstActionWithFullSwipe = false,
     this.firstActionWillCoverAllSpaceOnDeleting = true,
+
+    ///nullable
     this.controller,
+
+    ///nullable
     this.index,
     this.selectedIndicator = const Icon(
       Icons.add_circle,
@@ -95,14 +103,11 @@ class SwipeActionCell extends StatefulWidget {
       Icons.do_not_disturb_on,
       color: Colors.red,
     ),
+
+    ///nullable
     this.backgroundColor,
     this.editModeOffset = 60,
-  })  : assert(key != null,
-            "You should pass a key like [ValueKey] or [ObjectKey]"),
-
-        ///关于key ！= null请看下面的注释
-
-        super(key: key);
+  }) : super(key: key);
 
   ///About Key::::::
   ///You should put a key,like [ValueKey] or [ObjectKey]
@@ -121,43 +126,43 @@ class SwipeActionCell extends StatefulWidget {
 
 class SwipeActionCellState extends State<SwipeActionCell>
     with TickerProviderStateMixin {
-  double height;
-  double width;
+  late double height;
+  late double width;
 
-  int actionsCount;
-  int leadingActionsCount;
+  late int actionsCount;
+  late int leadingActionsCount;
 
-  Offset currentOffset;
-  double maxPullWidth;
-  double maxLeadingPullWidth;
+  late Offset currentOffset;
+  late double maxPullWidth;
+  late double maxLeadingPullWidth;
 
-  bool lockAnim;
-  bool lastItemOut;
+  bool lockAnim = false;
+  bool lastItemOut = false;
 
-  AnimationController controller;
-  AnimationController deleteController;
-  AnimationController editController;
+  late AnimationController controller;
+  late AnimationController deleteController;
+  late AnimationController editController;
 
-  Animation<double> animation;
-  Animation<double> curvedAnim;
-  Animation<double> deleteCurvedAnim;
-  Animation<double> editCurvedAnim;
+  late Animation<double> animation;
+  late Animation<double> curvedAnim;
+  late Animation<double> deleteCurvedAnim;
+  late Animation<double> editCurvedAnim;
 
-  ScrollPosition scrollPosition;
+  ScrollPosition? scrollPosition;
 
-  StreamSubscription otherCellOpenEventSubscription;
-  StreamSubscription ignorePointerSubscription;
-  StreamSubscription changeEditingModeSubscription;
-  StreamSubscription selectedSubscription;
+  StreamSubscription? otherCellOpenEventSubscription;
+  StreamSubscription? ignorePointerSubscription;
+  StreamSubscription? changeEditingModeSubscription;
+  StreamSubscription? selectedSubscription;
 
-  bool ignorePointer;
-  bool editing;
-  bool selected;
+  bool ignorePointer = false;
+  late bool editing;
+  late bool selected;
 
-  bool hasAction;
-  bool hasLeadingAction;
-  bool whenActionShowing;
-  bool whenLeadingActionShowing;
+  late bool hasAction;
+  late bool hasLeadingAction;
+  late bool whenActionShowing;
+  late bool whenLeadingActionShowing;
 
   @override
   void initState() {
@@ -215,7 +220,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     lockAnim = true;
     editController.value = 0.0;
     lockAnim = false;
-    widget.controller.selectedSet.remove(widget.index);
+    widget.controller?.selectedSet.remove(widget.index);
     animation = Tween<double>(begin: widget.editModeOffset, end: 0)
         .animate(editCurvedAnim)
           ..addListener(() {
@@ -231,7 +236,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
       return 0.0;
     }
     double sum = 0.0;
-    for (final action in widget.trailingActions) {
+
+    for (final action in widget.trailingActions!) {
       sum += action.widthSpace;
     }
     return sum;
@@ -242,7 +248,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
       return 0.0;
     }
     double sum = 0.0;
-    for (final action in widget.leadingActions) {
+    for (final action in widget.leadingActions!) {
       sum += action.widthSpace;
     }
     return sum;
@@ -256,7 +262,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
       assert(widget.controller != null && widget.index != null);
 
       if (event.selected &&
-          widget.controller.selectedSet.contains(widget.index)) {
+          widget.controller!.selectedSet.contains(widget.index)) {
         setState(() {});
       } else if (!event.selected) {
         if (selected) {
@@ -290,18 +296,18 @@ class SwipeActionCellState extends State<SwipeActionCell>
     });
   }
 
-  void _updateControllerSelectedIndexChangedCallback({bool selected}) {
-    widget.controller.selectedIndexPathsChangeCallback
-        ?.call([widget.index], selected, widget.controller.selectedSet.length);
+  void _updateControllerSelectedIndexChangedCallback({required bool selected}) {
+    widget.controller?.selectedIndexPathsChangeCallback?.call(
+        [widget.index!], selected, widget.controller!.selectedSet.length);
   }
 
   @override
   void dispose() {
     _removeScrollListener();
-    controller?.dispose();
+    controller.dispose();
+    deleteController.dispose();
+    editController.dispose();
     selectedSubscription?.cancel();
-    deleteController?.dispose();
-    editController?.dispose();
     otherCellOpenEventSubscription?.cancel();
     ignorePointerSubscription?.cancel();
     changeEditingModeSubscription?.cancel();
@@ -356,23 +362,23 @@ class SwipeActionCellState extends State<SwipeActionCell>
   void _addScrollListener() {
     if (widget.closeWhenScrolling) {
       scrollPosition = Scrollable.of(context)?.position;
-      scrollPosition?.isScrollingNotifier?.addListener(_scrollListener);
+      scrollPosition?.isScrollingNotifier.addListener(_scrollListener);
     }
   }
 
   void _removeScrollListener() {
-    scrollPosition?.isScrollingNotifier?.removeListener(_scrollListener);
+    scrollPosition?.isScrollingNotifier.removeListener(_scrollListener);
   }
 
   void _scrollListener() {
-    if ((scrollPosition?.isScrollingNotifier?.value ?? false) && !editing) {
+    if ((scrollPosition?.isScrollingNotifier.value ?? false) && !editing) {
       closeWithAnim();
     }
   }
 
   void _onHorizontalDragStart(DragStartDetails details) {
     if (editing) return;
-    SwipeActionStore.getInstance().bus?.fire(CellOpenEvent(key: widget.key));
+    SwipeActionStore.getInstance().bus.fire(CellOpenEvent(key: widget.key!));
     _closeNestedAction();
   }
 
@@ -400,7 +406,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
         if (!lastItemOut) {
           SwipeActionStore.getInstance()
               .bus
-              .fire(PullLastButtonEvent(key: widget.key, isPullingOut: true));
+              .fire(PullLastButtonEvent(key: widget.key!, isPullingOut: true));
           lastItemOut = true;
           HapticFeedback.heavyImpact();
         }
@@ -408,7 +414,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
         if (lastItemOut) {
           SwipeActionStore.getInstance()
               .bus
-              .fire(PullLastButtonEvent(key: widget.key, isPullingOut: false));
+              .fire(PullLastButtonEvent(key: widget.key!, isPullingOut: false));
           lastItemOut = false;
           HapticFeedback.heavyImpact();
         }
@@ -483,7 +489,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
           if (widget.firstActionWillCoverAllSpaceOnDeleting) {
             SwipeActionStore.getInstance()
                 .bus
-                .fire(PullLastButtonToCoverCellEvent(key: widget.key));
+                .fire(PullLastButtonToCoverCellEvent(key: widget.key!));
           }
           deleteWithAnim();
 
@@ -496,9 +502,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
       };
 
       if (whenActionShowing && widget.trailingActions != null) {
-        await widget.trailingActions[0].onTap?.call(completionHandler);
+        await widget.trailingActions?[0].onTap.call(completionHandler);
       } else if (whenLeadingActionShowing && widget.leadingActions != null) {
-        await widget.leadingActions[0].onTap?.call(completionHandler);
+        await widget.leadingActions?[0].onTap.call(completionHandler);
       }
     } else {
       ///normal dragging update
@@ -541,7 +547,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   ///When nestedAction is open ,adjust currentOffset if nestedWidth > currentOffset
-  void adjustOffset({double offsetX, Curve curve, bool trailing}) {
+  void adjustOffset(
+      {required double offsetX, required Curve curve, required bool trailing}) {
     controller.stop();
     final adjustOffsetAnimController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 150));
@@ -557,11 +564,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
             setState(() {});
           });
     adjustOffsetAnimController.forward().whenCompleteOrCancel(() {
-      adjustOffsetAnimController?.dispose();
+      adjustOffsetAnimController.dispose();
     });
   }
 
-  void _openWithAnim({@required bool trailing}) {
+  void _openWithAnim({required bool trailing}) {
     _resetAnimValue();
     animation = Tween<double>(
             begin: currentOffset.dx,
@@ -592,11 +599,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _closeNestedAction() {
-    if (widget.trailingActions?.first?.nestedAction != null ||
-        widget.leadingActions?.first?.nestedAction != null) {
+    if (widget.trailingActions?.first.nestedAction != null ||
+        widget.leadingActions?.first.nestedAction != null) {
       SwipeActionStore.getInstance()
           .bus
-          ?.fire(CloseNestedActionEvent(key: widget.key));
+          .fire(CloseNestedActionEvent(key: widget.key!));
     }
   }
 
@@ -627,10 +634,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   @override
   Widget build(BuildContext context) {
-    editing = widget.controller != null && widget.controller.isEditing;
+    editing = widget.controller != null && widget.controller!.isEditing;
 
     if (widget.controller != null) {
-      selected = widget.controller.selectedSet.contains(widget.index) ?? false;
+      selected = widget.controller!.selectedSet.contains(widget.index);
     } else {
       selected = false;
     }
@@ -655,11 +662,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
                         "如果你要进入编辑模式，请在SwipeActionCell中传入index 参数，他的值就是你列表组件的itemBuilder中返回的index即可");
 
                     if (selected) {
-                      widget.controller.selectedSet.remove(widget.index);
+                      widget.controller?.selectedSet.remove(widget.index);
                       _updateControllerSelectedIndexChangedCallback(
                           selected: false);
                     } else {
-                      widget.controller.selectedSet.add(widget.index);
+                      widget.controller?.selectedSet.add(widget.index!);
                       _updateControllerSelectedIndexChangedCallback(
                           selected: true);
                     }
@@ -687,7 +694,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
                   alignment: Alignment.centerLeft,
                   children: <Widget>[
                     widget.controller != null &&
-                            (widget.controller.isEditing ||
+                            (widget.controller!.isEditing ||
                                 editController.isAnimating)
                         ? _buildSelectedButton(selected)
                         : const SizedBox(),
@@ -752,8 +759,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
     final List<Widget> actionButtons =
         List.generate(leadingActionsCount, (index) {
       final actualIndex = leadingActionsCount - 1 - index;
-      if (widget.leadingActions.length == 1 &&
-          !widget.leadingActions[0].forceAlignmentToBoundary &&
+      if (widget.leadingActions!.length == 1 &&
+          !widget.leadingActions![0].forceAlignmentToBoundary &&
           widget.performsFirstActionWithFullSwipe) {
         return SwipeActionLeadingAlignButtonWidget(
           actionIndex: actualIndex,
@@ -769,9 +776,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
       willPull: lastItemOut && widget.performsFirstActionWithFullSwipe,
       firstActionWillCoverAllSpaceOnDeleting:
           widget.firstActionWillCoverAllSpaceOnDeleting,
-      parentKey: widget.key,
+      parentKey: widget.key!,
       totalActionWidth: maxLeadingPullWidth,
-      actions: widget.leadingActions,
+      actions: widget.leadingActions!,
       contentWidth: width,
       contentHeight: height,
       currentOffset: currentOffset.dx,
@@ -794,7 +801,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     final List<Widget> actionButtons = List.generate(actionsCount, (index) {
       final actualIndex = actionsCount - 1 - index;
       if (actionsCount == 1 &&
-          !widget.trailingActions[0].forceAlignmentToBoundary &&
+          !widget.trailingActions![0].forceAlignmentToBoundary &&
           widget.performsFirstActionWithFullSwipe) {
         return SwipeActionAlignButtonWidget(
           actionIndex: actualIndex,
@@ -810,9 +817,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
       willPull: lastItemOut && widget.performsFirstActionWithFullSwipe,
       firstActionWillCoverAllSpaceOnDeleting:
           widget.firstActionWillCoverAllSpaceOnDeleting,
-      parentKey: widget.key,
+      parentKey: widget.key!,
       totalActionWidth: maxPullWidth,
-      actions: widget.trailingActions,
+      actions: widget.trailingActions!,
       contentWidth: width,
       contentHeight: height,
       currentOffset: currentOffset.dx,
@@ -884,25 +891,25 @@ class SwipeAction {
   final Function(CompletionHandler) onTap;
 
   ///图标
-  final Widget icon;
+  final Widget? icon;
 
   ///标题
-  final String title;
+  final String? title;
 
   ///背景左上(右上）和左下（左上）的圆角
   final double backgroundRadius;
 
   ///嵌套的action
-  final SwipeNestedAction nestedAction;
+  final SwipeNestedAction? nestedAction;
 
   ///If you want to customize your content,you can use this attr.
   ///And don't set [title] and [icon] attrs
   ///如果你想自定义你的按钮内容，那么就设置这个content参数
   ///注意如果你设置了content，那么就不要设置title和icon，两个都必须为null
-  final Widget content;
+  final Widget? content;
 
   const SwipeAction({
-    @required this.onTap,
+    required this.onTap,
     this.title,
     this.style = const TextStyle(fontSize: 18, color: Colors.white),
     this.color = Colors.red,
@@ -921,7 +928,8 @@ class _ContentWidget extends StatefulWidget {
   final Widget child;
   final Function(Size) onLayoutUpdate;
 
-  const _ContentWidget({Key key, this.onLayoutUpdate, this.child})
+  const _ContentWidget(
+      {Key? key, required this.onLayoutUpdate, required this.child})
       : super(key: key);
 
   @override
@@ -932,16 +940,16 @@ class __ContentWidgetState extends State<_ContentWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted) widget.onLayoutUpdate(context.size);
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      if (mounted) widget.onLayoutUpdate(context.size!);
     });
   }
 
   @override
   void didUpdateWidget(_ContentWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted) widget.onLayoutUpdate(context.size);
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      if (mounted) widget.onLayoutUpdate(context.size!);
     });
   }
 
@@ -954,10 +962,10 @@ class __ContentWidgetState extends State<_ContentWidget> {
 ///点击后弹出的action
 class SwipeNestedAction {
   ///图标
-  final Widget icon;
+  final Widget? icon;
 
   ///标题
-  final String title;
+  final String? title;
 
   ///normally,you dont need to set this value.When your [SwipeNestedAction] take more width than
   ///original [SwipeAction] ,you can set this value.
@@ -969,7 +977,7 @@ class SwipeNestedAction {
   ///（这个参数的作用也就是微信ios端消息列表里面，你侧滑"订阅号消息"那个cell所呈现的效果。
   ///因为弹出的"确认删除"四个字需要调整原本宽度
   ///
-  final double nestedWidth;
+  final double? nestedWidth;
 
   ///The Animation Curve when pull the nestedAction
   ///弹出动画的曲线
@@ -982,7 +990,7 @@ class SwipeNestedAction {
   ///If you want to use this attr,please don't set title and icon
   ///你可以通过这个参数来自定义你的nestAction的内容
   ///如果你要使用这个参数，请不要设置title和icon
-  final Widget content;
+  final Widget? content;
 
   SwipeNestedAction({
     this.icon,

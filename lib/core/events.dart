@@ -1,32 +1,32 @@
 import 'package:flutter/widgets.dart';
 
 class CellOpenEvent {
-  CellOpenEvent({this.key});
+  CellOpenEvent({required this.key});
 
   final Key key;
 }
 
 class PullLastButtonEvent {
-  PullLastButtonEvent({this.key, this.isPullingOut});
+  PullLastButtonEvent({this.key, required this.isPullingOut});
 
-  final Key key;
+  final Key? key;
   final bool isPullingOut;
 }
 
 class PullLastButtonToCoverCellEvent {
-  PullLastButtonToCoverCellEvent({this.key});
+  PullLastButtonToCoverCellEvent({required this.key});
 
   final Key key;
 }
 
 class IgnorePointerEvent {
-  IgnorePointerEvent({this.ignore});
+  IgnorePointerEvent({required this.ignore});
 
   final bool ignore;
 }
 
 class CloseNestedActionEvent {
-  CloseNestedActionEvent({this.key});
+  CloseNestedActionEvent({required this.key});
 
   final Key key;
 }
@@ -34,11 +34,11 @@ class CloseNestedActionEvent {
 class EditingModeEvent {
   final bool editing;
 
-  EditingModeEvent({this.editing});
+  EditingModeEvent({required this.editing});
 }
 
 class CellSelectedEvent {
-  CellSelectedEvent({this.selected});
+  CellSelectedEvent({required this.selected});
 
   final bool selected;
 }

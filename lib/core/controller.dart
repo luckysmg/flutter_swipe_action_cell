@@ -21,7 +21,7 @@ class SwipeActionController {
 
   Set<int> selectedSet = Set<int>();
 
-  SelectedIndexPathsChangeCallback selectedIndexPathsChangeCallback;
+  SelectedIndexPathsChangeCallback? selectedIndexPathsChangeCallback;
 
   /// edit mode or not
   ///获取是否正处于编辑模式
@@ -49,11 +49,6 @@ class SwipeActionController {
     _fireEditEvent(editing: isEditing);
   }
 
-  @Deprecated('Use getSelectedIndexPaths()')
-  List<int> getSelectedIndexes() {
-    return List.from(selectedSet);
-  }
-
   ///Get the list of selected cell 's index
   ///拿到选择的cell的索引集合
   List<int> getSelectedIndexPaths({bool sorted = false}) {
@@ -70,7 +65,7 @@ class SwipeActionController {
   ///You still need to call [setState] after calling this method
   ///这个方法只是为了更新内部数据源，你仍然需要在调用这个方法之后
   ///去调用 [setState] 来更新你自己的数据源
-  void deleteCellAt({@required List<int> indexPaths}) {
+  void deleteCellAt({required List<int> indexPaths}) {
     indexPaths.forEach((element) {
       selectedSet.remove(element);
     });
@@ -85,7 +80,7 @@ class SwipeActionController {
 
   ///Select a cell (You must pass [SwipeActionCell.index] attr to your [SwipeActionCell]
   ///选中cell （注意！！！你必须把 index 参数传入cell
-  void selectCellAt({@required List<int> indexPaths}) {
+  void selectCellAt({required List<int> indexPaths}) {
     assert(
         isEditing,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
@@ -100,7 +95,7 @@ class SwipeActionController {
 
   ///Deselect  cells  (You must pass [SwipeActionCell.index] attr to your [SwipeActionCell]
   ///选中一个cell （注意！！！你必须把 index 参数传入cell
-  void deselectCellAt({@required List<int> indexPaths}) {
+  void deselectCellAt({required List<int> indexPaths}) {
     assert(
         isEditing,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
@@ -116,7 +111,7 @@ class SwipeActionController {
 
   ///select all cell
   ///选择所有的cell
-  void selectAll({@required int dataLength}) {
+  void selectAll({required int dataLength}) {
     assert(
         isEditing,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
@@ -143,7 +138,7 @@ class SwipeActionController {
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false));
   }
 
-  void _fireEditEvent({bool editing}) {
+  void _fireEditEvent({required bool editing}) {
     SwipeActionStore.getInstance().bus.fire(EditingModeEvent(editing: editing));
   }
 }
