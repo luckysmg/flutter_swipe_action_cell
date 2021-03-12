@@ -8,11 +8,13 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 
 ## Get started
 
+#### The null safety is available from 1.3.5 ! 
 ##### pub home page click here: [pub](https://pub.dev/packages/flutter_swipe_action_cell)
+
 
 ##### install:
 ```yaml
-flutter_swipe_action_cell: ^1.3.4
+flutter_swipe_action_cell: ^1.3.5
 ```  
 
 ## 1.Preview：

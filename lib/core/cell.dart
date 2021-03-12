@@ -79,21 +79,13 @@ class SwipeActionCell extends StatefulWidget {
   const SwipeActionCell({
     required Key key,
     required this.child,
-
-    ///nullable
     this.trailingActions,
-
-    ///nullable
     this.leadingActions,
     this.isDraggable = true,
     this.closeWhenScrolling = true,
     this.performsFirstActionWithFullSwipe = false,
     this.firstActionWillCoverAllSpaceOnDeleting = true,
-
-    ///nullable
     this.controller,
-
-    ///nullable
     this.index,
     this.selectedIndicator = const Icon(
       Icons.add_circle,
@@ -103,16 +95,14 @@ class SwipeActionCell extends StatefulWidget {
       Icons.do_not_disturb_on,
       color: Colors.red,
     ),
-
-    ///nullable
     this.backgroundColor,
     this.editModeOffset = 60,
   }) : super(key: key);
 
   ///About Key::::::
   ///You should put a key,like [ValueKey] or [ObjectKey]
-  ///dont use [GlobalKey] or [UniqueKey]
-  ///because that will make app slow.
+  ///don't use [GlobalKey] or [UniqueKey]
+  ///because that will make your app slow.
   ///
   ///关于key：：：你应该在构造的时候放入key，推荐使用[ValueKey] 或者 [ObjectKey] 。
   ///最好 不要 使用[GlobalKey]和[UniqueKey]。
@@ -159,7 +149,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   late bool editing;
   late bool selected;
 
-  late bool hasAction;
+  late bool hasTrailingAction;
   late bool hasLeadingAction;
   late bool whenActionShowing;
   late bool whenLeadingActionShowing;
@@ -167,7 +157,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   @override
   void initState() {
     super.initState();
-    hasAction = widget.trailingActions != null;
+    hasTrailingAction = widget.trailingActions != null;
     hasLeadingAction = widget.leadingActions != null;
     lastItemOut = false;
     lockAnim = false;
@@ -324,7 +314,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   @override
   void didUpdateWidget(SwipeActionCell oldWidget) {
     super.didUpdateWidget(oldWidget);
-    hasAction = widget.trailingActions != null;
+    hasTrailingAction = widget.trailingActions != null;
     hasLeadingAction = widget.leadingActions != null;
     actionsCount = widget.trailingActions?.length ?? 0;
     leadingActionsCount = widget.leadingActions?.length ?? 0;
@@ -373,6 +363,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   void _scrollListener() {
     if ((scrollPosition?.isScrollingNotifier.value ?? false) && !editing) {
       closeWithAnim();
+      _closeNestedAction();
     }
   }
 
@@ -387,7 +378,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
     if (!hasLeadingAction && details.delta.dx >= 0 && currentOffset.dx >= 0.0) {
       return;
     }
-    if (!hasAction && details.delta.dx <= 0 && currentOffset.dx <= 0.0) {
+    if (!hasTrailingAction &&
+        details.delta.dx <= 0 &&
+        currentOffset.dx <= 0.0) {
       return;
     }
     if (widget.performsFirstActionWithFullSwipe) {
@@ -472,7 +465,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   ///modify the offset if over scrolled
   void modifyOffsetIfOverScrolled() {
     if ((!hasLeadingAction && currentOffset.dx > 0.0) ||
-        (!hasAction && currentOffset.dx < 0.0)) {
+        (!hasTrailingAction && currentOffset.dx < 0.0)) {
       currentOffset = Offset.zero;
     }
   }
@@ -509,7 +502,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     } else {
       ///normal dragging update
       if (details.velocity.pixelsPerSecond.dx < 0) {
-        if (!whenLeadingActionShowing && hasAction) {
+        if (!whenLeadingActionShowing && hasTrailingAction) {
           _openWithAnim(trailing: true);
         } else {
           closeWithAnim();

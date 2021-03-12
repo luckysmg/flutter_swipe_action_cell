@@ -35,16 +35,16 @@ class _SwipeActionButtonWidgetState
   StreamSubscription? closeNestedActionEventSubscription;
 
   bool whenNestedActionShowing = false;
-  late bool whenFirstAction;
-  bool whenActiveToOffset = false;
+  bool whenActiveToOffset = true;
   bool whenPullingOut = false;
   bool whenDeleting = false;
+  late bool whenFirstAction;
 
   late SwipeData data;
   late SwipeAction action;
 
-  late AnimationController offsetController;
-  late AnimationController offsetFillActionContentController;
+  AnimationController? offsetController;
+  AnimationController? offsetFillActionContentController;
   late Animation<double> widthPullCurve;
   late Animation<double> offsetFillActionContentCurve;
 
@@ -76,7 +76,7 @@ class _SwipeActionButtonWidgetState
               offsetX = animation.value;
               setState(() {});
             });
-      offsetController.forward().whenComplete(() {
+      offsetController?.forward().whenComplete(() {
         whenActiveToOffset = true;
         whenPullingOut = true;
       });
@@ -94,7 +94,7 @@ class _SwipeActionButtonWidgetState
               offsetX = animation.value;
               setState(() {});
             });
-      offsetController.forward().whenComplete(() {
+      offsetController?.forward().whenComplete(() {
         whenActiveToOffset = true;
         whenPullingOut = false;
       });
@@ -144,30 +144,28 @@ class _SwipeActionButtonWidgetState
   }
 
   void _initCompletionHandler() {
-    if (action.onTap != null) {
-      handler = (delete) async {
-        if (delete) {
-          SwipeActionStore.getInstance()
-              .bus
-              .fire(IgnorePointerEvent(ignore: true));
+    handler = (delete) async {
+      if (delete) {
+        SwipeActionStore.getInstance()
+            .bus
+            .fire(IgnorePointerEvent(ignore: true));
 
-          if (data.firstActionWillCoverAllSpaceOnDeleting) {
-            _animToCoverCell();
+        if (data.firstActionWillCoverAllSpaceOnDeleting) {
+          _animToCoverCell();
 
-            ///and avoid layout jumping because of fast animation
-            await Future.delayed(const Duration(milliseconds: 50));
-          }
-          data.parentState.deleteWithAnim();
-
-          ///wait the animation to complete
-          await Future.delayed(const Duration(milliseconds: 401));
-        } else {
-          if (action.closeOnTap) {
-            data.parentState.closeWithAnim();
-          }
+          ///and avoid layout jumping because of fast animation
+          await Future.delayed(const Duration(milliseconds: 50));
         }
-      };
-    }
+        data.parentState.deleteWithAnim();
+
+        ///wait the animation to complete
+        await Future.delayed(const Duration(milliseconds: 401));
+      } else {
+        if (action.closeOnTap) {
+          data.parentState.closeWithAnim();
+        }
+      }
+    };
   }
 
   void _animToCoverCell() {
@@ -181,7 +179,7 @@ class _SwipeActionButtonWidgetState
             offsetX = animation.value;
             setState(() {});
           });
-    offsetController.forward();
+    offsetController?.forward();
   }
 
   void _animToCoverPullActionContent() async {
@@ -222,7 +220,7 @@ class _SwipeActionButtonWidgetState
             offsetX = animation.value;
             setState(() {});
           });
-    offsetFillActionContentController.forward();
+    offsetFillActionContentController?.forward();
   }
 
   @override
@@ -302,7 +300,7 @@ class _SwipeActionButtonWidgetState
               _buildTitle(action, shouldShowNestedActionInfo),
             ],
           )
-        : action.content!;
+        : action.content ?? const SizedBox();
   }
 
   Widget _buildIcon(SwipeAction action, bool shouldShowNestedActionInfo) {
@@ -333,8 +331,8 @@ class _SwipeActionButtonWidgetState
 
   @override
   void dispose() {
-    offsetController.dispose();
-    offsetFillActionContentController.dispose();
+    offsetController?.dispose();
+    offsetFillActionContentController?.dispose();
     pullLastButtonSubscription?.cancel();
     pullLastButtonToCoverCellEventSubscription?.cancel();
     closeNestedActionEventSubscription?.cancel();
@@ -345,21 +343,21 @@ class _SwipeActionButtonWidgetState
     offsetController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 60));
 
-    widthPullCurve =
-        CurvedAnimation(parent: offsetController, curve: Curves.easeInToLinear);
+    widthPullCurve = CurvedAnimation(
+        parent: offsetController!, curve: Curves.easeInToLinear);
 
     if (widget.actionIndex == 0 && action.nestedAction != null) {
       offsetFillActionContentController = AnimationController(
           vsync: this, duration: const Duration(milliseconds: 350));
       offsetFillActionContentCurve = CurvedAnimation(
-          parent: offsetFillActionContentController,
+          parent: offsetFillActionContentController!,
           curve: action.nestedAction!.curve);
     }
   }
 
-  void _resetAnimationController(AnimationController controller) {
+  void _resetAnimationController(AnimationController? controller) {
     lockAnim = true;
-    controller.value = 0;
+    controller?.value = 0;
     lockAnim = false;
   }
 }

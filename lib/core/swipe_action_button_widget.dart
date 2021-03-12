@@ -35,15 +35,15 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
 
   bool whenNestedActionShowing = false;
   bool whenFirstAction = false;
-  bool whenActiveToOffset = false;
+  bool whenActiveToOffset = true;
   bool whenPullingOut = false;
   bool whenDeleting = false;
 
   late SwipeData data;
   late SwipeAction action;
 
-  late AnimationController offsetController;
-  late AnimationController offsetFillActionContentController;
+  AnimationController? offsetController;
+  AnimationController? offsetFillActionContentController;
   late Animation<double> widthPullCurve;
   late Animation<double> offsetFillActionContentCurve;
 
@@ -54,7 +54,6 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   @override
   void initState() {
     super.initState();
-    whenActiveToOffset = true;
     lockAnim = false;
     whenNestedActionShowing = false;
     whenFirstAction = widget.actionIndex == 0;
@@ -78,7 +77,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
               offsetX = animation.value;
               setState(() {});
             });
-      offsetController.forward().whenComplete(() {
+      offsetController?.forward().whenComplete(() {
         whenActiveToOffset = true;
         whenPullingOut = true;
       });
@@ -96,7 +95,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
               offsetX = animation.value;
               setState(() {});
             });
-      offsetController.forward().whenComplete(() {
+      offsetController?.forward().whenComplete(() {
         whenActiveToOffset = true;
         whenPullingOut = false;
       });
@@ -181,7 +180,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
             offsetX = animation.value;
             setState(() {});
           });
-    offsetController.forward();
+    offsetController?.forward();
   }
 
   void _animToCoverPullActionContent() async {
@@ -222,7 +221,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
             offsetX = animation.value;
             setState(() {});
           });
-    offsetFillActionContentController.forward();
+    offsetFillActionContentController?.forward();
   }
 
   @override
@@ -302,7 +301,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
               _buildTitle(action, shouldShowNestedActionInfo),
             ],
           )
-        : action.content!;
+        : action.content ?? const SizedBox();
   }
 
   Widget _buildIcon(SwipeAction action, bool shouldShowNestedActionInfo) {
@@ -333,8 +332,8 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
 
   @override
   void dispose() {
-    offsetController.dispose();
-    offsetFillActionContentController.dispose();
+    offsetController?.dispose();
+    offsetFillActionContentController?.dispose();
     pullLastButtonSubscription?.cancel();
     pullLastButtonToCoverCellEventSubscription?.cancel();
     closeNestedActionEventSubscription?.cancel();
@@ -345,21 +344,21 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
     offsetController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 60));
 
-    widthPullCurve =
-        CurvedAnimation(parent: offsetController, curve: Curves.easeInToLinear);
+    widthPullCurve = CurvedAnimation(
+        parent: offsetController!, curve: Curves.easeInToLinear);
 
     if (widget.actionIndex == 0 && action.nestedAction != null) {
       offsetFillActionContentController = AnimationController(
           vsync: this, duration: const Duration(milliseconds: 350));
       offsetFillActionContentCurve = CurvedAnimation(
-          parent: offsetFillActionContentController,
+          parent: offsetFillActionContentController!,
           curve: action.nestedAction!.curve);
     }
   }
 
-  void _resetAnimationController(AnimationController controller) {
+  void _resetAnimationController(AnimationController? controller) {
     lockAnim = true;
-    controller.value = 0;
+    controller?.value = 0;
     lockAnim = false;
   }
 }

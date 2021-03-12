@@ -37,9 +37,9 @@ class _SwipeActionAlignButtonWidgetState
   late SwipeData data;
   late SwipeAction action;
 
-  late AnimationController offsetController;
-  late AnimationController widthFillActionContentController;
-  late AnimationController alignController;
+  AnimationController? offsetController;
+  AnimationController? widthFillActionContentController;
+  AnimationController? alignController;
   late Animation<double> alignCurve;
   late Animation<double> offsetCurve;
   late Animation<double> widthFillActionContentCurve;
@@ -75,7 +75,7 @@ class _SwipeActionAlignButtonWidgetState
         setState(() {});
       });
 
-      alignController.forward();
+      alignController?.forward();
     } else {
       var tween = AlignmentTween(begin: alignment, end: Alignment.centerRight)
           .animate(alignCurve);
@@ -84,7 +84,7 @@ class _SwipeActionAlignButtonWidgetState
         alignment = tween.value;
         setState(() {});
       });
-      alignController.forward();
+      alignController?.forward();
     }
   }
 
@@ -164,7 +164,7 @@ class _SwipeActionAlignButtonWidgetState
             offsetX = animation.value;
             setState(() {});
           });
-    offsetController.forward();
+    offsetController?.forward();
   }
 
   void _animToCoverPullActionContent() async {
@@ -204,10 +204,10 @@ class _SwipeActionAlignButtonWidgetState
             if (lockAnim) return;
             offsetX = animation.value;
             alignment = Alignment.lerp(alignment, Alignment.center,
-                widthFillActionContentController.value)!;
+                widthFillActionContentController!.value)!;
             setState(() {});
           });
-    widthFillActionContentController.forward();
+    widthFillActionContentController?.forward();
   }
 
   @override
@@ -273,7 +273,7 @@ class _SwipeActionAlignButtonWidgetState
               _buildTitle(action, shouldShowNestedActionInfo),
             ],
           )
-        : action.content!;
+        : action.content ?? const SizedBox();
   }
 
   Widget _buildIcon(SwipeAction action, bool shouldShowNestedActionInfo) {
@@ -304,9 +304,9 @@ class _SwipeActionAlignButtonWidgetState
 
   @override
   void dispose() {
-    offsetController.dispose();
-    alignController.dispose();
-    widthFillActionContentController.dispose();
+    offsetController?.dispose();
+    alignController?.dispose();
+    widthFillActionContentController?.dispose();
     pullLastButtonSubscription?.cancel();
     pullLastButtonToCoverCellEventSubscription?.cancel();
     closeNestedActionEventSubscription?.cancel();
@@ -320,23 +320,23 @@ class _SwipeActionAlignButtonWidgetState
         vsync: this, duration: const Duration(milliseconds: 500));
 
     alignCurve =
-        CurvedAnimation(parent: alignController, curve: Curves.easeOutCirc);
+        CurvedAnimation(parent: alignController!, curve: Curves.easeOutCirc);
 
-    offsetCurve =
-        CurvedAnimation(parent: offsetController, curve: Curves.easeInToLinear);
+    offsetCurve = CurvedAnimation(
+        parent: offsetController!, curve: Curves.easeInToLinear);
 
     if (widget.actionIndex == 0 && action.nestedAction != null) {
       widthFillActionContentController = AnimationController(
           vsync: this, duration: const Duration(milliseconds: 350));
       widthFillActionContentCurve = CurvedAnimation(
-          parent: widthFillActionContentController,
+          parent: widthFillActionContentController!,
           curve: action.nestedAction!.curve);
     }
   }
 
-  void _resetAnimationController(AnimationController controller) {
+  void _resetAnimationController(AnimationController? controller) {
     lockAnim = true;
-    controller.value = 0;
+    controller?.value = 0;
     lockAnim = false;
   }
 }
