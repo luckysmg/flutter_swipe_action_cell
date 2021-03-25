@@ -76,6 +76,10 @@ class SwipeActionCell extends StatefulWidget {
   ///def value = 60
   final double editModeOffset;
 
+  ///The factor describing how far the cell need to be swiped, for swipe to be considered "full"
+  ///def value = 0.75
+  final double fullSwipeFactor;
+
   const SwipeActionCell({
     required Key key,
     required this.child,
@@ -97,6 +101,7 @@ class SwipeActionCell extends StatefulWidget {
     ),
     this.backgroundColor,
     this.editModeOffset = 60,
+    this.fullSwipeFactor = 0.75,
   }) : super(key: key);
 
   ///About Key::::::
@@ -395,7 +400,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
     ///set performsFirstActionWithFullSwipe
     if (widget.performsFirstActionWithFullSwipe) {
-      if (currentOffset.dx.abs() > 0.75 * width) {
+      if (currentOffset.dx.abs() > widget.fullSwipeFactor * width) {
         if (!lastItemOut) {
           SwipeActionStore.getInstance()
               .bus
