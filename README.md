@@ -14,7 +14,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 
 ##### install:
 ```yaml
-flutter_swipe_action_cell: ^2.0.0
+flutter_swipe_action_cell: ^2.0.1
 ```  
 
 ## 1.Preview：
@@ -52,20 +52,6 @@ Edit mode |
 [Preview (YouTobe video)](https://youtu.be/LWuHas8Zspw)
 
 And you can find full example code in [example page](https://pub.dev/packages/flutter_swipe_action_cell/example)
-
-
-### Attention !! After V1.2.0，many attrs' (name) are changed because of the publishment of leading action button
- if you are using this package and you will upgrade to v1.2.0,you should know this.
- 
- Class| Previous Name | Name Today| 
- -------- |  -------- | --------
-  SwipeActionCell | actions | trailingActions |
-  SwipeActionCell | (class name) SwipeActionEditController| (class name) SwipeActionController |
-  SwipeAction | leftPadding | paddingToBoundary
-  SwipeAction | forceAlignmentLeft | forceAlignmentToBoundary
-
-
-<br/>
 
 
 ## Examples

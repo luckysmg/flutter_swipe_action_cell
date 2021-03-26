@@ -77,6 +77,9 @@ class SwipeActionCell extends StatefulWidget {
   final double editModeOffset;
 
   ///The factor describing how far the cell need to be swiped, for swipe to be considered "full"
+  ///only valid when [performsFirstActionWithFullSwipe] = true
+  ///当拖动到cell宽度 * fullSwipeFactor 的这个距离时，将会触发第一个按钮的事件
+  ///注意：[performsFirstActionWithFullSwipe] 为true的时候此参数才有效
   ///def value = 0.75
   final double fullSwipeFactor;
 

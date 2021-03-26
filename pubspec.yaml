@@ -1,6 +1,6 @@
 name: flutter_swipe_action_cell
 description: An awesome UI package incluing iOS style cell swipe action effect.You can use this package to implement iOS style tableView cell swipe action
-version: 2.0.0
+version: 2.0.1
 homepage: https://github.com/luckysmg/flutter_swipe_action_cell
 
 environment:
