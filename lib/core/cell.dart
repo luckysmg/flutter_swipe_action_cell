@@ -9,11 +9,9 @@ import 'package:flutter/widgets.dart';
 import 'controller.dart';
 import 'events.dart';
 import 'store.dart';
-import 'swipe_action_align_button_widget.dart';
-import 'swipe_action_button_widget.dart';
-import 'swipe_action_leading_align_button_widget.dart';
-import 'swipe_action_leading_button_widget.dart';
 import 'swipe_data.dart';
+import 'swipe_pull_align_button.dart';
+import 'swipe_pull_button.dart';
 
 ///
 /// @created by 文景睿
@@ -127,7 +125,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   late double height;
   late double width;
 
-  late int actionsCount;
+  late int trailingActionsCount;
   late int leadingActionsCount;
 
   late Offset currentOffset;
@@ -170,7 +168,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     lastItemOut = false;
     lockAnim = false;
     ignorePointer = false;
-    actionsCount = widget.trailingActions?.length ?? 0;
+    trailingActionsCount = widget.trailingActions?.length ?? 0;
     leadingActionsCount = widget.leadingActions?.length ?? 0;
     maxPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
@@ -324,7 +322,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     super.didUpdateWidget(oldWidget);
     hasTrailingAction = widget.trailingActions != null;
     hasLeadingAction = widget.leadingActions != null;
-    actionsCount = widget.trailingActions?.length ?? 0;
+    trailingActionsCount = widget.trailingActions?.length ?? 0;
     leadingActionsCount = widget.leadingActions?.length ?? 0;
     maxPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
@@ -539,7 +537,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
         }
       }
 
-      if (actionsCount == 1 || leadingActionsCount == 1) {
+      if (trailingActionsCount == 1 || leadingActionsCount == 1) {
         SwipeActionStore.getInstance()
             .bus
             .fire(PullLastButtonEvent(isPullingOut: false));
@@ -727,7 +725,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
                             editController.isAnimating ||
                             editing
                         ? const SizedBox()
-                        : _buildActionButtons(),
+                        : _buildTrailingActionButtons(),
                     currentOffset.dx == 0.0 ||
                             editController.isAnimating ||
                             editing
@@ -763,13 +761,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
       if (widget.leadingActions!.length == 1 &&
           !widget.leadingActions![0].forceAlignmentToBoundary &&
           widget.performsFirstActionWithFullSwipe) {
-        return SwipeActionLeadingAlignButtonWidget(
-          actionIndex: actualIndex,
-        );
+        return SwipePullAlignButton(actionIndex: actualIndex, trailing: false);
       } else {
-        return SwipeActionLeadingButtonWidget(
-          actionIndex: actualIndex,
-        );
+        return SwipePullButton(actionIndex: actualIndex, trailing: false);
       }
     });
 
@@ -795,22 +789,19 @@ class SwipeActionCellState extends State<SwipeActionCell>
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildTrailingActionButtons() {
     if (currentOffset.dx > 0) {
       return const SizedBox();
     }
-    final List<Widget> actionButtons = List.generate(actionsCount, (index) {
-      final actualIndex = actionsCount - 1 - index;
-      if (actionsCount == 1 &&
+    final List<Widget> actionButtons =
+        List.generate(trailingActionsCount, (index) {
+      final actualIndex = trailingActionsCount - 1 - index;
+      if (trailingActionsCount == 1 &&
           !widget.trailingActions![0].forceAlignmentToBoundary &&
           widget.performsFirstActionWithFullSwipe) {
-        return SwipeActionAlignButtonWidget(
-          actionIndex: actualIndex,
-        );
+        return SwipePullAlignButton(actionIndex: actualIndex, trailing: true);
       } else {
-        return SwipeActionButtonWidget(
-          actionIndex: actualIndex,
-        );
+        return SwipePullButton(actionIndex: actualIndex, trailing: true);
       }
     });
 

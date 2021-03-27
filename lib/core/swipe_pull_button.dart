@@ -9,23 +9,28 @@ import 'events.dart';
 import 'store.dart';
 import 'swipe_data.dart';
 
-class SwipeActionButtonWidget extends StatefulWidget {
+///The normal swipe action button
+class SwipePullButton extends StatefulWidget {
   final int actionIndex;
+  final bool trailing;
 
-  const SwipeActionButtonWidget({
+  const SwipePullButton({
     Key? key,
     required this.actionIndex,
+    required this.trailing,
   }) : super(key: key);
 
   @override
-  _SwipeActionButtonWidgetState createState() {
-    return _SwipeActionButtonWidgetState();
+  _SwipePullButtonState createState() {
+    return _SwipePullButtonState();
   }
 }
 
-class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
+class _SwipePullButtonState extends State<SwipePullButton>
     with TickerProviderStateMixin {
+  ///The cell's total offset,not button's
   late double offsetX;
+
   late Alignment alignment;
   late CompletionHandler handler;
 
@@ -33,9 +38,9 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   StreamSubscription? pullLastButtonToCoverCellEventSubscription;
   StreamSubscription? closeNestedActionEventSubscription;
 
+  bool whenActiveToOffset = true;
   bool whenNestedActionShowing = false;
   bool whenFirstAction = false;
-  bool whenActiveToOffset = true;
   bool whenPullingOut = false;
   bool whenDeleting = false;
 
@@ -51,13 +56,15 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
 
   bool lockAnim = false;
 
+  bool get trailing => widget.trailing;
+
   @override
   void initState() {
     super.initState();
     lockAnim = false;
     whenNestedActionShowing = false;
     whenFirstAction = widget.actionIndex == 0;
-    alignment = Alignment.centerLeft;
+    alignment = trailing ? Alignment.centerLeft : Alignment.centerRight;
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       _initAnim();
       _initCompletionHandler();
@@ -140,7 +147,7 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
   void _resetNestedAction() {
     whenActiveToOffset = true;
     whenNestedActionShowing = false;
-    alignment = Alignment.centerLeft;
+    alignment = trailing ? Alignment.centerLeft : Alignment.centerRight;
     setState(() {});
   }
 
@@ -173,7 +180,9 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
     whenDeleting = true;
     _resetAnimationController(offsetController);
     whenActiveToOffset = false;
-    animation = Tween<double>(begin: offsetX, end: -data.contentWidth)
+    animation = Tween<double>(
+            begin: offsetX,
+            end: widget.trailing ? -data.contentWidth : data.contentWidth)
         .animate(widthPullCurve)
           ..addListener(() {
             if (lockAnim) return;
@@ -204,14 +213,16 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
       data.parentState.adjustOffset(
           offsetX: action.nestedAction!.nestedWidth!,
           curve: action.nestedAction!.curve,
-          trailing: true);
+          trailing: widget.trailing);
     }
 
     double endOffset;
     if (action.nestedAction?.nestedWidth != null) {
-      endOffset = -action.nestedAction!.nestedWidth!;
+      endOffset = trailing
+          ? -action.nestedAction!.nestedWidth!
+          : action.nestedAction!.nestedWidth!;
     } else {
-      endOffset = -data.totalActionWidth;
+      endOffset = trailing ? -data.totalActionWidth : data.totalActionWidth;
     }
 
     animation = Tween<double>(begin: offsetX, end: endOffset)
@@ -263,22 +274,22 @@ class _SwipeActionButtonWidgetState extends State<SwipeActionButtonWidget>
         action.onTap.call(handler);
       },
       child: Transform.translate(
-        offset: Offset(data.contentWidth + offsetX, 0),
+        offset: Offset((trailing ? 1 : -1) * data.contentWidth + offsetX, 0),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(action.backgroundRadius),
-                bottomLeft: Radius.circular(action.backgroundRadius)),
+            borderRadius: BorderRadius.circular(action.backgroundRadius),
             color: action.color,
           ),
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: trailing ? Alignment.centerLeft : Alignment.centerRight,
             child: Container(
               padding: alignment == Alignment.center
                   ? const EdgeInsets.only()
-                  : EdgeInsets.only(left: action.paddingToBoundary),
+                  : trailing
+                      ? EdgeInsets.only(left: action.paddingToBoundary)
+                      : EdgeInsets.only(right: action.paddingToBoundary),
               alignment: alignment,
-              width: alignment == Alignment.center ? -offsetX : null,
+              width: alignment == Alignment.center ? offsetX.abs() : null,
               child: _buildButtonContent(shouldShowNestedActionInfo),
             ),
           ),

@@ -9,21 +9,22 @@ import 'events.dart';
 import 'store.dart';
 import 'swipe_data.dart';
 
-class SwipeActionLeadingAlignButtonWidget extends StatefulWidget {
+class SwipePullAlignButton extends StatefulWidget {
   final int actionIndex;
+  final bool trailing;
 
-  const SwipeActionLeadingAlignButtonWidget(
-      {Key? key, required this.actionIndex})
+  const SwipePullAlignButton(
+      {Key? key, required this.actionIndex, required this.trailing})
       : super(key: key);
 
   @override
-  _SwipeActionAlignButtonWidgetState createState() =>
-      _SwipeActionAlignButtonWidgetState();
+  _SwipePullAlignButtonState createState() => _SwipePullAlignButtonState();
 }
 
-class _SwipeActionAlignButtonWidgetState
-    extends State<SwipeActionLeadingAlignButtonWidget>
+class _SwipePullAlignButtonState extends State<SwipePullAlignButton>
     with TickerProviderStateMixin {
+  bool get trailing => widget.trailing;
+
   late double offsetX;
   late Alignment alignment;
   late CompletionHandler handler;
@@ -53,15 +54,9 @@ class _SwipeActionAlignButtonWidgetState
   @override
   void initState() {
     super.initState();
-    whenDeleting = false;
-    lockAnim = false;
-    whenNestedActionShowing = false;
     whenFirstAction = widget.actionIndex == 0;
-    alignment = Alignment.centerLeft;
+    alignment = trailing ? Alignment.centerRight : Alignment.centerLeft;
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      if (action.forceAlignmentToBoundary) {
-        alignment = Alignment.centerLeft;
-      }
       _initAnim();
       _initCompletionHandler();
     });
@@ -72,7 +67,9 @@ class _SwipeActionAlignButtonWidgetState
   void _pullActionButton(bool isPullingOut) {
     _resetAnimationController(alignController);
     if (isPullingOut) {
-      var tween = AlignmentTween(begin: alignment, end: Alignment.centerRight)
+      var tween = AlignmentTween(
+              begin: alignment,
+              end: trailing ? Alignment.centerLeft : Alignment.centerRight)
           .animate(alignCurve);
       tween.addListener(() {
         if (lockAnim) return;
@@ -82,7 +79,9 @@ class _SwipeActionAlignButtonWidgetState
 
       alignController?.forward();
     } else {
-      var tween = AlignmentTween(begin: alignment, end: Alignment.centerLeft)
+      var tween = AlignmentTween(
+              begin: alignment,
+              end: trailing ? Alignment.centerRight : Alignment.centerLeft)
           .animate(alignCurve);
       tween.addListener(() {
         if (lockAnim) return;
@@ -130,7 +129,7 @@ class _SwipeActionAlignButtonWidgetState
 
   void _resetNestedAction() {
     whenNestedActionShowing = false;
-    alignment = Alignment.centerLeft;
+    alignment = trailing ? Alignment.centerRight : Alignment.centerLeft;
     setState(() {});
   }
 
@@ -162,7 +161,9 @@ class _SwipeActionAlignButtonWidgetState
   void _animToCoverCell() {
     whenDeleting = true;
     _resetAnimationController(offsetController);
-    animation = Tween<double>(begin: offsetX, end: data.contentWidth)
+    animation = Tween<double>(
+            begin: offsetX,
+            end: trailing ? -data.contentWidth : data.contentWidth)
         .animate(offsetCurve)
           ..addListener(() {
             if (lockAnim) return;
@@ -176,7 +177,7 @@ class _SwipeActionAlignButtonWidgetState
     if (action.nestedAction?.nestedWidth != null) {
       try {
         assert(
-            action.nestedAction!.nestedWidth! >= data.totalActionWidth,
+            (action.nestedAction?.nestedWidth ?? 0) >= data.totalActionWidth,
             "Your nested width must be larger than the width of all action buttons"
             "\n 你的nestedWidth必须要大于或者等于所有按钮的总长度，否则下面的按钮会显现出来");
       } catch (e) {
@@ -193,14 +194,16 @@ class _SwipeActionAlignButtonWidgetState
       data.parentState.adjustOffset(
           offsetX: action.nestedAction!.nestedWidth!,
           curve: action.nestedAction!.curve,
-          trailing: false);
+          trailing: trailing);
     }
 
     double endOffset;
     if (action.nestedAction?.nestedWidth != null) {
-      endOffset = action.nestedAction!.nestedWidth!;
+      endOffset = trailing
+          ? -action.nestedAction!.nestedWidth!
+          : action.nestedAction!.nestedWidth!;
     } else {
-      endOffset = data.totalActionWidth;
+      endOffset = trailing ? -data.totalActionWidth : data.totalActionWidth;
     }
 
     animation = Tween<double>(begin: offsetX, end: endOffset)
@@ -242,20 +245,18 @@ class _SwipeActionAlignButtonWidgetState
         action.onTap.call(handler);
       },
       child: Transform.translate(
-        offset: Offset(-data.contentWidth + offsetX, 0),
+        offset: Offset((trailing ? 1 : -1) * data.contentWidth + offsetX, 0),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(action.backgroundRadius),
-                bottomRight: Radius.circular(action.backgroundRadius)),
+            borderRadius: BorderRadius.circular(action.backgroundRadius),
             color: action.color,
           ),
           child: Align(
-            alignment: Alignment.centerRight,
+            alignment: trailing ? Alignment.centerLeft : Alignment.centerRight,
             child: Container(
               padding: const EdgeInsets.only(left: 16, right: 16),
               alignment: alignment,
-              width: offsetX,
+              width: offsetX.abs(),
               child: _buildButtonContent(shouldShowNestedActionInfo),
             ),
           ),
@@ -283,13 +284,13 @@ class _SwipeActionAlignButtonWidgetState
 
   Widget _buildIcon(SwipeAction action, bool shouldShowNestedActionInfo) {
     return shouldShowNestedActionInfo
-        ? action.nestedAction!.icon ?? const SizedBox()
+        ? action.nestedAction?.icon ?? const SizedBox()
         : action.icon ?? const SizedBox();
   }
 
   Widget _buildTitle(SwipeAction action, bool shouldShowNestedActionInfo) {
     if (shouldShowNestedActionInfo) {
-      if (action.nestedAction!.title == null) return const SizedBox();
+      if (action.nestedAction?.title == null) return const SizedBox();
       return Text(
         action.nestedAction!.title!,
         overflow: TextOverflow.clip,

@@ -14,7 +14,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 
 ##### install:
 ```yaml
-flutter_swipe_action_cell: ^2.0.1
+flutter_swipe_action_cell: ^2.0.2
 ```  
 
 ## 1.Preview：
