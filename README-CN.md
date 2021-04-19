@@ -19,7 +19,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^2.0.2
+flutter_swipe_action_cell: ^2.0.3
 ```
 
  <br/>
@@ -54,6 +54,11 @@ flutter_swipe_action_cell: ^2.0.2
 -------- |
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/>|
 
+
+
+### 最新更新（v2.0.3）：
+取消`SwipeAction`中的 `paddingToBoundary`参数，按钮内部内容将自动居中
+
 ###  1.目前已经实现的内容 ：
 - [x] 支持左右两边拉出的按钮
 - [x] 拉出按钮，顺滑的拉出动画和回弹动画
@@ -70,9 +75,8 @@ flutter_swipe_action_cell: ^2.0.2
 ###  2.已经在版本中实现但是未稳定的内容： 
 无
 
-
 ###  3.下一步可能要实现的内容 (不保证一定实现)：
-- [ ] 拉出时多个按钮提供不同的offset计算方式，不同的叠放方式
+无
 
 
 ### 4. 如果你开发中遇到bug请滚动到此页面最下面来确认 ！！

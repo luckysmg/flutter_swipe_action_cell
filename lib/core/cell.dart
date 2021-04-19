@@ -862,10 +862,6 @@ class SwipeAction {
   ///点击这个按钮的时候，是否关闭actions 默认为true
   final bool closeOnTap;
 
-  ///the distance between the title content and boundary,default value is 16
-  ///标题内容与action button左/右边界的距离，方便自定义，默认为16
-  final double paddingToBoundary;
-
   ///When you have just one button,if it is on leading/trailing,set this param to true will
   ///make the content inside button [Alignment.centerRight] / [Alignment.centerLeft]
   final bool forceAlignmentToBoundary;
@@ -905,7 +901,6 @@ class SwipeAction {
     this.title,
     this.style = const TextStyle(fontSize: 18, color: Colors.white),
     this.color = Colors.red,
-    this.paddingToBoundary = 16,
     this.icon,
     this.closeOnTap = true,
     this.backgroundRadius = 0.0,

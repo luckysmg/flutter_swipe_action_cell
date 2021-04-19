@@ -283,15 +283,11 @@ class _SwipePullButtonState extends State<SwipePullButton>
           child: Align(
             alignment: trailing ? Alignment.centerLeft : Alignment.centerRight,
             child: Container(
-              padding: alignment == Alignment.center
-                  ? const EdgeInsets.only()
-                  : trailing
-                      ? EdgeInsets.only(left: action.paddingToBoundary)
-                      : EdgeInsets.only(right: action.paddingToBoundary),
-              alignment: alignment,
-              width: alignment == Alignment.center ? offsetX.abs() : null,
-              child: _buildButtonContent(shouldShowNestedActionInfo),
-            ),
+                alignment: Alignment.center,
+                width: shouldShowNestedActionInfo
+                    ? offsetX.abs()
+                    : action.widthSpace,
+                child: _buildButtonContent(shouldShowNestedActionInfo)),
           ),
         ),
       ),
