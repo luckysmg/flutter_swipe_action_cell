@@ -1,4 +1,4 @@
-## [2.0.4] - fix bug when delete cell using controller
+## [2.0.4] - fix bug when delete cell using controller,and add tap close area widget
 ## [2.0.3] - cancel action的paddingToBoundary，content center automatically
 ## [2.0.2] - bugfix
 ## [2.0.1] - customize fullDrag
