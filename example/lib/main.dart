@@ -62,65 +62,71 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: CupertinoButton.filled(
-          child: Text('switch'),
-          onPressed: () {
-            controller.toggleEditingMode();
-          }),
-      appBar: CupertinoNavigationBar(
-        middle: CupertinoButton.filled(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            minSize: 0,
-            child: Text('deselect all', style: TextStyle(fontSize: 22)),
+
+    ///What's the tap-close area ??
+    ///When you tap any position in this
+    ///area,all opening cell will close.
+    return SwipeActionCellTapCloseArea(
+      child: Scaffold(
+        floatingActionButton: CupertinoButton.filled(
+            child: Text('switch'),
             onPressed: () {
-              controller.deselectAll();
+              controller.toggleEditingMode();
             }),
-        leading: CupertinoButton.filled(
-            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-            minSize: 0,
-            child: Text(
-                'delete cells (${controller.getSelectedIndexPaths().length})',
-                style: TextStyle(color: Colors.white)),
-            onPressed: () {
-              ///获取选取的索引集合
-              List<int> selectedIndexes = controller.getSelectedIndexPaths();
+        appBar: CupertinoNavigationBar(
+          middle: CupertinoButton.filled(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              minSize: 0,
+              child: Text('deselect all', style: TextStyle(fontSize: 22)),
+              onPressed: () {
+                controller.deselectAll();
+              }),
+          leading: CupertinoButton.filled(
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+              minSize: 0,
+              child: Text(
+                  'delete cells (${controller.getSelectedIndexPaths().length})',
+                  style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                ///获取选取的索引集合
+                List<int> selectedIndexes = controller.getSelectedIndexPaths();
 
-              List<String> idList = [];
-              selectedIndexes.forEach((element) {
-                idList.add(list[element].id);
-              });
-
-              ///遍历id集合，并且在原来的list中删除这些id所对应的数据
-              idList.forEach((itemId) {
-                list.removeWhere((element) {
-                  return element.id == itemId;
+                List<String> idList = [];
+                selectedIndexes.forEach((element) {
+                  idList.add(list[element].id);
                 });
-              });
 
-              ///更新内部数据，这句话一定要写哦
-              controller.deleteCellAt(indexPaths: selectedIndexes);
-              setState(() {});
-            }),
-        trailing: CupertinoButton.filled(
-            minSize: 0,
-            padding: EdgeInsets.all(10),
-            child: Text('select all'),
-            onPressed: () {
-              controller.selectAll(dataLength: list.length);
-            }),
-      ),
-      body: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        itemCount: list.length,
-        itemBuilder: (context, index) {
-          return _item(index);
-        },
+                ///遍历id集合，并且在原来的list中删除这些id所对应的数据
+                idList.forEach((itemId) {
+                  list.removeWhere((element) {
+                    return element.id == itemId;
+                  });
+                });
+
+                ///更新内部数据，这句话一定要写哦
+                controller.deleteCellAt(indexPaths: selectedIndexes);
+                setState(() {});
+              }),
+          trailing: CupertinoButton.filled(
+              minSize: 0,
+              padding: EdgeInsets.all(10),
+              child: Text('select all'),
+              onPressed: () {
+                controller.selectAll(dataLength: list.length);
+              }),
+        ),
+        body: ListView.builder(
+          physics: BouncingScrollPhysics(),
+          itemCount: list.length,
+          itemBuilder: (context, index) {
+            return _item(context, index);
+          },
+        ),
       ),
     );
   }
 
-  Widget _item(int index) {
+  Widget _item(BuildContext ctx, int index) {
     return SwipeActionCell(
       controller: controller,
       index: index,
@@ -148,10 +154,18 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
         SwipeAction(
             title: "action3", color: Colors.orange, onTap: (handler) {}),
       ],
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Text("This is index of ${list[index]}",
-            style: TextStyle(fontSize: 25)),
+      child: GestureDetector(
+        onTap: () {
+          Scaffold.of(ctx)..showSnackBar(SnackBar(
+              content: Text(
+            'tap',
+          )));
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text("This is index of ${list[index]}",
+              style: TextStyle(fontSize: 25)),
+        ),
       ),
     );
   }
