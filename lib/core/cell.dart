@@ -129,7 +129,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   late int leadingActionsCount;
 
   late Offset currentOffset;
-  late double maxPullWidth;
+  late double maxTrailingPullWidth;
   late double maxLeadingPullWidth;
 
   bool lockAnim = false;
@@ -157,7 +157,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   late bool hasTrailingAction;
   late bool hasLeadingAction;
-  late bool whenActionShowing;
+  late bool whenTrailingActionShowing;
   late bool whenLeadingActionShowing;
 
   @override
@@ -170,7 +170,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     ignorePointer = false;
     trailingActionsCount = widget.trailingActions?.length ?? 0;
     leadingActionsCount = widget.leadingActions?.length ?? 0;
-    maxPullWidth = _getTrailingMaxPullWidth();
+    maxTrailingPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
     currentOffset = Offset.zero;
 
@@ -324,7 +324,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     hasLeadingAction = widget.leadingActions != null;
     trailingActionsCount = widget.trailingActions?.length ?? 0;
     leadingActionsCount = widget.leadingActions?.length ?? 0;
-    maxPullWidth = _getTrailingMaxPullWidth();
+    maxTrailingPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
     if (widget.closeWhenScrolling != oldWidget.closeWhenScrolling) {
       _removeScrollListener();
@@ -436,21 +436,21 @@ class SwipeActionCellState extends State<SwipeActionCell>
     ///When currentOffset.dx == 0,need to exec this code to judge which direction
     if (currentOffset.dx == 0.0) {
       if (details.delta.dx < 0) {
-        whenActionShowing = true;
+        whenTrailingActionShowing = true;
       } else if (details.delta.dx > 0) {
         whenLeadingActionShowing = true;
       }
     }
 
-    if (whenActionShowing) {
-      if (-currentOffset.dx > maxPullWidth && details.delta.dx < 0) {
+    if (whenTrailingActionShowing) {
+      if (-currentOffset.dx > maxTrailingPullWidth && details.delta.dx < 0) {
         currentOffset += Offset(details.delta.dx / 9, 0);
       } else {
         currentOffset += Offset(details.delta.dx, 0);
       }
 
-      if (currentOffset.dx < -maxPullWidth - 100) {
-        currentOffset = Offset(-maxPullWidth - 100, 0);
+      if (currentOffset.dx < -maxTrailingPullWidth - 100) {
+        currentOffset = Offset(-maxTrailingPullWidth - 100, 0);
       }
     } else if (whenLeadingActionShowing) {
       if (currentOffset.dx > maxLeadingPullWidth && details.delta.dx > 0) {
@@ -500,7 +500,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
         }
       };
 
-      if (whenActionShowing && widget.trailingActions != null) {
+      if (whenTrailingActionShowing && widget.trailingActions != null) {
         await widget.trailingActions?[0].onTap.call(completionHandler);
       } else if (whenLeadingActionShowing && widget.leadingActions != null) {
         await widget.leadingActions?[0].onTap.call(completionHandler);
@@ -515,7 +515,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
         }
         return;
       } else if (details.velocity.pixelsPerSecond.dx > 0) {
-        if (!whenActionShowing && hasLeadingAction) {
+        if (!whenTrailingActionShowing && hasLeadingAction) {
           _openWithAnim(trailing: false);
         } else {
           closeWithAnim();
@@ -523,8 +523,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
         return;
       }
 
-      if (whenActionShowing) {
-        if (-currentOffset.dx < maxPullWidth / 4) {
+      if (whenTrailingActionShowing) {
+        if (-currentOffset.dx < maxTrailingPullWidth / 4) {
           closeWithAnim();
         } else {
           _openWithAnim(trailing: true);
@@ -571,7 +571,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     _resetAnimValue();
     animation = Tween<double>(
             begin: currentOffset.dx,
-            end: trailing ? -maxPullWidth : maxLeadingPullWidth)
+            end: trailing ? -maxTrailingPullWidth : maxLeadingPullWidth)
         .animate(curvedAnim)
           ..addListener(() {
             if (lockAnim) return;
@@ -617,8 +617,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
       ..addListener(() {
         ///When quickly click the delete button,the animation will not be seen
         ///so the code below is to solve this problem....
-        if (whenActionShowing) {
-          currentOffset = Offset(-maxPullWidth, 0);
+        if (whenTrailingActionShowing) {
+          currentOffset = Offset(-maxTrailingPullWidth, 0);
         } else if (whenLeadingActionShowing) {
           currentOffset = Offset(maxLeadingPullWidth, 0);
         }
@@ -641,7 +641,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
       selected = false;
     }
 
-    whenActionShowing = currentOffset.dx < 0;
+    whenTrailingActionShowing = currentOffset.dx < 0;
     whenLeadingActionShowing = currentOffset.dx > 0;
 
     return IgnorePointer(
@@ -746,7 +746,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
       decoration: BoxDecoration(color: widget.backgroundColor),
       alignment: Alignment.center,
       width: widget.editModeOffset,
-      height: height,
       child: selected ? widget.selectedIndicator : widget.unselectedIndicator,
     );
   }
@@ -810,7 +809,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
       firstActionWillCoverAllSpaceOnDeleting:
           widget.firstActionWillCoverAllSpaceOnDeleting,
       parentKey: widget.key!,
-      totalActionWidth: maxPullWidth,
+      totalActionWidth: maxTrailingPullWidth,
       actions: widget.trailingActions!,
       contentWidth: width,
       contentHeight: height,

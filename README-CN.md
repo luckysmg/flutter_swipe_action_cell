@@ -19,7 +19,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^2.0.3
+flutter_swipe_action_cell: ^2.0.4
 ```
 
  <br/>
@@ -56,8 +56,8 @@ flutter_swipe_action_cell: ^2.0.3
 
 
 
-### 最新更新（v2.0.3）：
-取消`SwipeAction`中的 `paddingToBoundary`参数，按钮内部内容将自动居中
+### 最新更新（v2.0.4）：
+修复利用controller删除cell的红屏bug
 
 ###  1.目前已经实现的内容 ：
 - [x] 支持左右两边拉出的按钮

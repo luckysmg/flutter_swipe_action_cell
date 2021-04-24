@@ -1,38 +1,39 @@
-## [2.0.3] - 取消action的paddingToBoundary属性，按钮内部内容实现自动居中
-## [2.0.2] - 内部架构优化
-## [2.0.1] - 增加自定义拉满效果的比例参数
-## [2.0.0] - 开始合并空安全并且解决滑动的时候不会关闭嵌套按钮的bug
-## [1.3.4] - 优化：在cell打开的时候，点击内容会关闭cell而不是响应内部事件
-## [1.3.3] - 修复在利用controller关闭cell时nestedAction显示
-## [1.3.2] - 修复在编辑模式下自定义indicator大小不正常的bug
-## [1.3.1] - 在利用controller获取选取的集合的时候允许获取排序后的集合
-## [1.3.0] - 修复在controller传入的时候，并且左边利用自定义布局的时候编辑按钮显示的问题
-## [1.2.7] - 修复在overScroll时候的offset边界处理
-## [1.2.6] - 允许两个action传入null
-## [1.2.5] - 修复编辑模式狂点状态不统一的bug
-## [1.2.4] - 增加自定义editModeOffset功能
-## [1.2.3] - 添加cell的自定义背景颜色功能
-## [1.2.2] - 添加选择/取消选择/全选/取消全选每个cell的监听回调功能
-## [1.2.1] - 更新文档（一次不向下兼容命名的更新）
-## [1.2.0] - 规范命名（一次不向下兼容命名的更新）
-## [1.1.2] - 修改文档
-## [1.1.1] - 增加左边的按钮
-## [1.1.0] - 修复编辑模式下的bug
-## [1.0.9] - 兼容1.22，取消overflow参数
-## [1.0.8] - 规范controller.selectAll的API
-## [1.0.7] - 给controller添加选择，取消选择，全选，取消全选功能
-## [1.0.6+1] - 给controller添加选择，取消选择，全选，取消全选功能
-## [1.0.6] - 增加取消侧滑的功能
-## [1.0.5+9] - 增加取消侧滑的功能
-## [1.0.5+8] - 增加取消侧滑的功能
-## [1.0.5+7] - 优化代码，提升性能
-## [1.0.5+6] - 对齐修复
-## [1.0.5+5] - 导入修复
-## [1.0.5+4] - 进一步优化一个button时的弹出动画
-## [1.0.5+4] - 修复弹出动画
-## [1.0.5+2] - 给SwipeAction和SwipeNestedAction提供自定义内容的能力
-## [1.0.5+1] - 1.SwipeActionEditController提供一个关闭已经打开cell的API。  2.性能优化
-## [1.0.5] - 基本bug测试完毕，优化import文件，1.0.5发布
+## [2.0.4] - fix bug when delete cell using controller
+## [2.0.3] - cancel action的paddingToBoundary，content center automatically
+## [2.0.2] - bugfix
+## [2.0.1] - customize fullDrag
+## [2.0.0] - bugfix
+## [1.3.4] - bugfix
+## [1.3.3] - bugfix
+## [1.3.2] - bugfix
+## [1.3.1] - bugfix
+## [1.3.0] - bugfix
+## [1.2.7] - bugfix
+## [1.2.6] - actions nullable
+## [1.2.5] - bugfix
+## [1.2.4] - customizable editModeOffset
+## [1.2.3] - cell can customize bg color
+## [1.2.2] - add select cell call back
+## [1.2.1] - modify foc
+## [1.2.0] - modify doc
+## [1.1.2] - modify doc
+## [1.1.1] - bugfix
+## [1.1.0] - bugfix
+## [1.0.9] - cancel overflow
+## [1.0.8] - bugfix
+## [1.0.7] - controller can selectAll can unselectAll
+## [1.0.6+1] - bugfix
+## [1.0.6] - bugfix
+## [1.0.5+9] - bugfix
+## [1.0.5+8] - bugfix
+## [1.0.5+7] - bugfix
+## [1.0.5+6] - bugfix
+## [1.0.5+5] - bugfix
+## [1.0.5+4] - bugfix
+## [1.0.5+4] - bugfix
+## [1.0.5+2] - customizable content
+## [1.0.5+1] - controller can close cell
+## [1.0.5] - bugfix
 ## [1.0.4+7] - doc fixed
 ## [1.0.4+6] - doc fixed
 ## [1.0.4+5] - Add edit mode
