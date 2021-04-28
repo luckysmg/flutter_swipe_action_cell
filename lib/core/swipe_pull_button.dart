@@ -164,13 +164,13 @@ class _SwipePullButtonState extends State<SwipePullButton>
           ///and avoid layout jumping because of fast animation
           await Future.delayed(const Duration(milliseconds: 50));
         }
-        data.parentState.deleteWithAnim();
 
         ///wait the animation to complete
-        await Future.delayed(const Duration(milliseconds: 401));
+        await data.parentState.deleteWithAnim();
       } else {
         if (action.closeOnTap) {
-          data.parentState.closeWithAnim();
+          _resetNestedAction();
+          await data.parentState.closeWithAnim();
         }
       }
     };

@@ -490,13 +490,15 @@ class SwipeActionCellState extends State<SwipeActionCell>
                 .bus
                 .fire(PullLastButtonToCoverCellEvent(key: widget.key!));
           }
-          deleteWithAnim();
 
           ///wait animation to complete
-          await Future.delayed(const Duration(milliseconds: 500));
+          await deleteWithAnim();
         } else {
           lastItemOut = false;
-          closeWithAnim();
+          _closeNestedAction();
+
+          ///wait animation to complete
+          await closeWithAnim();
         }
       };
 
@@ -582,7 +584,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
     controller.forward();
   }
 
-  void closeWithAnim() async {
+  ///close this cell and return the [Future] of the animation
+  Future<void> closeWithAnim() async {
     _resetAnimValue();
     if (mounted) {
       animation =
@@ -593,7 +596,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
               setState(() {});
             });
 
-      controller.forward();
+      return controller.forward();
     }
   }
 
@@ -612,7 +615,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
     lockAnim = false;
   }
 
-  void deleteWithAnim() async {
+  ///delete this cell and return the [Future] of the animation
+  Future<void> deleteWithAnim() async {
     animation = Tween<double>(begin: 1.0, end: 0.01).animate(deleteCurvedAnim)
       ..addListener(() {
         ///When quickly click the delete button,the animation will not be seen
@@ -624,11 +628,12 @@ class SwipeActionCellState extends State<SwipeActionCell>
         }
       });
 
-    deleteController.reverse().whenCompleteOrCancel(() {
-      SwipeActionStore.getInstance()
-          .bus
-          .fire(IgnorePointerEvent(ignore: false));
-    });
+    return deleteController.reverse()
+      ..whenCompleteOrCancel(() {
+        SwipeActionStore.getInstance()
+            .bus
+            .fire(IgnorePointerEvent(ignore: false));
+      });
   }
 
   @override
