@@ -14,7 +14,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 
 ##### install:
 ```yaml
-flutter_swipe_action_cell: ^2.0.4
+flutter_swipe_action_cell: ^2.0.5
 ```  
 
 ## 1.Preview：
@@ -45,11 +45,6 @@ With leading Action and trailing action |
 Edit mode | 
 -------- |
 <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/> |
-
-
-## Latest update (v2.0.4):
-bugfix:Red screen when delete cell using controller
-
 
 
 ## Full example:

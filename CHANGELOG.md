@@ -1,3 +1,4 @@
+## [2.0.5] - fix bug about using handler and make some animation's duration customizable.
 ## [2.0.4] - fix bug when delete cell using controller,and add tap close area widget
 ## [2.0.3] - cancel action的paddingToBoundary，content center automatically
 ## [2.0.2] - bugfix

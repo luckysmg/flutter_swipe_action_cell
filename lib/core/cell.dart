@@ -81,6 +81,14 @@ class SwipeActionCell extends StatefulWidget {
   ///def value = 0.75
   final double fullSwipeFactor;
 
+  ///The normal animation duration,such as open animation and close animation duration. The unit is ms
+  ///普通动画的执行时间，比如开启动画，关闭动画,单位是毫秒
+  final int normalAnimationDuration;
+
+  ///The animation duration of the delete animation.The unit is ms.
+  ///删除动画的执行时间。单位是毫秒
+  final int deleteAnimationDuration;
+
   const SwipeActionCell({
     required Key key,
     required this.child,
@@ -103,6 +111,8 @@ class SwipeActionCell extends StatefulWidget {
     this.backgroundColor,
     this.editModeOffset = 60,
     this.fullSwipeFactor = 0.75,
+    this.deleteAnimationDuration = 400,
+    this.normalAnimationDuration = 500,
   }) : super(key: key);
 
   ///About Key::::::
@@ -176,13 +186,13 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: Duration(milliseconds: widget.normalAnimationDuration),
       value: 0.0,
     );
     deleteController = AnimationController(
       vsync: this,
       value: 1.0,
-      duration: const Duration(milliseconds: 400),
+      duration: Duration(milliseconds: widget.deleteAnimationDuration),
     );
     editController = AnimationController(
       vsync: this,

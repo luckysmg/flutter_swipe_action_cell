@@ -62,66 +62,60 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    ///What's the tap-close area ??
-    ///When you tap any position in this
-    ///area,all opening cell will close.
-    return SwipeActionCellTapCloseArea(
-      child: Scaffold(
-        floatingActionButton: CupertinoButton.filled(
-            child: Text('switch'),
+    return Scaffold(
+      floatingActionButton: CupertinoButton.filled(
+          child: Text('switch'),
+          onPressed: () {
+            controller.toggleEditingMode();
+          }),
+      appBar: CupertinoNavigationBar(
+        middle: CupertinoButton.filled(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            minSize: 0,
+            child: Text('deselect all', style: TextStyle(fontSize: 22)),
             onPressed: () {
-              controller.toggleEditingMode();
+              controller.deselectAll();
             }),
-        appBar: CupertinoNavigationBar(
-          middle: CupertinoButton.filled(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              minSize: 0,
-              child: Text('deselect all', style: TextStyle(fontSize: 22)),
-              onPressed: () {
-                controller.deselectAll();
-              }),
-          leading: CupertinoButton.filled(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-              minSize: 0,
-              child: Text(
-                  'delete cells (${controller.getSelectedIndexPaths().length})',
-                  style: TextStyle(color: Colors.white)),
-              onPressed: () {
-                ///获取选取的索引集合
-                List<int> selectedIndexes = controller.getSelectedIndexPaths();
+        leading: CupertinoButton.filled(
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+            minSize: 0,
+            child: Text(
+                'delete cells (${controller.getSelectedIndexPaths().length})',
+                style: TextStyle(color: Colors.white)),
+            onPressed: () {
+              ///获取选取的索引集合
+              List<int> selectedIndexes = controller.getSelectedIndexPaths();
 
-                List<String> idList = [];
-                selectedIndexes.forEach((element) {
-                  idList.add(list[element].id);
+              List<String> idList = [];
+              selectedIndexes.forEach((element) {
+                idList.add(list[element].id);
+              });
+
+              ///遍历id集合，并且在原来的list中删除这些id所对应的数据
+              idList.forEach((itemId) {
+                list.removeWhere((element) {
+                  return element.id == itemId;
                 });
+              });
 
-                ///遍历id集合，并且在原来的list中删除这些id所对应的数据
-                idList.forEach((itemId) {
-                  list.removeWhere((element) {
-                    return element.id == itemId;
-                  });
-                });
-
-                ///更新内部数据，这句话一定要写哦
-                controller.deleteCellAt(indexPaths: selectedIndexes);
-                setState(() {});
-              }),
-          trailing: CupertinoButton.filled(
-              minSize: 0,
-              padding: EdgeInsets.all(10),
-              child: Text('select all'),
-              onPressed: () {
-                controller.selectAll(dataLength: list.length);
-              }),
-        ),
-        body: ListView.builder(
-          physics: BouncingScrollPhysics(),
-          itemCount: list.length,
-          itemBuilder: (context, index) {
-            return _item(context, index);
-          },
-        ),
+              ///更新内部数据，这句话一定要写哦
+              controller.deleteCellAt(indexPaths: selectedIndexes);
+              setState(() {});
+            }),
+        trailing: CupertinoButton.filled(
+            minSize: 0,
+            padding: EdgeInsets.all(10),
+            child: Text('select all'),
+            onPressed: () {
+              controller.selectAll(dataLength: list.length);
+            }),
+      ),
+      body: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          return _item(context, index);
+        },
       ),
     );
   }
@@ -131,6 +125,10 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
       controller: controller,
       index: index,
       key: ValueKey(list[index]),
+
+      ///animation default value below...
+      normalAnimationDuration: 500,
+      deleteAnimationDuration: 400,
       performsFirstActionWithFullSwipe: true,
       trailingActions: [
         SwipeAction(
@@ -138,6 +136,7 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
             nestedAction: SwipeNestedAction(title: "confirm"),
             onTap: (handler) async {
               await handler(true);
+
               list.removeAt(index);
               setState(() {});
             }),
@@ -156,10 +155,13 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
       ],
       child: GestureDetector(
         onTap: () {
-          Scaffold.of(ctx)..showSnackBar(SnackBar(
+          Scaffold.of(ctx)
+            ..showSnackBar(SnackBar(
               content: Text(
-            'tap',
-          )));
+                'tap',
+              ),
+              duration: const Duration(seconds: 1),
+            ));
         },
         child: Padding(
           padding: const EdgeInsets.all(15.0),
