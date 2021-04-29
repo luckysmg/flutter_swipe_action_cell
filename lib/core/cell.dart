@@ -162,6 +162,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
   StreamSubscription? selectedSubscription;
 
   bool ignorePointer = false;
+
+  ///bool field to avoid  action button be tapped open when cell is closing
+  bool ignoreActionButtonHit = false;
+
   late bool editing;
   late bool selected;
 
@@ -596,6 +600,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   ///close this cell and return the [Future] of the animation
   Future<void> closeWithAnim() async {
+    //when close animation is running,ignore action button hit test
+    ignoreActionButtonHit = true;
     _resetAnimValue();
     if (mounted) {
       animation =
@@ -606,7 +612,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
               setState(() {});
             });
 
-      return controller.forward();
+      return controller.forward()
+        ..whenCompleteOrCancel(() {
+          ignoreActionButtonHit = false;
+        });
     }
   }
 

@@ -262,6 +262,10 @@ class _SwipePullButtonState extends State<SwipePullButton>
 
     return GestureDetector(
       onTap: () {
+        if (data.parentState.ignoreActionButtonHit) {
+          return;
+        }
+
         if (whenFirstAction &&
             action.nestedAction != null &&
             !whenNestedActionShowing) {
