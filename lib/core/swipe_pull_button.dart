@@ -354,12 +354,12 @@ class _SwipePullButtonState extends State<SwipePullButton>
     widthPullCurve = CurvedAnimation(
         parent: offsetController!, curve: Curves.easeInToLinear);
 
-    if (widget.actionIndex == 0 && action.nestedAction != null) {
+    if (widget.actionIndex == 0) {
       offsetFillActionContentController = AnimationController(
           vsync: this, duration: const Duration(milliseconds: 350));
       offsetFillActionContentCurve = CurvedAnimation(
           parent: offsetFillActionContentController!,
-          curve: action.nestedAction!.curve);
+          curve: action.nestedAction?.curve ?? Curves.easeOutQuart);
     }
   }
 
