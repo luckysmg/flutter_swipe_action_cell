@@ -1,5 +1,7 @@
  # flutter_swipe_action_cell
  一个强大的列表项侧滑库
+
+### 如果你喜欢这个库，不要吝啬你的star😀，这个项目的star越多，说明这个库越受欢迎，使用的人越多，我也就会花更多的时间在这个库上。
  
  ### Language: 
  [English](https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/README.md)

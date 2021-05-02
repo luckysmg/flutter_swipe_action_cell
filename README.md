@@ -6,6 +6,9 @@
 
 A package that can give you a cell that can be swiped ,effect is like iOS native
 
+### If you like this package,you can give me a star😀.The more stars this project has,the more time I will take in the project😀
+
+
 ## Get started
 
 #### The null safety is available from 2.0.0 ! 
