@@ -1,3 +1,4 @@
+## [2.0.7] - modify doc,reduce package size
 ## [2.0.6] - fix bug
 ## [2.0.5] - fix bug about using handler and make some animation's duration customizable.
 ## [2.0.4] - fix bug when delete cell using controller,and add tap close area widget

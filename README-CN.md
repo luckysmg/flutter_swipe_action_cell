@@ -21,7 +21,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^2.0.6
+flutter_swipe_action_cell: ^2.0.7
 ```
 
  <br/>
@@ -31,33 +31,33 @@ flutter_swipe_action_cell: ^2.0.6
 
 简单删除 | 拉满执行第一个action | 
 -------- | -----
- <img src="https://raw.githubusercontent.com/luckysmg/flutter_swipe_action_cell/master/images/1.gif" width="250"  alt=""/> | <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="250"  alt=""/>
+ <img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/1.gif?raw=true" width="250"  alt=""/> | <img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/2.gif?raw=true" width="250"  alt=""/>
 
 
 伴随动画删除 | 多于一个action的样式 | 
 -------- | -----
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="250"  alt=""/> | <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true" width="250"  alt=""/>
+ <img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/3.gif?raw=true" width="250"  alt=""/> | <img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/4.gif?raw=true" width="250"  alt=""/>
 
 仿微信确认删除交互 | 仿微信确认删除自动调整按钮大小 
 -------- | -------- 
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="250"  alt=""/>|<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/7.gif?raw=true" width="250"  alt=""/>|
+<img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/6.gif?raw=true" width="250"  alt=""/>|<img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/7.gif?raw=true" width="250"  alt=""/>|
 
 仿微信收藏页 自定义按钮形状交互 | 
 -------- |
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.gif?raw=true" width="300"  alt=""/>
+<img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/9.gif?raw=true" width="300"  alt=""/>
 
 支持左侧按钮和右侧的按钮 | 
 -------- |
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/10.GIF?raw=true" width="300"  alt=""/> |
+<img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/10.gif?raw=true" width="300"  alt=""/> |
 
 
 
 编辑模式 (GIF 较大） | 
 -------- |
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="200"  alt=""/>|
+<img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/8.gif?raw=true" width="200"  alt=""/>|
 
 
-###  1.目前已经实现的内容 ：
+###  目前已经实现的内容 ：
 - [x] 支持左右两边拉出的按钮
 - [x] 拉出按钮，顺滑的拉出动画和回弹动画
 - [x] 支持iOS原生的弹出按钮触发第一个动作交互
@@ -70,16 +70,6 @@ flutter_swipe_action_cell: ^2.0.6
 - [x] 支持只使用编辑模式，通过设置取消侧滑参数，防止和TabView或PageView手势冲突
 
 
-###  2.已经在版本中实现但是未稳定的内容： 
-无
-
-###  3.下一步可能要实现的内容 (不保证一定实现)：
-无
-
-
-### 4. 如果你开发中遇到bug请滚动到此页面最下面来确认 ！！
-
-<br/>
 
 ## 最完整的例子（几乎涵盖所有常用api）:
 [完整效果预览 （西瓜视频）](https://v.ixigua.com/JAqWvNM/)
@@ -91,7 +81,7 @@ flutter_swipe_action_cell: ^2.0.6
 
  - ## Example 1:最简单的例子---删除
  
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/1.gif?raw=true" width="300"  alt=""/>
+<img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/1.gif?raw=true" width="300"  alt=""/>
 
  - ##### Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```dart
@@ -118,7 +108,7 @@ flutter_swipe_action_cell: ^2.0.6
  
  - ## Example 2:拉满将会执行第一个action
  
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/2.gif?raw=true" width="300"  alt=""/>
+ <img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/2.gif?raw=true" width="300"  alt=""/>
 
  ```dart
  SwipeActionCell(
@@ -145,7 +135,7 @@ flutter_swipe_action_cell: ^2.0.6
 
  - ## Example 3:伴随动画的删除（按照iOS原生动画做的）
  
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/3.gif?raw=true" width="300"  alt=""/>
+ <img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/3.gif?raw=true" width="300"  alt=""/>
  
  ```dart
 SwipeActionCell(
@@ -175,7 +165,7 @@ SwipeActionCell(
 
  - ## Example 4:多于一个action
  
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/4.gif?raw=true" width="200"  alt=""/>
+ <img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/4.gif?raw=true" width="200"  alt=""/>
 
  
  ```dart
@@ -227,7 +217,7 @@ SwipeActionCell(
  ```
 
 - ## Example 5：仿微信iOS端消息删除效果
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/6.gif?raw=true" width="300"  alt=""/>
+<img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/6.gif?raw=true" width="300"  alt=""/>
 
 ```dart
 return SwipeActionCell(
@@ -263,7 +253,7 @@ return SwipeActionCell(
 
 
 - ## Example 6：编辑模式（类似iOS原生效果）
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/8.GIF?raw=true" width="300"  alt=""/>
+<img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/8.gif?raw=true" width="300"  alt=""/>
 
 ```dart
 /// 控制器（目前就是控制编辑的）
@@ -327,7 +317,7 @@ ListView.builder(
 
  - ## Example 7：仿美团iOS端订单页删除效果
  
- <img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/5.gif?raw=true" width="250"  alt=""/>
+ <img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/5.gif?raw=true" width="250"  alt=""/>
 
  #### 根据gif图可以判断，删除逻辑应该是这样的：
  - 1.点击或者拉动到最后触发删除动作
@@ -377,7 +367,7 @@ Widget _item(int index) {
 
 - ## Example 8：仿微信ios端收藏列表效果（自定义形状按钮）
 
-<img src="https://github.com/luckysmg/flutter_swipe_action_cell/blob/master/images/9.gif?raw=true" width="250"  alt=""/>
+<img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/9.gif?raw=true" width="250"  alt=""/>
 
 ```dart
 
