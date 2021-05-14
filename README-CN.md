@@ -21,7 +21,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^2.0.7
+flutter_swipe_action_cell: ^2.0.8
 ```
 
  <br/>
@@ -268,6 +268,12 @@ return SwipeActionCell(
 ///如果你想获取你选中的行，那么请调用以下API
 List<int> selectedIndexes = controller.getSelectedIndexes();
 
+///打开cell
+controller.openCellAt(index: 2, trailing: true, animated: true);
+
+///关闭 cell
+controller.closeAllOpenCell();
+
 ///切换编辑模式
 controller.toggleEditingMode()
 
@@ -499,12 +505,14 @@ content| 自定义的内容视图|否（如果你需要这个参数，请保持t
 impactWhenShowing|弹出的时候的震动（知乎app消息页面的删除效果）|否(def=false)
 
 
-#### SwipeActionEditController：
+#### SwipeActionController：
 参数名（方法名） | 含义 |
 -------- | --- |
 isEditing | 是否处于编辑模式
 selectedIndexPathsChangeCallback|获取选择/取消选择cell的回调
-getSelectedIndexes() | 获取选中的行的索引集合
+openCellAt|打开特定位置的cell
+closeAllOpenCell|关闭所有打开的cell
+getSelectedIndexPaths() | 获取选中的行的索引集合
 toggleEditingMode() | 切换编辑模式
 stopEditingMode()|暂停编辑模式
 startEditingMode()| 开始编辑

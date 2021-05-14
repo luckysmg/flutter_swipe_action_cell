@@ -1,3 +1,4 @@
+## [2.0.8] - let controller can open cell programmatically
 ## [2.0.7] - modify doc,reduce package size
 ## [2.0.6] - fix bug
 ## [2.0.5] - fix bug about using handler and make some animation's duration customizable.

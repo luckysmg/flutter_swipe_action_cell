@@ -18,7 +18,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 ##### install:
 
 ```yaml
-flutter_swipe_action_cell: ^2.0.7
+flutter_swipe_action_cell: ^2.0.8
 ```  
 
 ## 1.Preview：
@@ -251,6 +251,13 @@ SwipeActionEditController controller;
   }
 ///To get the selected rows index
 List<int> selectedIndexes = controller.getSelectedIndexes();
+
+
+///open cell
+controller.openCellAt(index: 2, trailing: true, animated: true);
+
+///close cell
+controller.closeAllOpenCell();
 
 ///toggleEditingMode
 controller.toggleEditingMode()

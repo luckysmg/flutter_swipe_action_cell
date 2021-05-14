@@ -71,11 +71,29 @@ class SwipeActionController {
     });
   }
 
+  ///Open a cell programmatically
+  /// 1.If cell has already opening,nothing will happen !
+  /// 2.You can only open one cell,when you open cell use this method,other opening cell will close.
+  /// 3.If cell is not on screen,nothing will happen !
+  ///利用编程的方式打开一个cell
+  /// 1. 如果cell已经打开，那么什么都不会发生！！
+  /// 2.你只能在同一时刻打开一个cell，当你调用此方法进行打开cell的时候，如果那个cell已经打开，则不会做任何事情
+  /// 3.如果cell不在屏幕上，什么也不会发生！！
+  void openCellAt(
+      {required int index, required bool trailing, bool animated = true}) {
+    SwipeActionStore.getInstance().bus.fire(CellProgramOpenEvent(
+        index: index, trailing: trailing, animated: animated));
+  }
+
   ///You can call this method to close all opening cell without passing controller into cell
   ///你可以不把controller传入cell就可以直接调用这个方法
   ///用于关闭所有打开的cell
   void closeAllOpenCell() {
-    SwipeActionStore.getInstance().bus.fire(CellOpenEvent(key: UniqueKey()));
+    //Send a CellFingerOpenEvent with UniqueKey,so all opening cell don't have this key
+    //so all of opening cell will close
+    SwipeActionStore.getInstance()
+        .bus
+        .fire(CellFingerOpenEvent(key: UniqueKey()));
   }
 
   ///Select a cell (You must pass [SwipeActionCell.index] attr to your [SwipeActionCell]

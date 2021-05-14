@@ -135,9 +135,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
   late double height;
   late double width;
 
-  late int trailingActionsCount;
-  late int leadingActionsCount;
-
   late Offset currentOffset;
   late double maxTrailingPullWidth;
   late double maxLeadingPullWidth;
@@ -157,6 +154,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   ScrollPosition? scrollPosition;
 
   StreamSubscription? otherCellOpenEventSubscription;
+  StreamSubscription? programOpenCellEventSubscription;
   StreamSubscription? ignorePointerSubscription;
   StreamSubscription? changeEditingModeSubscription;
   StreamSubscription? selectedSubscription;
@@ -174,6 +172,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
   late bool whenTrailingActionShowing;
   late bool whenLeadingActionShowing;
 
+  int get trailingActionsCount => widget.trailingActions?.length ?? 0;
+
+  int get leadingActionsCount => widget.leadingActions?.length ?? 0;
+
   @override
   void initState() {
     super.initState();
@@ -182,8 +184,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
     lastItemOut = false;
     lockAnim = false;
     ignorePointer = false;
-    trailingActionsCount = widget.trailingActions?.length ?? 0;
-    leadingActionsCount = widget.leadingActions?.length ?? 0;
     maxTrailingPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
     currentOffset = Offset.zero;
@@ -281,12 +281,40 @@ class SwipeActionCellState extends State<SwipeActionCell>
       }
     });
 
-    otherCellOpenEventSubscription =
-        SwipeActionStore.getInstance().bus.on<CellOpenEvent>().listen((event) {
+    otherCellOpenEventSubscription = SwipeActionStore.getInstance()
+        .bus
+        .on<CellFingerOpenEvent>()
+        .listen((event) {
       if (event.key != widget.key && currentOffset.dx != 0.0) {
         closeWithAnim();
         _closeNestedAction();
       }
+    });
+
+    programOpenCellEventSubscription = SwipeActionStore.getInstance()
+        .bus
+        .on<CellProgramOpenEvent>()
+        .listen((event) {
+      assert(widget.index != null);
+
+      //If cell is opening or animating,just return
+      if (currentOffset.dx != 0.0) {
+        return;
+      }
+
+      if (event.trailing && !hasTrailingAction ||
+          !event.trailing && !hasLeadingAction) {
+        return;
+      }
+      if (event.index != this.widget.index) {
+        return;
+      }
+
+      //fire a CellFingerOpenEvent to tell other cell this cell is opening,and close itself
+      SwipeActionStore.getInstance()
+          .bus
+          .fire(CellFingerOpenEvent(key: widget.key!));
+      _open(trailing: event.trailing, animated: event.animated);
     });
 
     ignorePointerSubscription = SwipeActionStore.getInstance()
@@ -321,6 +349,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     otherCellOpenEventSubscription?.cancel();
     ignorePointerSubscription?.cancel();
     changeEditingModeSubscription?.cancel();
+    programOpenCellEventSubscription?.cancel();
     super.dispose();
   }
 
@@ -336,8 +365,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
     super.didUpdateWidget(oldWidget);
     hasTrailingAction = widget.trailingActions != null;
     hasLeadingAction = widget.leadingActions != null;
-    trailingActionsCount = widget.trailingActions?.length ?? 0;
-    leadingActionsCount = widget.leadingActions?.length ?? 0;
     maxTrailingPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
     if (widget.closeWhenScrolling != oldWidget.closeWhenScrolling) {
@@ -389,7 +416,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   void _onHorizontalDragStart(DragStartDetails details) {
     if (editing) return;
-    SwipeActionStore.getInstance().bus.fire(CellOpenEvent(key: widget.key!));
+    //indicates this cell is opening
+    SwipeActionStore.getInstance()
+        .bus
+        .fire(CellFingerOpenEvent(key: widget.key!));
     _closeNestedAction();
   }
 
@@ -523,16 +553,16 @@ class SwipeActionCellState extends State<SwipeActionCell>
       }
     } else {
       ///normal dragging update
-      if (details.velocity.pixelsPerSecond.dx < 0) {
+      if (details.velocity.pixelsPerSecond.dx < 0.0) {
         if (!whenLeadingActionShowing && hasTrailingAction) {
-          _openWithAnim(trailing: true);
+          _open(trailing: true);
         } else {
           closeWithAnim();
         }
         return;
-      } else if (details.velocity.pixelsPerSecond.dx > 0) {
+      } else if (details.velocity.pixelsPerSecond.dx > 0.0) {
         if (!whenTrailingActionShowing && hasLeadingAction) {
-          _openWithAnim(trailing: false);
+          _open(trailing: false);
         } else {
           closeWithAnim();
         }
@@ -543,13 +573,13 @@ class SwipeActionCellState extends State<SwipeActionCell>
         if (-currentOffset.dx < maxTrailingPullWidth / 4) {
           closeWithAnim();
         } else {
-          _openWithAnim(trailing: true);
+          _open(trailing: true);
         }
       } else if (whenLeadingActionShowing) {
         if (currentOffset.dx < maxLeadingPullWidth / 4) {
           closeWithAnim();
         } else {
-          _openWithAnim(trailing: false);
+          _open(trailing: false);
         }
       }
 
@@ -583,19 +613,25 @@ class SwipeActionCellState extends State<SwipeActionCell>
     });
   }
 
-  void _openWithAnim({required bool trailing}) {
-    _resetAnimValue();
-    animation = Tween<double>(
-            begin: currentOffset.dx,
-            end: trailing ? -maxTrailingPullWidth : maxLeadingPullWidth)
-        .animate(curvedAnim)
-          ..addListener(() {
-            if (lockAnim) return;
-            this.currentOffset = Offset(animation.value, 0);
-            setState(() {});
-          });
+  void _open({required bool trailing, bool animated = true}) {
+    if (animated) {
+      _resetAnimValue();
+      animation = Tween<double>(
+              begin: currentOffset.dx,
+              end: trailing ? -maxTrailingPullWidth : maxLeadingPullWidth)
+          .animate(curvedAnim)
+            ..addListener(() {
+              if (lockAnim) return;
+              this.currentOffset = Offset(animation.value, 0);
+              setState(() {});
+            });
 
-    controller.forward();
+      controller.forward();
+    } else {
+      this.currentOffset =
+          Offset(trailing ? -maxTrailingPullWidth : maxLeadingPullWidth, 0);
+      setState(() {});
+    }
   }
 
   ///close this cell and return the [Future] of the animation

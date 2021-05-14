@@ -60,14 +60,44 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
     });
   }
 
+  Widget bottomBar() {
+    return Container(
+      color: Colors.grey[200],
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: CupertinoButton.filled(
+                  padding: EdgeInsets.only(),
+                  child: Text('open cell at 2'),
+                  onPressed: () {
+                    controller.openCellAt(
+                        index: 2, trailing: true, animated: true);
+                  }),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: CupertinoButton.filled(
+                  padding: EdgeInsets.only(),
+                  child: Text('switch edit mode'),
+                  onPressed: () {
+                    controller.toggleEditingMode();
+                  }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: CupertinoButton.filled(
-          child: Text('switch'),
-          onPressed: () {
-            controller.toggleEditingMode();
-          }),
+      bottomNavigationBar: bottomBar(),
       appBar: CupertinoNavigationBar(
         middle: CupertinoButton.filled(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
