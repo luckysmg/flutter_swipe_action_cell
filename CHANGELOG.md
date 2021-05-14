@@ -1,3 +1,4 @@
+## [2.1.0] - simple update
 ## [2.0.8] - let controller can open cell programmatically
 ## [2.0.7] - modify doc,reduce package size
 ## [2.0.6] - fix bug
