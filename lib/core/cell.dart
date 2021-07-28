@@ -176,6 +176,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   int get leadingActionsCount => widget.leadingActions?.length ?? 0;
 
+  final cellStateInfo = CellStateInfo();
+
   @override
   void initState() {
     super.initState();
@@ -703,6 +705,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
     whenTrailingActionShowing = currentOffset.dx < 0;
     whenLeadingActionShowing = currentOffset.dx > 0;
+    cellStateInfo.isActionShowing = whenTrailingActionShowing || whenLeadingActionShowing;
 
     return IgnorePointer(
       ignoring: ignorePointer,
@@ -748,10 +751,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
                   GestureRecognizerFactoryWithHandlers<
                           DirectionDependentDragGestureRecognizer>(
                       () => DirectionDependentDragGestureRecognizer(
+                        cellStateInfo: cellStateInfo,
                           canDragToLeft:
-                              widget.trailingActions?.isNotEmpty ?? false,
-                          canDragToRight: widget.leadingActions?.isNotEmpty ??
-                              false), (instance) {
+                              currentOffset != Offset.zero || hasTrailingAction,
+                          canDragToRight: currentOffset != Offset.zero ||
+                              hasLeadingAction), (instance) {
                 instance
                   ..onStart = _onHorizontalDragStart
                   ..onUpdate = _onHorizontalDragUpdate
@@ -1069,17 +1073,25 @@ class DirectionDependentDragGestureRecognizer
     extends HorizontalDragGestureRecognizer {
   final bool canDragToLeft;
   final bool canDragToRight;
+  final CellStateInfo cellStateInfo;
 
   DirectionDependentDragGestureRecognizer(
-      {required this.canDragToLeft, required this.canDragToRight});
+      {required this.cellStateInfo,
+      required this.canDragToLeft,
+      required this.canDragToRight});
 
   @override
   void handleEvent(PointerEvent event) {
     final delta = event.delta.dx;
-    if (canDragToLeft && delta < 0 ||
+    if (cellStateInfo.isActionShowing ||
+        canDragToLeft && delta < 0 ||
         canDragToRight && delta > 0 ||
         delta == 0) {
       super.handleEvent(event);
     }
   }
+}
+
+class CellStateInfo {
+  bool isActionShowing = false;
 }
