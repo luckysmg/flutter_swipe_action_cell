@@ -705,7 +705,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
     whenTrailingActionShowing = currentOffset.dx < 0;
     whenLeadingActionShowing = currentOffset.dx > 0;
-    cellStateInfo.isActionShowing = whenTrailingActionShowing || whenLeadingActionShowing;
+    cellStateInfo.isActionShowing =
+        whenTrailingActionShowing || whenLeadingActionShowing;
 
     return IgnorePointer(
       ignoring: ignorePointer,
@@ -751,11 +752,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
                   GestureRecognizerFactoryWithHandlers<
                           DirectionDependentDragGestureRecognizer>(
                       () => DirectionDependentDragGestureRecognizer(
-                        cellStateInfo: cellStateInfo,
-                          canDragToLeft:
-                              currentOffset != Offset.zero || hasTrailingAction,
-                          canDragToRight: currentOffset != Offset.zero ||
-                              hasLeadingAction), (instance) {
+                          cellStateInfo: cellStateInfo,
+                          canDragToLeft: hasTrailingAction,
+                          canDragToRight: hasLeadingAction), (instance) {
                 instance
                   ..onStart = _onHorizontalDragStart
                   ..onUpdate = _onHorizontalDragUpdate
