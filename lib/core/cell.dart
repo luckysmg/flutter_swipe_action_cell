@@ -176,7 +176,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   int get leadingActionsCount => widget.leadingActions?.length ?? 0;
 
-  final cellStateInfo = CellStateInfo();
+  final cellStateInfo = _CellStateInfo();
 
   @override
   void initState() {
@@ -748,10 +748,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
                     : null;
             }),
             if (widget.isDraggable)
-              DirectionDependentDragGestureRecognizer:
+              _DirectionDependentDragGestureRecognizer:
                   GestureRecognizerFactoryWithHandlers<
-                          DirectionDependentDragGestureRecognizer>(
-                      () => DirectionDependentDragGestureRecognizer(
+                          _DirectionDependentDragGestureRecognizer>(
+                      () => _DirectionDependentDragGestureRecognizer(
                           cellStateInfo: cellStateInfo,
                           canDragToLeft: hasTrailingAction,
                           canDragToRight: hasLeadingAction), (instance) {
@@ -1068,13 +1068,13 @@ class SwipeNestedAction {
   });
 }
 
-class DirectionDependentDragGestureRecognizer
+class _DirectionDependentDragGestureRecognizer
     extends HorizontalDragGestureRecognizer {
   final bool canDragToLeft;
   final bool canDragToRight;
-  final CellStateInfo cellStateInfo;
+  final _CellStateInfo cellStateInfo;
 
-  DirectionDependentDragGestureRecognizer(
+  _DirectionDependentDragGestureRecognizer(
       {required this.cellStateInfo,
       required this.canDragToLeft,
       required this.canDragToRight});
@@ -1091,6 +1091,6 @@ class DirectionDependentDragGestureRecognizer
   }
 }
 
-class CellStateInfo {
+class _CellStateInfo {
   bool isActionShowing = false;
 }
