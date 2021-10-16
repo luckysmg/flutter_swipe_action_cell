@@ -220,11 +220,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
     animation =
         Tween<double>(begin: currentOffset.dx, end: widget.editModeOffset)
             .animate(editCurvedAnim)
-              ..addListener(() {
-                if (lockAnim) return;
-                currentOffset = Offset(animation.value, 0);
-                setState(() {});
-              });
+          ..addListener(() {
+            if (lockAnim) return;
+            currentOffset = Offset(animation.value, 0);
+            setState(() {});
+          });
     editController.forward();
   }
 
@@ -235,11 +235,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
     widget.controller?.selectedSet.remove(widget.index);
     animation = Tween<double>(begin: widget.editModeOffset, end: 0)
         .animate(editCurvedAnim)
-          ..addListener(() {
-            if (lockAnim) return;
-            currentOffset = Offset(animation.value, 0);
-            setState(() {});
-          });
+      ..addListener(() {
+        if (lockAnim) return;
+        currentOffset = Offset(animation.value, 0);
+        setState(() {});
+      });
     editController.forward();
   }
 
@@ -605,11 +605,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
     final endOffset = trailing ? -offsetX : offsetX;
     animation = Tween<double>(begin: currentOffset.dx, end: endOffset)
         .animate(curveAnim)
-          ..addListener(() {
-            if (lockAnim) return;
-            this.currentOffset = Offset(animation.value, 0);
-            setState(() {});
-          });
+      ..addListener(() {
+        if (lockAnim) return;
+        this.currentOffset = Offset(animation.value, 0);
+        setState(() {});
+      });
     adjustOffsetAnimController.forward().whenCompleteOrCancel(() {
       adjustOffsetAnimController.dispose();
     });
@@ -622,11 +622,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
               begin: currentOffset.dx,
               end: trailing ? -maxTrailingPullWidth : maxLeadingPullWidth)
           .animate(curvedAnim)
-            ..addListener(() {
-              if (lockAnim) return;
-              this.currentOffset = Offset(animation.value, 0);
-              setState(() {});
-            });
+        ..addListener(() {
+          if (lockAnim) return;
+          this.currentOffset = Offset(animation.value, 0);
+          setState(() {});
+        });
 
       controller.forward();
     } else {

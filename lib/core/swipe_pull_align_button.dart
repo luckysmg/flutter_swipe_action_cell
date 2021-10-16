@@ -165,11 +165,11 @@ class _SwipePullAlignButtonState extends State<SwipePullAlignButton>
             begin: offsetX,
             end: trailing ? -data.contentWidth : data.contentWidth)
         .animate(offsetCurve)
-          ..addListener(() {
-            if (lockAnim) return;
-            offsetX = animation.value;
-            setState(() {});
-          });
+      ..addListener(() {
+        if (lockAnim) return;
+        offsetX = animation.value;
+        setState(() {});
+      });
     offsetController?.forward();
   }
 
@@ -208,13 +208,13 @@ class _SwipePullAlignButtonState extends State<SwipePullAlignButton>
 
     animation = Tween<double>(begin: offsetX, end: endOffset)
         .animate(widthFillActionContentCurve)
-          ..addListener(() {
-            if (lockAnim) return;
-            offsetX = animation.value;
-            alignment = Alignment.lerp(alignment, Alignment.center,
-                widthFillActionContentController!.value)!;
-            setState(() {});
-          });
+      ..addListener(() {
+        if (lockAnim) return;
+        offsetX = animation.value;
+        alignment = Alignment.lerp(alignment, Alignment.center,
+            widthFillActionContentController!.value)!;
+        setState(() {});
+      });
     widthFillActionContentController?.forward();
   }
 

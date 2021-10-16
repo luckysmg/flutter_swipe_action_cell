@@ -79,11 +79,11 @@ class _SwipePullButtonState extends State<SwipePullButton>
     if (isPullingOut) {
       animation = Tween<double>(begin: offsetX, end: data.currentOffset)
           .animate(widthPullCurve)
-            ..addListener(() {
-              if (lockAnim) return;
-              offsetX = animation.value;
-              setState(() {});
-            });
+        ..addListener(() {
+          if (lockAnim) return;
+          offsetX = animation.value;
+          setState(() {});
+        });
       offsetController?.forward().whenComplete(() {
         whenActiveToOffset = true;
         whenPullingOut = true;
@@ -97,11 +97,11 @@ class _SwipePullButtonState extends State<SwipePullButton>
       final currentOffset = sumWidth * factor;
       animation = Tween<double>(begin: data.currentOffset, end: currentOffset)
           .animate(widthPullCurve)
-            ..addListener(() {
-              if (lockAnim) return;
-              offsetX = animation.value;
-              setState(() {});
-            });
+        ..addListener(() {
+          if (lockAnim) return;
+          offsetX = animation.value;
+          setState(() {});
+        });
       offsetController?.forward().whenComplete(() {
         whenActiveToOffset = true;
         whenPullingOut = false;
@@ -184,11 +184,11 @@ class _SwipePullButtonState extends State<SwipePullButton>
             begin: offsetX,
             end: widget.trailing ? -data.contentWidth : data.contentWidth)
         .animate(widthPullCurve)
-          ..addListener(() {
-            if (lockAnim) return;
-            offsetX = animation.value;
-            setState(() {});
-          });
+      ..addListener(() {
+        if (lockAnim) return;
+        offsetX = animation.value;
+        setState(() {});
+      });
     offsetController?.forward();
   }
 
@@ -227,11 +227,11 @@ class _SwipePullButtonState extends State<SwipePullButton>
 
     animation = Tween<double>(begin: offsetX, end: endOffset)
         .animate(offsetFillActionContentCurve)
-          ..addListener(() {
-            if (lockAnim) return;
-            offsetX = animation.value;
-            setState(() {});
-          });
+      ..addListener(() {
+        if (lockAnim) return;
+        offsetX = animation.value;
+        setState(() {});
+      });
     offsetFillActionContentController?.forward();
   }
 
