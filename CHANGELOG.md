@@ -1,3 +1,4 @@
+## [2.1.2] - Simply format code
 ## [2.1.1] - Ignore drag gestures if no actions provided
 ## [2.1.0] - simple update
 ## [2.0.8] - let controller can open cell programmatically
