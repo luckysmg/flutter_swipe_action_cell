@@ -1,4 +1,4 @@
-# swipe_action_cell_example
+# example
 
 A new Flutter project.
 

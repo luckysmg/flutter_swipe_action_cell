@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,13 +18,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -34,10 +36,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Center(
         child: CupertinoButton.filled(
-            child: Text('Enter new page'),
+            child: const Text('Enter new page'),
             onPressed: () {
               Navigator.push(context,
-                  CupertinoPageRoute(builder: (c) => SwipeActionPage()));
+                  CupertinoPageRoute(builder: (c) => const SwipeActionPage()));
             }),
       ),
     );
@@ -46,7 +48,7 @@ class _HomePageState extends State<HomePage> {
 
 class Model {
   String id = UniqueKey().toString();
-  int index;
+  int index = 0;
 
   @override
   String toString() {
@@ -55,6 +57,8 @@ class Model {
 }
 
 class SwipeActionPage extends StatefulWidget {
+  const SwipeActionPage({Key? key}) : super(key: key);
+
   @override
   _SwipeActionPageState createState() => _SwipeActionPageState();
 }
@@ -64,7 +68,7 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
     return Model()..index = index;
   });
 
-  SwipeActionController controller;
+  late SwipeActionController controller;
 
   @override
   void initState() {
@@ -93,20 +97,20 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
           children: [
             Expanded(
               child: CupertinoButton.filled(
-                  padding: EdgeInsets.only(),
-                  child: Text('open cell at 2'),
+                  padding: const EdgeInsets.only(),
+                  child: const Text('open cell at 2'),
                   onPressed: () {
                     controller.openCellAt(
                         index: 2, trailing: true, animated: true);
                   }),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Expanded(
               child: CupertinoButton.filled(
-                  padding: EdgeInsets.only(),
-                  child: Text('switch edit mode'),
+                  padding: const EdgeInsets.only(),
+                  child: const Text('switch edit mode'),
                   onPressed: () {
                     controller.toggleEditingMode();
                   }),
@@ -123,9 +127,9 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
       bottomNavigationBar: bottomBar(),
       appBar: CupertinoNavigationBar(
         middle: CupertinoButton.filled(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             minSize: 0,
-            child: Text('deselect all', style: TextStyle(fontSize: 22)),
+            child: const Text('deselect all', style: TextStyle(fontSize: 22)),
             onPressed: () {
               controller.deselectAll();
             }),
@@ -134,22 +138,22 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
             minSize: 0,
             child: Text(
                 'delete cells (${controller.getSelectedIndexPaths().length})',
-                style: TextStyle(color: Colors.white)),
+                style: const TextStyle(color: Colors.white)),
             onPressed: () {
               ///获取选取的索引集合
               List<int> selectedIndexes = controller.getSelectedIndexPaths();
 
               List<String> idList = [];
-              selectedIndexes.forEach((element) {
+              for (var element in selectedIndexes) {
                 idList.add(list[element].id);
-              });
+              }
 
               ///遍历id集合，并且在原来的list中删除这些id所对应的数据
-              idList.forEach((itemId) {
+              for (var itemId in idList) {
                 list.removeWhere((element) {
                   return element.id == itemId;
                 });
-              });
+              }
 
               ///更新内部数据，这句话一定要写哦
               controller.deleteCellAt(indexPaths: selectedIndexes);
@@ -157,14 +161,14 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
             }),
         trailing: CupertinoButton.filled(
             minSize: 0,
-            padding: EdgeInsets.all(10),
-            child: Text('select all'),
+            padding: const EdgeInsets.all(10),
+            child: const Text('select all'),
             onPressed: () {
               controller.selectAll(dataLength: list.length);
             }),
       ),
       body: ListView.builder(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         itemCount: list.length,
         itemBuilder: (context, index) {
           return _item(context, index);
@@ -177,15 +181,17 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
     return SwipeActionCell(
       controller: controller,
       index: index,
+
+      // Required!
       key: ValueKey(list[index]),
 
-      ///animation default value below...
-      normalAnimationDuration: 500,
-      deleteAnimationDuration: 400,
-      performsFirstActionWithFullSwipe: true,
+      /// Animation default value below
+      // normalAnimationDuration: 400,
+      // deleteAnimationDuration: 400,
       trailingActions: [
         SwipeAction(
             title: "delete",
+            performsFirstActionWithFullSwipe: true,
             nestedAction: SwipeNestedAction(title: "confirm"),
             onTap: (handler) async {
               await handler(true);
@@ -208,18 +214,17 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
       ],
       child: GestureDetector(
         onTap: () {
-          ScaffoldMessenger.of(ctx)
-            ..showSnackBar(SnackBar(
-              content: Text(
-                'tap',
-              ),
-              duration: const Duration(seconds: 1),
-            ));
+          ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
+            content: Text(
+              'tap',
+            ),
+            duration: Duration(seconds: 1),
+          ));
         },
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text("This is index of ${list[index]}",
-              style: TextStyle(fontSize: 25)),
+              style: const TextStyle(fontSize: 25)),
         ),
       ),
     );
