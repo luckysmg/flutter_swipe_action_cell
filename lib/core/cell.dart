@@ -94,6 +94,8 @@ class SwipeActionCell extends StatefulWidget {
   ///
   final bool selectable;
 
+  final VoidCallback? onItemTap;
+
   const SwipeActionCell({
     required Key key,
     required this.child,
@@ -119,6 +121,7 @@ class SwipeActionCell extends StatefulWidget {
     this.deleteAnimationDuration = 400,
     this.normalAnimationDuration = 500,
     this.selectable = true,
+    this.onItemTap,
   }) : super(key: key);
 
   ///About Key::::::
@@ -725,33 +728,36 @@ class SwipeActionCellState extends State<SwipeActionCell>
                 GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
                     () => TapGestureRecognizer(), (instance) {
               instance
-                ..onTap = editing && !editController.isAnimating ||
-                        currentOffset.dx != 0.0
-                    ? () {
-                        if (editing && !editController.isAnimating) {
-                          assert(
-                              widget.index != null,
-                              "From SwipeActionCell:\nIf you want to enter edit mode,please pass the 'index' parameter in SwipeActionCell\n"
-                              "=====================================================================================\n"
-                              "如果你要进入编辑模式，请在SwipeActionCell中传入index 参数，他的值就是你列表组件的itemBuilder中返回的index即可");
+                ..onTap = widget.onItemTap ??
+                    (editing && !editController.isAnimating ||
+                            currentOffset.dx != 0.0
+                        ? () {
+                            if (editing && !editController.isAnimating) {
+                              assert(
+                                  widget.index != null,
+                                  "From SwipeActionCell:\nIf you want to enter edit mode,please pass the 'index' parameter in SwipeActionCell\n"
+                                  "=====================================================================================\n"
+                                  "如果你要进入编辑模式，请在SwipeActionCell中传入index 参数，他的值就是你列表组件的itemBuilder中返回的index即可");
 
-                          if (selected) {
-                            widget.controller?.selectedSet.remove(widget.index);
-                            _updateControllerSelectedIndexChangedCallback(
-                                selected: false);
-                          } else {
-                            widget.controller?.selectedSet.add(widget.index!);
-                            _updateControllerSelectedIndexChangedCallback(
-                                selected: true);
+                              if (selected) {
+                                widget.controller?.selectedSet
+                                    .remove(widget.index);
+                                _updateControllerSelectedIndexChangedCallback(
+                                    selected: false);
+                              } else {
+                                widget.controller?.selectedSet
+                                    .add(widget.index!);
+                                _updateControllerSelectedIndexChangedCallback(
+                                    selected: true);
+                              }
+                              setState(() {});
+                            } else if (currentOffset.dx != 0 &&
+                                !controller.isAnimating) {
+                              closeWithAnim();
+                              _closeNestedAction();
+                            }
                           }
-                          setState(() {});
-                        } else if (currentOffset.dx != 0 &&
-                            !controller.isAnimating) {
-                          closeWithAnim();
-                          _closeNestedAction();
-                        }
-                      }
-                    : null;
+                        : null);
             }),
             if (widget.isDraggable)
               _DirectionDependentDragGestureRecognizer:
@@ -817,6 +823,14 @@ class SwipeActionCellState extends State<SwipeActionCell>
                             editing
                         ? const SizedBox()
                         : _buildLeadingActionButtons(),
+                    Visibility(
+                      visible: editing && !editController.isAnimating,
+                      child: widget.controller != null &&
+                          (widget.controller!.isEditing ||
+                              editController.isAnimating)
+                          ? _buildSelectedButton(selected)
+                          : const SizedBox(),
+                    ),
                   ],
                 );
               },
