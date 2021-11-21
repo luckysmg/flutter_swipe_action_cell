@@ -89,6 +89,11 @@ class SwipeActionCell extends StatefulWidget {
   ///删除动画的执行时间。单位是毫秒
   final int deleteAnimationDuration;
 
+  /// Disable select animation when [selectable] is false. [selectedIndicator] is always being used.
+  /// 灵活控制要否选择。
+  ///
+  final bool selectable;
+
   const SwipeActionCell({
     required Key key,
     required this.child,
@@ -113,6 +118,7 @@ class SwipeActionCell extends StatefulWidget {
     this.fullSwipeFactor = 0.75,
     this.deleteAnimationDuration = 400,
     this.normalAnimationDuration = 500,
+    this.selectable = true,
   }) : super(key: key);
 
   ///About Key::::::
@@ -822,6 +828,14 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   Widget _buildSelectedButton(bool selected) {
+    if (!widget.selectable) {
+      return Container(
+        decoration: BoxDecoration(color: widget.backgroundColor),
+        alignment: Alignment.center,
+        width: widget.editModeOffset,
+        child: widget.selectedIndicator,
+      );
+    }
     return Container(
       decoration: BoxDecoration(color: widget.backgroundColor),
       alignment: Alignment.center,
