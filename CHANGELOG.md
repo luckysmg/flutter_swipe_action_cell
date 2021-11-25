@@ -1,3 +1,5 @@
+## [2.1.3] - Breaking change! Make performsFirstActionWithFullSwipe can control leading or trailing actions separately
+## [2.1.3-beta] - Make performsFirstActionWithFullSwipe can control leading or trailing actions separately
 ## [2.1.2] - Simply format code
 ## [2.1.1] - Ignore drag gestures if no actions provided
 ## [2.1.0] - simple update

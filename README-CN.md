@@ -21,7 +21,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^2.1.2
+flutter_swipe_action_cell: ^2.1.3
 ```
 
  <br/>
@@ -113,11 +113,10 @@ flutter_swipe_action_cell: ^2.1.2
  ```dart
  SwipeActionCell(
        key: ValueKey(list[index]),
-
-       ///参数名和iOS原生相同
-       performsFirstActionWithFullSwipe: true,
        trailingActions: <SwipeAction>[
          SwipeAction(
+             ///参数名和iOS原生相同
+             performsFirstActionWithFullSwipe: true,
              title: "delete",
              onTap: (CompletionHandler handler) async {
                list.removeAt(index);
@@ -140,7 +139,6 @@ flutter_swipe_action_cell: ^2.1.2
  ```dart
 SwipeActionCell(
       key: ValueKey(list[index]),
-      performsFirstActionWithFullSwipe: true,
       trailingActions: <SwipeAction>[
         SwipeAction(
             title: "delete",
@@ -171,7 +169,6 @@ SwipeActionCell(
  ```dart
 SwipeActionCell(
       key: ValueKey(list[index]),
-      performsFirstActionWithFullSwipe: true,
       trailingActions: <SwipeAction>[
         SwipeAction(
             title: "delete",
@@ -299,10 +296,10 @@ ListView.builder(
        controller: controller,
        ///这个index需要你传入，否则会报错
        index: index,
-       performsFirstActionWithFullSwipe: true,
        key: ValueKey(list[index]),
        trailingActions: [
          SwipeAction(
+             performsFirstActionWithFullSwipe:true
              onTap: (handler) async {
                await handler(true);
                list.removeAt(index);
@@ -337,7 +334,6 @@ ListView.builder(
 Widget _item(int index) {
     return SwipeActionCell(
       key: ValueKey(list[index]),
-      performsFirstActionWithFullSwipe: true,
       trailingActions: <SwipeAction>[
         SwipeAction(
             icon: Icon(Icons.add),
@@ -472,7 +468,6 @@ trailingActions | 这个cell下的所有右侧action|否
 leadingActions | 这个cell下的所有左侧action|否
 child| cell内容 | 是
 closeWhenScrolling | 滚动时关闭打开的cell|否（def=true）
-performsFirstActionWithFullSwipe|往左拉满时执行第一个action|否（def=false)
 firstActionWillCoverAllSpaceOnDeleting|执行动画删除时是否让第一个覆盖cell|否（def=true)
 editModeOffset|进入编辑模式的cell偏移|否（def=60)
 backgroundColor|cell的背景颜色|否（def=Theme.of(context).scaffoldBackgroundColor)
@@ -485,7 +480,7 @@ onTap | 点击此action执行的动作|是
 title | action的文字 |否（不填就不显示文字）
 style | title的TextStyle|否（有一个默认样式）
 color | action拉出的背景颜色|否（def=Color.red)
-leftPadding | button的内容距离左边界的padding|否（def=15)
+performsFirstActionWithFullSwipe|拉满时执行第一个action|否（def=false)
 icon | action的图标|否（不填就不显示）
 closeOnTap | 点击此action是否关闭cell|否（def=true）
 backgroundRadius|拉出的button的左上和左下圆角大小|否（def=0.0）

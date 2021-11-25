@@ -31,13 +31,6 @@ class SwipeActionCell extends StatefulWidget {
   ///当你滚动（比如ListView之类的时候，这个item将会关闭拉出的actions，默认为true
   final bool closeWhenScrolling;
 
-  ///When drag cell a long distance,it will be dismissed，
-  ///and it will execute the onTap  of the first [SwipeAction]
-  ///def value = false
-  ///就像iOS一样，往左拉满会直接删除一样,拉满后会执行第一个 [SwipeAction] 的onTap方法
-  ///默认为false
-  final bool performsFirstActionWithFullSwipe;
-
   ///When deleting the cell
   ///the first action will cover all content size with animation.(emm.. just like iOS native effect)
   ///def value = true
@@ -103,7 +96,6 @@ class SwipeActionCell extends StatefulWidget {
     this.leadingActions,
     this.isDraggable = true,
     this.closeWhenScrolling = true,
-    this.performsFirstActionWithFullSwipe = false,
     this.firstActionWillCoverAllSpaceOnDeleting = true,
     this.controller,
     this.index,
@@ -119,7 +111,7 @@ class SwipeActionCell extends StatefulWidget {
     this.editModeOffset = 60,
     this.fullSwipeFactor = 0.75,
     this.deleteAnimationDuration = 400,
-    this.normalAnimationDuration = 500,
+    this.normalAnimationDuration = 400,
     this.selectable = true,
     this.onItemTap,
   }) : super(key: key);
@@ -444,7 +436,16 @@ class SwipeActionCellState extends State<SwipeActionCell>
         currentOffset.dx <= 0.0) {
       return;
     }
-    if (widget.performsFirstActionWithFullSwipe) {
+
+    final bool leadingActionCanFullSwipe = whenLeadingActionShowing &&
+        leadingActionsCount > 0 &&
+        widget.leadingActions![0].performsFirstActionWithFullSwipe;
+
+    final bool trailingActionCanFullSwipe = whenTrailingActionShowing &&
+        trailingActionsCount > 0 &&
+        widget.trailingActions![0].performsFirstActionWithFullSwipe;
+
+    if (leadingActionCanFullSwipe || trailingActionCanFullSwipe) {
       _updateWithFullDraggableEffect(details);
     } else {
       _updateWithNormalEffect(details);
@@ -455,23 +456,21 @@ class SwipeActionCellState extends State<SwipeActionCell>
     currentOffset += Offset(details.delta.dx, 0);
 
     ///set performsFirstActionWithFullSwipe
-    if (widget.performsFirstActionWithFullSwipe) {
-      if (currentOffset.dx.abs() > widget.fullSwipeFactor * width) {
-        if (!lastItemOut) {
-          SwipeActionStore.getInstance()
-              .bus
-              .fire(PullLastButtonEvent(key: widget.key!, isPullingOut: true));
-          lastItemOut = true;
-          HapticFeedback.heavyImpact();
-        }
-      } else {
-        if (lastItemOut) {
-          SwipeActionStore.getInstance()
-              .bus
-              .fire(PullLastButtonEvent(key: widget.key!, isPullingOut: false));
-          lastItemOut = false;
-          HapticFeedback.heavyImpact();
-        }
+    if (currentOffset.dx.abs() > widget.fullSwipeFactor * width) {
+      if (!lastItemOut) {
+        SwipeActionStore.getInstance()
+            .bus
+            .fire(PullLastButtonEvent(key: widget.key!, isPullingOut: true));
+        lastItemOut = true;
+        HapticFeedback.heavyImpact();
+      }
+    } else {
+      if (lastItemOut) {
+        SwipeActionStore.getInstance()
+            .bus
+            .fire(PullLastButtonEvent(key: widget.key!, isPullingOut: false));
+        lastItemOut = false;
+        HapticFeedback.heavyImpact();
       }
     }
 
@@ -534,7 +533,12 @@ class SwipeActionCellState extends State<SwipeActionCell>
   void _onHorizontalDragEnd(DragEndDetails details) async {
     if (editing) return;
 
-    if (lastItemOut && widget.performsFirstActionWithFullSwipe) {
+    final bool canFullSwipe = leadingActionsCount > 0 &&
+            widget.leadingActions![0].performsFirstActionWithFullSwipe ||
+        trailingActionsCount > 0 &&
+            widget.trailingActions![0].performsFirstActionWithFullSwipe;
+
+    if (lastItemOut && canFullSwipe) {
       CompletionHandler completionHandler = (delete) async {
         if (delete) {
           SwipeActionStore.getInstance()
@@ -867,7 +871,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
       final actualIndex = leadingActionsCount - 1 - index;
       if (widget.leadingActions!.length == 1 &&
           !widget.leadingActions![0].forceAlignmentToBoundary &&
-          widget.performsFirstActionWithFullSwipe) {
+          widget.leadingActions![0].performsFirstActionWithFullSwipe) {
         return SwipePullAlignButton(actionIndex: actualIndex, trailing: false);
       } else {
         return SwipePullButton(actionIndex: actualIndex, trailing: false);
@@ -875,7 +879,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
     });
 
     return SwipeData(
-      willPull: lastItemOut && widget.performsFirstActionWithFullSwipe,
+      willPull: lastItemOut &&
+          widget.leadingActions![0].performsFirstActionWithFullSwipe,
       firstActionWillCoverAllSpaceOnDeleting:
           widget.firstActionWillCoverAllSpaceOnDeleting,
       parentKey: widget.key!,
@@ -884,7 +889,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
       contentWidth: width,
       contentHeight: height,
       currentOffset: currentOffset.dx,
-      fullDraggable: widget.performsFirstActionWithFullSwipe,
+      fullDraggable: widget.leadingActions![0].performsFirstActionWithFullSwipe,
       parentState: this,
       child: SizedBox(
         height: height,
@@ -905,7 +910,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
       final actualIndex = trailingActionsCount - 1 - index;
       if (trailingActionsCount == 1 &&
           !widget.trailingActions![0].forceAlignmentToBoundary &&
-          widget.performsFirstActionWithFullSwipe) {
+          widget.trailingActions![0].performsFirstActionWithFullSwipe) {
         return SwipePullAlignButton(actionIndex: actualIndex, trailing: true);
       } else {
         return SwipePullButton(actionIndex: actualIndex, trailing: true);
@@ -913,7 +918,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
     });
 
     return SwipeData(
-      willPull: lastItemOut && widget.performsFirstActionWithFullSwipe,
+      willPull: lastItemOut &&
+          widget.trailingActions![0].performsFirstActionWithFullSwipe,
       firstActionWillCoverAllSpaceOnDeleting:
           widget.firstActionWillCoverAllSpaceOnDeleting,
       parentKey: widget.key!,
@@ -922,7 +928,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
       contentWidth: width,
       contentHeight: height,
       currentOffset: currentOffset.dx,
-      fullDraggable: widget.performsFirstActionWithFullSwipe,
+      fullDraggable:
+          widget.trailingActions![0].performsFirstActionWithFullSwipe,
       parentState: this,
       child: SizedBox(
         height: height,
@@ -1003,6 +1010,15 @@ class SwipeAction {
   ///注意如果你设置了content，那么就不要设置title和icon，两个都必须为null
   final Widget? content;
 
+  ///Tip:It is ok to set this property only in first action.
+  ///When drag cell a long distance,it will be dismissed，
+  ///and it will execute the onTap  of the first [SwipeAction]
+  ///def value = false
+  ///这个属性设置给第一个action就好
+  ///就像iOS一样，往左拉满会直接删除一样,拉满后会执行第一个 [SwipeAction] 的onTap方法
+  ///默认为false
+  final bool performsFirstActionWithFullSwipe;
+
   const SwipeAction({
     required this.onTap,
     this.title,
@@ -1015,6 +1031,7 @@ class SwipeAction {
     this.widthSpace = 80,
     this.nestedAction,
     this.content,
+    this.performsFirstActionWithFullSwipe = false,
   });
 }
 
