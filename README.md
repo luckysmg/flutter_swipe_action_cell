@@ -18,7 +18,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 ##### install:
 
 ```yaml
-flutter_swipe_action_cell: ^2.1.2
+flutter_swipe_action_cell: ^2.1.3-beta
 ```  
 
 ## 1.Preview：
@@ -90,11 +90,10 @@ And you can find full example code in [example page](https://pub.dev/packages/fl
  SwipeActionCell(
        ///this key is necessary
        key: ObjectKey(list[index]),
- 
-       ///this is the same as iOS native
-       performsFirstActionWithFullSwipe: true,
        trailingActions: <SwipeAction>[
          SwipeAction(
+             ///this is the same as iOS native
+             performsFirstActionWithFullSwipe: true,
              title: "delete",
              onTap: (CompletionHandler handler) async {
                list.removeAt(index);
@@ -117,7 +116,6 @@ And you can find full example code in [example page](https://pub.dev/packages/fl
  ```dart
 SwipeActionCell(
       key: ObjectKey(list[index]),
-      performsFirstActionWithFullSwipe: true,
       trailingActions: <SwipeAction>[
         SwipeAction(
             title: "delete",
@@ -149,8 +147,6 @@ SwipeActionCell(
  ```dart
 SwipeActionCell(
       key: ObjectKey(list[index]),
-
-      performsFirstActionWithFullSwipe: true,
       trailingActions: <SwipeAction>[
         SwipeAction(
             title: "delete",
@@ -203,7 +199,6 @@ SwipeActionCell(
 ```dart
 return SwipeActionCell(
       key: ValueKey(list[index]),
-      performsFirstActionWithFullSwipe: true,
       trailingActions: <SwipeAction>[
         SwipeAction(
           ///
@@ -294,10 +289,11 @@ ListView.builder(
        controller: controller,
        ///index is required if you want to enter edit mode
        index: index,
-       performsFirstActionWithFullSwipe: true,
        key: ValueKey(list[index]),
        trailingActions: [
          SwipeAction(
+             ///this is the same as iOS native
+             performsFirstActionWithFullSwipe: true,
              onTap: (handler) async {
                await handler(true);
                list.removeAt(index);
