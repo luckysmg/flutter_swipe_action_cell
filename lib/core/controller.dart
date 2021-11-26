@@ -79,10 +79,17 @@ class SwipeActionController {
   /// 1. 如果cell已经打开，那么什么都不会发生！！
   /// 2.你只能在同一时刻打开一个cell，当你调用此方法进行打开cell的时候，如果那个cell已经打开，则不会做任何事情
   /// 3.如果cell不在屏幕上，什么也不会发生！！
-  void openCellAt(
-      {required int index, required bool trailing, bool animated = true}) {
+  void openCellAt({
+    required int index,
+    required bool trailing,
+    bool animated = true,
+  }) {
     SwipeActionStore.getInstance().bus.fire(CellProgramOpenEvent(
-        index: index, trailing: trailing, animated: animated));
+          index: index,
+          trailing: trailing,
+          animated: animated,
+          controller: this,
+        ));
   }
 
   ///You can call this method to close all opening cell without passing controller into cell

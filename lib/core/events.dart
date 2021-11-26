@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import 'controller.dart';
+
 class CellFingerOpenEvent {
   CellFingerOpenEvent({required this.key});
 
@@ -7,9 +9,14 @@ class CellFingerOpenEvent {
 }
 
 class CellProgramOpenEvent {
-  const CellProgramOpenEvent(
-      {required this.index, required this.animated, required this.trailing});
+  const CellProgramOpenEvent({
+    required this.controller,
+    required this.index,
+    required this.animated,
+    required this.trailing,
+  });
 
+  final SwipeActionController controller;
   final int index;
   final bool animated;
   final bool trailing;

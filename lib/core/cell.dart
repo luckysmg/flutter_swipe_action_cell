@@ -296,6 +296,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
         return;
       }
 
+      if (event.controller != widget.controller) {
+        return;
+      }
+
       if (event.trailing && !hasTrailingAction ||
           !event.trailing && !hasLeadingAction) {
         return;
