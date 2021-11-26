@@ -21,7 +21,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^2.1.3
+flutter_swipe_action_cell: ^2.1.4
 ```
 
  <br/>
