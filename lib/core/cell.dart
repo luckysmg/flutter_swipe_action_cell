@@ -666,8 +666,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _closeNestedAction() {
-    if (widget.trailingActions?.first.nestedAction != null ||
-        widget.leadingActions?.first.nestedAction != null) {
+    if (trailingActionsCount > 0 &&
+            widget.trailingActions?.first.nestedAction != null ||
+        leadingActionsCount > 0 &&
+            widget.leadingActions?.first.nestedAction != null) {
       SwipeActionStore.getInstance()
           .bus
           .fire(CloseNestedActionEvent(key: widget.key!));
