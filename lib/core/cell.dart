@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 import 'controller.dart';
 import 'events.dart';
@@ -82,6 +80,10 @@ class SwipeActionCell extends StatefulWidget {
   ///删除动画的执行时间。单位是毫秒
   final int deleteAnimationDuration;
 
+  ///The foreground color showing when the cell is selected in edit mode，def value is Colors.black.withAlpha(30)
+  ///当选中cell的时候的一个前景蒙版颜色，默认为Colors.black.withAlpha(30)
+  final Color? selectedForegroundColor;
+
   const SwipeActionCell({
     required Key key,
     required this.child,
@@ -105,6 +107,7 @@ class SwipeActionCell extends StatefulWidget {
     this.fullSwipeFactor = 0.75,
     this.deleteAnimationDuration = 400,
     this.normalAnimationDuration = 400,
+    this.selectedForegroundColor
   }) : super(key: key);
 
   ///About Key::::::
@@ -328,6 +331,12 @@ class SwipeActionCellState extends State<SwipeActionCell>
         .bus
         .on<EditingModeEvent>()
         .listen((event) {
+          assert(widget.controller != null,"If you want to use edit mode,you must pass the "
+              "SwipeActionController to cell.\n"
+              "如果你要使用编辑模式必须给cell传入SwipeActionController");
+      if(event.controller != widget.controller){
+        return;
+      }
       event.editing ? _startEditingWithAnim() : _stopEditingWithAnim();
     });
   }
@@ -388,7 +397,13 @@ class SwipeActionCellState extends State<SwipeActionCell>
             .bus
             .on<EditingModeEvent>()
             .listen((event) {
-          event.editing ? _startEditingWithAnim() : _stopEditingWithAnim();
+          assert(widget.controller != null,"If you want to use edit mode,you must pass the "
+              "SwipeActionController to cell.\n"
+              "如果你要使用编辑模式必须给cell传入SwipeActionController");
+              if(event.controller != widget.controller){
+                return;
+              }
+              event.editing ? _startEditingWithAnim() : _stopEditingWithAnim();
         });
       }
     }
@@ -774,7 +789,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
           child: DecoratedBox(
             position: DecorationPosition.foreground,
             decoration: BoxDecoration(
-              color: selected ? Colors.black.withAlpha(30) : Colors.transparent,
+              color: selected ? (widget.selectedForegroundColor ?? Colors.black.withAlpha(30)): Colors.transparent,
             ),
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {

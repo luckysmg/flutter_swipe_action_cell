@@ -30,13 +30,13 @@ class SwipeActionController {
   ///start editing
   void startEditingMode() {
     isEditing = true;
-    _fireEditEvent(editing: true);
+    _fireEditEvent(controller: this,editing: true);
   }
 
   ///stop editing
   void stopEditingMode() {
     isEditing = false;
-    _fireEditEvent(editing: false);
+    _fireEditEvent(controller: this,editing: false);
   }
 
   ///If it is editing,stop it.
@@ -46,7 +46,7 @@ class SwipeActionController {
       selectedIndexPathsChangeCallback?.call(selectedSet.toList(), false, 0);
     }
     isEditing = !isEditing;
-    _fireEditEvent(editing: isEditing);
+    _fireEditEvent(controller: this,editing: isEditing);
   }
 
   ///Get the list of selected cell 's index
@@ -163,7 +163,7 @@ class SwipeActionController {
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false));
   }
 
-  void _fireEditEvent({required bool editing}) {
-    SwipeActionStore.getInstance().bus.fire(EditingModeEvent(editing: editing));
+  void _fireEditEvent({required SwipeActionController controller, required bool editing}) {
+    SwipeActionStore.getInstance().bus.fire(EditingModeEvent(controller: controller, editing: editing));
   }
 }

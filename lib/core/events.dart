@@ -48,8 +48,9 @@ class CloseNestedActionEvent {
 }
 
 class EditingModeEvent {
-  const EditingModeEvent({required this.editing});
+  const EditingModeEvent({required this.controller, required this.editing});
 
+  final SwipeActionController controller;
   final bool editing;
 }
 
