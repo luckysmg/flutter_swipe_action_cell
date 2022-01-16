@@ -21,7 +21,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^2.1.5
+flutter_swipe_action_cell: ^2.1.6
 ```
 
  <br/>
@@ -339,9 +339,7 @@ Widget _item(int index) {
             icon: Icon(Icons.add),
             title: "delete",
             onTap: (CompletionHandler handler) async {
-              ///先关闭cell
-              await handler(false);
-
+              
               ///利用延时模拟请求网络的过程
               await Future.delayed(Duration(seconds: 1));
 
