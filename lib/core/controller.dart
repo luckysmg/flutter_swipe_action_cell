@@ -25,28 +25,28 @@ class SwipeActionController {
 
   /// edit mode or not
   ///获取是否正处于编辑模式
-  bool isEditing = false;
+  final ValueNotifier<bool> isEditing = ValueNotifier<bool>(false);
 
   ///start editing
   void startEditingMode() {
-    isEditing = true;
+    isEditing.value = true;
     _fireEditEvent(controller: this,editing: true);
   }
 
   ///stop editing
   void stopEditingMode() {
-    isEditing = false;
+    isEditing.value = false;
     _fireEditEvent(controller: this,editing: false);
   }
 
   ///If it is editing,stop it.
   ///If it is not editing, start it
   void toggleEditingMode() {
-    if (isEditing) {
+    if (isEditing.value) {
       selectedIndexPathsChangeCallback?.call(selectedSet.toList(), false, 0);
     }
-    isEditing = !isEditing;
-    _fireEditEvent(controller: this,editing: isEditing);
+    isEditing.value = !isEditing.value;
+    _fireEditEvent(controller: this,editing: isEditing.value);
   }
 
   ///Get the list of selected cell 's index
@@ -107,7 +107,7 @@ class SwipeActionController {
   ///选中cell （注意！！！你必须把 index 参数传入cell
   void selectCellAt({required List<int> indexPaths}) {
     assert(
-        isEditing,
+        isEditing.value,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
     indexPaths.forEach((element) {
@@ -122,7 +122,7 @@ class SwipeActionController {
   ///选中一个cell （注意！！！你必须把 index 参数传入cell
   void deselectCellAt({required List<int> indexPaths}) {
     assert(
-        isEditing,
+        isEditing.value,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
 
@@ -138,7 +138,7 @@ class SwipeActionController {
   ///选择所有的cell
   void selectAll({required int dataLength}) {
     assert(
-        isEditing,
+        isEditing.value,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
 
@@ -152,7 +152,7 @@ class SwipeActionController {
   ///取消选择所有的cell
   void deselectAll() {
     assert(
-        isEditing,
+        isEditing.value,
         "Please call method :selectCellAt(index)  when you are in edit mode\n"
         "请在编辑模式打开的情况下调用 selectCellAt(index)");
 

@@ -720,7 +720,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   @override
   Widget build(BuildContext context) {
-    editing = widget.controller != null && widget.controller!.isEditing;
+    editing = widget.controller != null && widget.controller!.isEditing.value;
 
     if (widget.controller != null) {
       selected = widget.controller!.selectedSet.contains(widget.index);
@@ -798,7 +798,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
                   alignment: Alignment.centerLeft,
                   children: <Widget>[
                     widget.controller != null &&
-                            (widget.controller!.isEditing ||
+                            (widget.controller!.isEditing.value ||
                                 editController.isAnimating)
                         ? _buildSelectedButton(selected)
                         : const SizedBox(),

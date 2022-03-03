@@ -1,3 +1,4 @@
+## [2.1.7] - [Breaking change] Change SwipeActionController isEditing from bool to ValueNotifier<bool>
 ## [2.1.6] - Fix edit mode controller event identifier and add customized selectedForegroundColor
 ## [2.1.5] - Fix #40 issue
 ## [2.1.4] - Repair: open other controllers with the same index under multiple controllers
