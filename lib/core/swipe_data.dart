@@ -39,8 +39,7 @@ class SwipeData extends InheritedWidget {
         oldWidget.currentOffset != currentOffset ||
         oldWidget.fullDraggable != fullDraggable ||
         oldWidget.parentKey != parentKey ||
-        oldWidget.firstActionWillCoverAllSpaceOnDeleting !=
-            firstActionWillCoverAllSpaceOnDeleting ||
+        oldWidget.firstActionWillCoverAllSpaceOnDeleting != firstActionWillCoverAllSpaceOnDeleting ||
         oldWidget.contentWidth != contentWidth ||
         oldWidget.totalActionWidth != totalActionWidth ||
         oldWidget.willPull != willPull ||

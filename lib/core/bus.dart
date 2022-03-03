@@ -5,8 +5,7 @@ class SwipeActionBus {
 
   StreamController get streamController => _streamController;
 
-  SwipeActionBus({bool sync = false})
-      : _streamController = StreamController.broadcast(sync: sync);
+  SwipeActionBus({bool sync = false}) : _streamController = StreamController.broadcast(sync: sync);
 
   Stream<T> on<T>() {
     if (T == dynamic) {

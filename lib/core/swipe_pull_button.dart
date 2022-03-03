@@ -26,8 +26,7 @@ class SwipePullButton extends StatefulWidget {
   }
 }
 
-class _SwipePullButtonState extends State<SwipePullButton>
-    with TickerProviderStateMixin {
+class _SwipePullButtonState extends State<SwipePullButton> with TickerProviderStateMixin {
   ///The cell's total offset,not button's
   late double offsetX;
 
@@ -77,8 +76,7 @@ class _SwipePullButtonState extends State<SwipePullButton>
     _resetAnimationController(offsetController);
     whenActiveToOffset = false;
     if (isPullingOut) {
-      animation = Tween<double>(begin: offsetX, end: data.currentOffset)
-          .animate(widthPullCurve)
+      animation = Tween<double>(begin: offsetX, end: data.currentOffset).animate(widthPullCurve)
         ..addListener(() {
           if (lockAnim) return;
           offsetX = animation.value;
@@ -95,8 +93,7 @@ class _SwipePullButtonState extends State<SwipePullButton>
         sumWidth += data.actions[i].widthSpace;
       }
       final currentOffset = sumWidth * factor;
-      animation = Tween<double>(begin: data.currentOffset, end: currentOffset)
-          .animate(widthPullCurve)
+      animation = Tween<double>(begin: data.currentOffset, end: currentOffset).animate(widthPullCurve)
         ..addListener(() {
           if (lockAnim) return;
           offsetX = animation.value;
@@ -111,31 +108,22 @@ class _SwipePullButtonState extends State<SwipePullButton>
 
   void _listenEvent() {
     ///Cell layer has judged the value of performsFirstActionWithFullSwipe
-    pullLastButtonSubscription = SwipeActionStore.getInstance()
-        .bus
-        .on<PullLastButtonEvent>()
-        .listen((event) async {
+    pullLastButtonSubscription = SwipeActionStore.getInstance().bus.on<PullLastButtonEvent>().listen((event) async {
       if (event.key == data.parentKey && whenFirstAction) {
         _pullActionButton(event.isPullingOut);
       }
     });
 
-    pullLastButtonToCoverCellEventSubscription = SwipeActionStore.getInstance()
-        .bus
-        .on<PullLastButtonToCoverCellEvent>()
-        .listen((event) {
+    pullLastButtonToCoverCellEventSubscription =
+        SwipeActionStore.getInstance().bus.on<PullLastButtonToCoverCellEvent>().listen((event) {
       if (event.key == data.parentKey) {
         _animToCoverCell();
       }
     });
 
-    closeNestedActionEventSubscription = SwipeActionStore.getInstance()
-        .bus
-        .on<CloseNestedActionEvent>()
-        .listen((event) {
-      if (event.key == data.parentKey &&
-          action.nestedAction != null &&
-          whenNestedActionShowing) {
+    closeNestedActionEventSubscription =
+        SwipeActionStore.getInstance().bus.on<CloseNestedActionEvent>().listen((event) {
+      if (event.key == data.parentKey && action.nestedAction != null && whenNestedActionShowing) {
         _resetNestedAction();
       }
       if (event.key != data.parentKey && whenNestedActionShowing) {
@@ -154,9 +142,7 @@ class _SwipePullButtonState extends State<SwipePullButton>
   void _initCompletionHandler() {
     handler = (delete) async {
       if (delete) {
-        SwipeActionStore.getInstance()
-            .bus
-            .fire(IgnorePointerEvent(ignore: true));
+        SwipeActionStore.getInstance().bus.fire(IgnorePointerEvent(ignore: true));
 
         if (data.firstActionWillCoverAllSpaceOnDeleting) {
           _animToCoverCell();
@@ -180,9 +166,7 @@ class _SwipePullButtonState extends State<SwipePullButton>
     whenDeleting = true;
     _resetAnimationController(offsetController);
     whenActiveToOffset = false;
-    animation = Tween<double>(
-            begin: offsetX,
-            end: widget.trailing ? -data.contentWidth : data.contentWidth)
+    animation = Tween<double>(begin: offsetX, end: widget.trailing ? -data.contentWidth : data.contentWidth)
         .animate(widthPullCurve)
       ..addListener(() {
         if (lockAnim) return;
@@ -208,25 +192,19 @@ class _SwipePullButtonState extends State<SwipePullButton>
     whenNestedActionShowing = true;
     alignment = Alignment.center;
 
-    if (action.nestedAction?.nestedWidth != null &&
-        action.nestedAction!.nestedWidth! > data.totalActionWidth) {
+    if (action.nestedAction?.nestedWidth != null && action.nestedAction!.nestedWidth! > data.totalActionWidth) {
       data.parentState.adjustOffset(
-          offsetX: action.nestedAction!.nestedWidth!,
-          curve: action.nestedAction!.curve,
-          trailing: widget.trailing);
+          offsetX: action.nestedAction!.nestedWidth!, curve: action.nestedAction!.curve, trailing: widget.trailing);
     }
 
     double endOffset;
     if (action.nestedAction?.nestedWidth != null) {
-      endOffset = trailing
-          ? -action.nestedAction!.nestedWidth!
-          : action.nestedAction!.nestedWidth!;
+      endOffset = trailing ? -action.nestedAction!.nestedWidth! : action.nestedAction!.nestedWidth!;
     } else {
       endOffset = trailing ? -data.totalActionWidth : data.totalActionWidth;
     }
 
-    animation = Tween<double>(begin: offsetX, end: endOffset)
-        .animate(offsetFillActionContentCurve)
+    animation = Tween<double>(begin: offsetX, end: endOffset).animate(offsetFillActionContentCurve)
       ..addListener(() {
         if (lockAnim) return;
         offsetX = animation.value;
@@ -241,9 +219,8 @@ class _SwipePullButtonState extends State<SwipePullButton>
     action = data.actions[widget.actionIndex];
     final bool willPull = data.willPull && whenFirstAction;
 
-    final bool shouldShowNestedActionInfo = widget.actionIndex == 0 &&
-        action.nestedAction != null &&
-        whenNestedActionShowing;
+    final bool shouldShowNestedActionInfo =
+        widget.actionIndex == 0 && action.nestedAction != null && whenNestedActionShowing;
 
     if (whenActiveToOffset && !whenNestedActionShowing) {
       ///compute offset
@@ -266,9 +243,7 @@ class _SwipePullButtonState extends State<SwipePullButton>
           return;
         }
 
-        if (whenFirstAction &&
-            action.nestedAction != null &&
-            !whenNestedActionShowing) {
+        if (whenFirstAction && action.nestedAction != null && !whenNestedActionShowing) {
           if (action.nestedAction!.impactWhenShowing) {
             HapticFeedback.mediumImpact();
           }
@@ -288,9 +263,7 @@ class _SwipePullButtonState extends State<SwipePullButton>
             alignment: trailing ? Alignment.centerLeft : Alignment.centerRight,
             child: Container(
                 alignment: Alignment.center,
-                width: shouldShowNestedActionInfo
-                    ? offsetX.abs()
-                    : action.widthSpace,
+                width: shouldShowNestedActionInfo ? offsetX.abs() : action.widthSpace,
                 child: _buildButtonContent(shouldShowNestedActionInfo)),
           ),
         ),
@@ -316,9 +289,7 @@ class _SwipePullButtonState extends State<SwipePullButton>
   }
 
   Widget _buildIcon(SwipeAction action, bool shouldShowNestedActionInfo) {
-    return shouldShowNestedActionInfo
-        ? action.nestedAction?.icon ?? const SizedBox()
-        : action.icon ?? const SizedBox();
+    return shouldShowNestedActionInfo ? action.nestedAction?.icon ?? const SizedBox() : action.icon ?? const SizedBox();
   }
 
   Widget _buildTitle(SwipeAction action, bool shouldShowNestedActionInfo) {
@@ -352,18 +323,14 @@ class _SwipePullButtonState extends State<SwipePullButton>
   }
 
   void _initAnim() {
-    offsetController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 60));
+    offsetController = AnimationController(vsync: this, duration: const Duration(milliseconds: 60));
 
-    widthPullCurve = CurvedAnimation(
-        parent: offsetController!, curve: Curves.easeInToLinear);
+    widthPullCurve = CurvedAnimation(parent: offsetController!, curve: Curves.easeInToLinear);
 
     if (widget.actionIndex == 0) {
-      offsetFillActionContentController = AnimationController(
-          vsync: this, duration: const Duration(milliseconds: 350));
+      offsetFillActionContentController = AnimationController(vsync: this, duration: const Duration(milliseconds: 350));
       offsetFillActionContentCurve = CurvedAnimation(
-          parent: offsetFillActionContentController!,
-          curve: action.nestedAction?.curve ?? Curves.easeOutQuart);
+          parent: offsetFillActionContentController!, curve: action.nestedAction?.curve ?? Curves.easeOutQuart);
     }
   }
 

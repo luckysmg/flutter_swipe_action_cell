@@ -30,13 +30,13 @@ class SwipeActionController {
   ///start editing
   void startEditingMode() {
     isEditing.value = true;
-    _fireEditEvent(controller: this,editing: true);
+    _fireEditEvent(controller: this, editing: true);
   }
 
   ///stop editing
   void stopEditingMode() {
     isEditing.value = false;
-    _fireEditEvent(controller: this,editing: false);
+    _fireEditEvent(controller: this, editing: false);
   }
 
   ///If it is editing,stop it.
@@ -46,7 +46,7 @@ class SwipeActionController {
       selectedIndexPathsChangeCallback?.call(selectedSet.toList(), false, 0);
     }
     isEditing.value = !isEditing.value;
-    _fireEditEvent(controller: this,editing: isEditing.value);
+    _fireEditEvent(controller: this, editing: isEditing.value);
   }
 
   ///Get the list of selected cell 's index
@@ -98,9 +98,7 @@ class SwipeActionController {
   void closeAllOpenCell() {
     //Send a CellFingerOpenEvent with UniqueKey,so all opening cell don't have this key
     //so all of opening cell will close
-    SwipeActionStore.getInstance()
-        .bus
-        .fire(CellFingerOpenEvent(key: UniqueKey()));
+    SwipeActionStore.getInstance().bus.fire(CellFingerOpenEvent(key: UniqueKey()));
   }
 
   ///Select a cell (You must pass [SwipeActionCell.index] attr to your [SwipeActionCell]
@@ -113,8 +111,7 @@ class SwipeActionController {
     indexPaths.forEach((element) {
       selectedSet.add(element);
     });
-    selectedIndexPathsChangeCallback?.call(
-        indexPaths, true, selectedSet.length);
+    selectedIndexPathsChangeCallback?.call(indexPaths, true, selectedSet.length);
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: true));
   }
 
@@ -129,8 +126,7 @@ class SwipeActionController {
     indexPaths.forEach((element) {
       selectedSet.remove(element);
     });
-    selectedIndexPathsChangeCallback?.call(
-        indexPaths, false, selectedSet.length);
+    selectedIndexPathsChangeCallback?.call(indexPaths, false, selectedSet.length);
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false));
   }
 
@@ -158,8 +154,7 @@ class SwipeActionController {
 
     final List<int> deselectedList = selectedSet.toList();
     selectedSet.clear();
-    selectedIndexPathsChangeCallback?.call(
-        deselectedList, false, selectedSet.length);
+    selectedIndexPathsChangeCallback?.call(deselectedList, false, selectedSet.length);
     SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false));
   }
 
