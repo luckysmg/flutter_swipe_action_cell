@@ -51,10 +51,10 @@ class SwipeActionController {
   ///If it is not editing, start it
   void toggleEditingMode() {
     if (isEditing.value) {
-      selectedIndexPathsChangeCallback?.call(selectedSet.toList(), false, 0);
+      stopEditingMode();
+    } else {
+      startEditingMode();
     }
-    isEditing.value = !isEditing.value;
-    _fireEditEvent(controller: this, editing: isEditing.value);
   }
 
   ///Get the list of selected cell 's index
