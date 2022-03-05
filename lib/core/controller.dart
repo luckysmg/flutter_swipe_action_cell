@@ -29,12 +29,20 @@ class SwipeActionController {
 
   ///start editing
   void startEditingMode() {
+    if(isEditing.value){
+      return;
+    }
     isEditing.value = true;
     _fireEditEvent(controller: this, editing: true);
   }
 
   ///stop editing
   void stopEditingMode() {
+    if(!isEditing.value){
+      return;
+    }
+    selectedIndexPathsChangeCallback?.call(List<int>.of(selectedSet), false, 0);
+    selectedSet.clear();
     isEditing.value = false;
     _fireEditEvent(controller: this, editing: false);
   }

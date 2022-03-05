@@ -221,7 +221,6 @@ class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderSta
     lockAnim = true;
     editController.value = 0.0;
     lockAnim = false;
-    widget.controller?.selectedSet.remove(widget.index);
     animation = Tween<double>(begin: widget.editModeOffset, end: 0).animate(editCurvedAnim)
       ..addListener(() {
         if (lockAnim) return;
