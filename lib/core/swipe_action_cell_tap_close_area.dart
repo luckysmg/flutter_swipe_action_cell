@@ -7,7 +7,8 @@ class SwipeActionCellTapCloseArea extends StatelessWidget {
 
   final SwipeActionController _controller = SwipeActionController();
 
-  SwipeActionCellTapCloseArea({Key? key, required this.child}) : super(key: key);
+  SwipeActionCellTapCloseArea({Key? key, required this.child})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
