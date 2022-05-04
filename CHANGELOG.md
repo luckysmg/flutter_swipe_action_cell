@@ -1,3 +1,4 @@
+## [2.2.1] - Fix performance issue #44 (Avoid unnecessary rebuild all cells when scrolling).
 ## [2.2.0] - Bug fix
 ## [2.1.8] - Bug fix
 ## [2.1.7] - [Breaking change] Change SwipeActionController isEditing from bool to ValueNotifier<bool>

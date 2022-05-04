@@ -424,7 +424,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _scrollListener() {
-    if ((scrollPosition?.isScrollingNotifier.value ?? false) && !editing) {
+    final bool isScrolling = scrollPosition?.isScrollingNotifier.value ?? false;
+    final bool isCellOpening = currentOffset.dx != 0.0;
+    if (isCellOpening && isScrolling && !editing) {
       closeWithAnim();
       _closeNestedAction();
     }
