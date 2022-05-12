@@ -1,3 +1,5 @@
+## [2.2.3] - Fix performance issue #44 (Avoid unnecessary rebuild all cells when scrolling).
+## [2.2.2] - For flutter 3 (Please use 3.0.0).
 ## [2.2.1] - Fix performance issue #44 (Avoid unnecessary rebuild all cells when scrolling).
 ## [2.2.0] - Bug fix
 ## [2.1.8] - Bug fix
