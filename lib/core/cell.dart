@@ -1052,7 +1052,7 @@ class __ContentWidgetState extends State<_ContentWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (mounted) widget.onLayoutUpdate(context.size!);
     });
   }
@@ -1060,7 +1060,7 @@ class __ContentWidgetState extends State<_ContentWidget> {
   @override
   void didUpdateWidget(_ContentWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (mounted) widget.onLayoutUpdate(context.size!);
     });
   }

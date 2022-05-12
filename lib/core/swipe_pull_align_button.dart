@@ -56,7 +56,7 @@ class _SwipePullAlignButtonState extends State<SwipePullAlignButton>
     super.initState();
     whenFirstAction = widget.actionIndex == 0;
     alignment = trailing ? Alignment.centerRight : Alignment.centerLeft;
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _initAnim();
       _initCompletionHandler();
     });

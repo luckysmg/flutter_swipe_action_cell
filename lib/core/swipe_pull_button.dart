@@ -65,7 +65,7 @@ class _SwipePullButtonState extends State<SwipePullButton>
     whenNestedActionShowing = false;
     whenFirstAction = widget.actionIndex == 0;
     alignment = trailing ? Alignment.centerLeft : Alignment.centerRight;
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _initAnim();
       _initCompletionHandler();
     });
