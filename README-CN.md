@@ -21,7 +21,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^3.0.0
+flutter_swipe_action_cell: ^3.0.1
 ```
 
  <br/>
@@ -68,7 +68,7 @@ flutter_swipe_action_cell: ^3.0.0
 - [x] 支持自定义按钮内容，形状，颜色等。
 - [x] 支持仿iOS原生列表编辑模式交互，多选，全选，取消全选，获取选中项等多种操作
 - [x] 支持只使用编辑模式，通过设置取消侧滑参数，防止和TabView或PageView手势冲突
-
+- [x] 支持全局配置页面路由切换时关闭此时正打开的cell菜单
 
 
 ## 最完整的例子（几乎涵盖所有常用api）:
@@ -441,6 +441,16 @@ Widget _item(int index) {
     );
   }
 
+
+```
+
+- ## Example 9：页面切换时统一关闭打开的cell
+只需要在App的路由观察者中加上一个`SwipeActionNavigatorObserver`即可
+```dart
+return MaterialApp(
+  navigatorObservers: [SwipeActionNavigatorObserver()],
+  ....
+);
 
 ```
 

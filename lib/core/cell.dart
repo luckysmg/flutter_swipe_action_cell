@@ -281,7 +281,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
         .bus
         .on<CellFingerOpenEvent>()
         .listen((event) {
-      if (event.key != widget.key && currentOffset.dx != 0.0) {
+      if (event.key != widget.key && currentOffset.dx != 0.0 && !editing && !editController.isAnimating) {
         closeWithAnim();
         _closeNestedAction();
       }

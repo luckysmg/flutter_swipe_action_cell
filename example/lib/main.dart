@@ -12,6 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      /// Add this SwipeActionNavigatorObserver to close opening cell when navigator changes its routes
+      /// 添加这个可以在路由切换的时候统一关闭打开的cell，全局有效
+      navigatorObservers: [SwipeActionNavigatorObserver()],
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -215,17 +218,12 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
       ],
       child: GestureDetector(
         onTap: () {
-          ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
-            content: Text(
-              'tap',
-            ),
-            duration: Duration(seconds: 1),
-          ));
+          Navigator.push(context, CupertinoPageRoute(builder: (ctx)=>const HomePage()));
         },
         child: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(20.0),
           child: Text("This is index of ${list[index]}",
-              style: const TextStyle(fontSize: 25)),
+              style: const TextStyle(fontSize: 30)),
         ),
       ),
     );

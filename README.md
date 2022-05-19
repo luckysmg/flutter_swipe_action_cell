@@ -18,7 +18,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 ##### install:
 
 ```yaml
-flutter_swipe_action_cell: ^3.0.0
+flutter_swipe_action_cell: ^3.0.1
 ```  
 
 ## 1.Preview：
@@ -388,6 +388,17 @@ Widget _item(int index) {
       ),
     );
   }
+
+```
+
+
+- ## Example 8：Close opening cell when navigator change its routes.
+Add a `SwipeActionNavigatorObserver` in `MaterialApp`'s `navigatorObservers`
+```dart
+return MaterialApp(
+  navigatorObservers: [SwipeActionNavigatorObserver()],
+  ....
+);
 
 ```
 
