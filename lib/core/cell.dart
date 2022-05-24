@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'layout_size_changed_notifier.dart';
 import 'controller.dart';
 import 'events.dart';
 import 'store.dart';
@@ -738,13 +739,17 @@ class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderSta
                     widget.controller != null && (widget.controller!.isEditing.value || editController.isAnimating)
                         ? _buildSelectedButton(selected)
                         : const SizedBox(),
-                    _ContentWidget(
-                      onLayoutUpdate: (size) {
-                        this.height = size.height;
+                    LayoutSizeChangedNotifier(
+                      callback: (Size size) {
+                        height = size.height;
+                        if (whenTrailingActionShowing || whenLeadingActionShowing) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (mounted) setState(() {});
+                          });
+                        }
                       },
                       child: Transform.translate(
-                        offset:
-                            editing && !editController.isAnimating ? Offset(widget.editModeOffset, 0) : currentOffset,
+                        offset: editing && !editController.isAnimating ? Offset(widget.editModeOffset, 0) : currentOffset,
                         transformHitTests: false,
                         child: SizedBox(
                           width: double.infinity,
@@ -947,39 +952,6 @@ class SwipeAction {
     this.content,
     this.performsFirstActionWithFullSwipe = false,
   });
-}
-
-class _ContentWidget extends StatefulWidget {
-  final Widget child;
-  final Function(Size) onLayoutUpdate;
-
-  const _ContentWidget({Key? key, required this.onLayoutUpdate, required this.child}) : super(key: key);
-
-  @override
-  __ContentWidgetState createState() => __ContentWidgetState();
-}
-
-class __ContentWidgetState extends State<_ContentWidget> {
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted) widget.onLayoutUpdate(context.size!);
-    });
-  }
-
-  @override
-  void didUpdateWidget(_ContentWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted) widget.onLayoutUpdate(context.size!);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
-  }
 }
 
 ///点击后弹出的action

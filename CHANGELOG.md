@@ -1,3 +1,4 @@
+## [3.0.2] - Fix issue : size not correct when change widget size and action button showing 
 ## [3.0.1] - Add SwipeActionNavigatorObserver to close opening cell when navigator changes routes
 ## [3.0.0] - Support flutter 3
 ## [2.2.3] - Fix performance issue #44 (Avoid unnecessary rebuild all cells when scrolling).
