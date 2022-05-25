@@ -41,7 +41,8 @@ class _HomePageState extends State<HomePage> {
         child: CupertinoButton.filled(
             child: const Text('Enter new page'),
             onPressed: () {
-              Navigator.push(context, CupertinoPageRoute(builder: (c) => const SwipeActionPage()));
+              Navigator.push(context,
+                  CupertinoPageRoute(builder: (c) => const SwipeActionPage()));
             }),
       ),
     );
@@ -75,7 +76,8 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
   @override
   void initState() {
     super.initState();
-    controller = SwipeActionController(selectedIndexPathsChangeCallback: (changedIndexPaths, selected, currentCount) {
+    controller = SwipeActionController(selectedIndexPathsChangeCallback:
+        (changedIndexPaths, selected, currentCount) {
       print(
           'cell at ${changedIndexPaths.toString()} is/are ${selected ? 'selected' : 'unselected'} ,current selected count is $currentCount');
 
@@ -101,7 +103,8 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
                   padding: const EdgeInsets.only(),
                   child: const Text('open cell at 2'),
                   onPressed: () {
-                    controller.openCellAt(index: 2, trailing: true, animated: true);
+                    controller.openCellAt(
+                        index: 2, trailing: true, animated: true);
                   }),
             ),
             const SizedBox(
@@ -136,7 +139,8 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
         leading: CupertinoButton.filled(
             padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
             minSize: 0,
-            child: Text('delete cells (${controller.getSelectedIndexPaths().length})',
+            child: Text(
+                'delete cells (${controller.getSelectedIndexPaths().length})',
                 style: const TextStyle(color: Colors.white)),
             onPressed: () {
               ///获取选取的索引集合
@@ -209,15 +213,18 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
               list.removeAt(index);
               setState(() {});
             }),
-        SwipeAction(title: "action3", color: Colors.orange, onTap: (handler) {}),
+        SwipeAction(
+            title: "action3", color: Colors.orange, onTap: (handler) {}),
       ],
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, CupertinoPageRoute(builder: (ctx) => const HomePage()));
+          Navigator.push(
+              context, CupertinoPageRoute(builder: (ctx) => const HomePage()));
         },
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Text("This is index of ${list[index]}", style: const TextStyle(fontSize: 30)),
+          child: Text("This is index of ${list[index]}",
+              style: const TextStyle(fontSize: 30)),
         ),
       ),
     );

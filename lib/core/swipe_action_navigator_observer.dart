@@ -26,7 +26,9 @@ class SwipeActionNavigatorObserver extends NavigatorObserver {
     _controller.closeAllOpenCell();
   }
 
-  void didStartUserGesture(Route<dynamic> route, Route<dynamic>? previousRoute) {
+  @override
+  void didStartUserGesture(
+      Route<dynamic> route, Route<dynamic>? previousRoute) {
     _controller.closeAllOpenCell();
   }
 
