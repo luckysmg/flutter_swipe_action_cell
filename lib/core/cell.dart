@@ -742,12 +742,12 @@ class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderSta
 
 
     // Action buttons
-    final bool shouldShowActionButtons = currentOffset.dx == 0.0 || editController.isAnimating || editing;
-    final Widget trailing = shouldShowActionButtons
+    final bool shouldHideActionButtons = currentOffset.dx == 0.0 || editController.isAnimating || editing;
+    final Widget trailing = shouldHideActionButtons
         ? const SizedBox()
         : _buildTrailingActionButtons();
 
-    final Widget leading = shouldShowActionButtons
+    final Widget leading = shouldHideActionButtons
         ? const SizedBox()
         : _buildLeadingActionButtons();
 
