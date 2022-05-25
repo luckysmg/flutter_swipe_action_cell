@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'layout_size_changed_notifier.dart';
 import 'controller.dart';
 import 'events.dart';
 import 'store.dart';
@@ -127,7 +126,7 @@ class SwipeActionCell extends StatefulWidget {
 }
 
 class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderStateMixin {
-  late double height;
+
   late double width;
 
   late Offset currentOffset;
@@ -739,28 +738,18 @@ class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderSta
                     widget.controller != null && (widget.controller!.isEditing.value || editController.isAnimating)
                         ? _buildSelectedButton(selected)
                         : const SizedBox(),
-                    LayoutSizeChangedNotifier(
-                      callback: (Size size) {
-                        height = size.height;
-                        if (whenTrailingActionShowing || whenLeadingActionShowing) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            if (mounted) setState(() {});
-                          });
-                        }
-                      },
-                      child: Transform.translate(
-                        offset: editing && !editController.isAnimating ? Offset(widget.editModeOffset, 0) : currentOffset,
-                        transformHitTests: false,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
-                              ),
-                              child: IgnorePointer(
-                                  ignoring: editController.isAnimating || editing || currentOffset.dx.abs() > 20,
-                                  child: widget.child)),
-                        ),
+                    Transform.translate(
+                      offset: editing && !editController.isAnimating ? Offset(widget.editModeOffset, 0) : currentOffset,
+                      transformHitTests: false,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
+                            ),
+                            child: IgnorePointer(
+                                ignoring: editController.isAnimating || editing || currentOffset.dx.abs() > 20,
+                                child: widget.child)),
                       ),
                     ),
                     currentOffset.dx == 0.0 || editController.isAnimating || editing
@@ -813,9 +802,7 @@ class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderSta
       currentOffset: currentOffset.dx,
       fullDraggable: widget.leadingActions![0].performsFirstActionWithFullSwipe,
       parentState: this,
-      child: SizedBox(
-        height: height,
-        width: double.infinity,
+      child: Positioned.fill(
         child: Stack(
           children: actionButtons,
         ),
@@ -848,9 +835,7 @@ class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderSta
       currentOffset: currentOffset.dx,
       fullDraggable: widget.trailingActions![0].performsFirstActionWithFullSwipe,
       parentState: this,
-      child: SizedBox(
-        height: height,
-        width: double.infinity,
+      child: Positioned.fill(
         child: Stack(
           children: actionButtons,
         ),
