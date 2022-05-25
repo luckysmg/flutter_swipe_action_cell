@@ -17,8 +17,13 @@ import 'swipe_pull_button.dart';
 ///
 
 class SwipeActionCell extends StatefulWidget {
+
+  /// Actions on trailing
+  /// 右边的action
   final List<SwipeAction>? trailingActions;
 
+  /// Actions on leading
+  /// 左边的action
   final List<SwipeAction>? leadingActions;
 
   ///Your content view
@@ -127,7 +132,7 @@ class SwipeActionCell extends StatefulWidget {
 
 class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderStateMixin {
 
-  late double width;
+  double width = 0;
 
   late Offset currentOffset;
   late double maxTrailingPullWidth;
@@ -161,22 +166,19 @@ class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderSta
   late bool editing;
   late bool selected;
 
-  late bool hasTrailingAction;
-  late bool hasLeadingAction;
   late bool whenTrailingActionShowing;
   late bool whenLeadingActionShowing;
 
   int get trailingActionsCount => widget.trailingActions?.length ?? 0;
-
   int get leadingActionsCount => widget.leadingActions?.length ?? 0;
+  bool get hasTrailingAction => trailingActionsCount > 0;
+  bool get hasLeadingAction => leadingActionsCount > 0;
 
-  final cellStateInfo = _CellStateInfo();
+  final _CellStateInfo cellStateInfo = _CellStateInfo();
 
   @override
   void initState() {
     super.initState();
-    hasTrailingAction = widget.trailingActions != null;
-    hasLeadingAction = widget.leadingActions != null;
     lastItemOut = false;
     lockAnim = false;
     ignorePointer = false;
@@ -345,8 +347,6 @@ class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderSta
   @override
   void didUpdateWidget(SwipeActionCell oldWidget) {
     super.didUpdateWidget(oldWidget);
-    hasTrailingAction = widget.trailingActions != null;
-    hasLeadingAction = widget.leadingActions != null;
     maxTrailingPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
     if (widget.closeWhenScrolling != oldWidget.closeWhenScrolling) {
@@ -663,9 +663,53 @@ class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderSta
       });
   }
 
+  Map<Type, GestureRecognizerFactory> get gestures {
+    return {
+      TapGestureRecognizer:
+      GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(() => TapGestureRecognizer(), (instance) {
+        instance
+          ..onTap = editing && !editController.isAnimating || currentOffset.dx != 0.0
+              ? () {
+            if (editing && !editController.isAnimating) {
+              assert(
+              widget.index != null,
+              "From SwipeActionCell:\nIf you want to enter edit mode,please pass the 'index' parameter in SwipeActionCell\n"
+                  "=====================================================================================\n"
+                  "如果你要进入编辑模式，请在SwipeActionCell中传入index 参数，他的值就是你列表组件的itemBuilder中返回的index即可");
+
+              if (selected) {
+                widget.controller?.selectedSet.remove(widget.index);
+                _updateControllerSelectedIndexChangedCallback(selected: false);
+              } else {
+                widget.controller?.selectedSet.add(widget.index!);
+                _updateControllerSelectedIndexChangedCallback(selected: true);
+              }
+              setState(() {});
+            } else if (currentOffset.dx != 0 && !controller.isAnimating) {
+              closeWithAnim();
+              _closeNestedAction();
+            }
+          }
+              : null;
+      }),
+      if (widget.isDraggable)
+        _DirectionDependentDragGestureRecognizer:
+        GestureRecognizerFactoryWithHandlers<_DirectionDependentDragGestureRecognizer>(
+                () => _DirectionDependentDragGestureRecognizer(
+                cellStateInfo: cellStateInfo,
+                canDragToLeft: hasTrailingAction,
+                canDragToRight: hasLeadingAction), (instance) {
+          instance
+            ..onStart = _onHorizontalDragStart
+            ..onUpdate = _onHorizontalDragUpdate
+            ..onEnd = _onHorizontalDragEnd;
+        }),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
-    editing = widget.controller != null && widget.controller!.isEditing.value;
+    editing = widget.controller?.isEditing.value ?? false;
 
     if (widget.controller != null) {
       selected = widget.controller!.selectedSet.contains(widget.index);
@@ -677,53 +721,43 @@ class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderSta
     whenLeadingActionShowing = currentOffset.dx > 0;
     cellStateInfo.isActionShowing = whenTrailingActionShowing || whenLeadingActionShowing;
 
+    final Widget selectedButton = widget.controller != null && (widget.controller!.isEditing.value || editController.isAnimating)
+        ? _buildSelectedButton(selected)
+        : const SizedBox();
+
+    final Widget content = Transform.translate(
+      offset: editing && !editController.isAnimating ? Offset(widget.editModeOffset, 0) : currentOffset,
+      transformHitTests: false,
+      child: SizedBox(
+        width: double.infinity,
+        child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
+            ),
+            child: IgnorePointer(
+                ignoring: editController.isAnimating || editing || currentOffset.dx.abs() > 20,
+                child: widget.child)),
+      ),
+    );
+
+
+    // Action buttons
+    final bool shouldShowActionButtons = currentOffset.dx == 0.0 || editController.isAnimating || editing;
+    final Widget trailing = shouldShowActionButtons
+        ? const SizedBox()
+        : _buildTrailingActionButtons();
+
+    final Widget leading = shouldShowActionButtons
+        ? const SizedBox()
+        : _buildLeadingActionButtons();
+
     return IgnorePointer(
       ignoring: ignorePointer,
       child: SizeTransition(
         sizeFactor: deleteCurvedAnim,
         child: RawGestureDetector(
           behavior: HitTestBehavior.opaque,
-          gestures: {
-            TapGestureRecognizer:
-                GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(() => TapGestureRecognizer(), (instance) {
-              instance
-                ..onTap = editing && !editController.isAnimating || currentOffset.dx != 0.0
-                    ? () {
-                        if (editing && !editController.isAnimating) {
-                          assert(
-                              widget.index != null,
-                              "From SwipeActionCell:\nIf you want to enter edit mode,please pass the 'index' parameter in SwipeActionCell\n"
-                              "=====================================================================================\n"
-                              "如果你要进入编辑模式，请在SwipeActionCell中传入index 参数，他的值就是你列表组件的itemBuilder中返回的index即可");
-
-                          if (selected) {
-                            widget.controller?.selectedSet.remove(widget.index);
-                            _updateControllerSelectedIndexChangedCallback(selected: false);
-                          } else {
-                            widget.controller?.selectedSet.add(widget.index!);
-                            _updateControllerSelectedIndexChangedCallback(selected: true);
-                          }
-                          setState(() {});
-                        } else if (currentOffset.dx != 0 && !controller.isAnimating) {
-                          closeWithAnim();
-                          _closeNestedAction();
-                        }
-                      }
-                    : null;
-            }),
-            if (widget.isDraggable)
-              _DirectionDependentDragGestureRecognizer:
-                  GestureRecognizerFactoryWithHandlers<_DirectionDependentDragGestureRecognizer>(
-                      () => _DirectionDependentDragGestureRecognizer(
-                          cellStateInfo: cellStateInfo,
-                          canDragToLeft: hasTrailingAction,
-                          canDragToRight: hasLeadingAction), (instance) {
-                instance
-                  ..onStart = _onHorizontalDragStart
-                  ..onUpdate = _onHorizontalDragUpdate
-                  ..onEnd = _onHorizontalDragEnd;
-              }),
-          },
+          gestures: gestures,
           child: DecoratedBox(
             position: DecorationPosition.foreground,
             decoration: BoxDecoration(
@@ -735,29 +769,10 @@ class SwipeActionCellState extends State<SwipeActionCell> with TickerProviderSta
                 return Stack(
                   alignment: Alignment.centerLeft,
                   children: <Widget>[
-                    widget.controller != null && (widget.controller!.isEditing.value || editController.isAnimating)
-                        ? _buildSelectedButton(selected)
-                        : const SizedBox(),
-                    Transform.translate(
-                      offset: editing && !editController.isAnimating ? Offset(widget.editModeOffset, 0) : currentOffset,
-                      transformHitTests: false,
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: widget.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            child: IgnorePointer(
-                                ignoring: editController.isAnimating || editing || currentOffset.dx.abs() > 20,
-                                child: widget.child)),
-                      ),
-                    ),
-                    currentOffset.dx == 0.0 || editController.isAnimating || editing
-                        ? const SizedBox()
-                        : _buildTrailingActionButtons(),
-                    currentOffset.dx == 0.0 || editController.isAnimating || editing
-                        ? const SizedBox()
-                        : _buildLeadingActionButtons(),
+                    selectedButton,
+                    content,
+                    trailing,
+                    leading,
                   ],
                 );
               },
