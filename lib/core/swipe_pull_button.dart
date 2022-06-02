@@ -159,13 +159,8 @@ class _SwipePullButtonState extends State<SwipePullButton>
             .fire(IgnorePointerEvent(ignore: true));
 
         if (data.firstActionWillCoverAllSpaceOnDeleting) {
-          _animToCoverCell();
-
-          ///and avoid layout jumping because of fast animation
-          await Future.delayed(const Duration(milliseconds: 50));
+          await _animToCoverCell();
         }
-
-        ///wait the animation to complete
         await data.parentState.deleteWithAnim();
       } else {
         if (action.closeOnTap) {
@@ -176,7 +171,7 @@ class _SwipePullButtonState extends State<SwipePullButton>
     };
   }
 
-  void _animToCoverCell() {
+  Future<void> _animToCoverCell() async {
     whenDeleting = true;
     _resetAnimationController(offsetController);
     whenActiveToOffset = false;
@@ -189,7 +184,7 @@ class _SwipePullButtonState extends State<SwipePullButton>
         offsetX = animation.value;
         setState(() {});
       });
-    offsetController?.forward();
+    await offsetController?.forward();
   }
 
   void _animToCoverPullActionContent() async {
