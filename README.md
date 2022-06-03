@@ -18,7 +18,7 @@ A package that can give you a cell that can be swiped ,effect is like iOS native
 ##### install:
 
 ```yaml
-flutter_swipe_action_cell: ^3.0.2
+flutter_swipe_action_cell: ^3.0.3
 ```  
 
 ## 1.Preview：
@@ -421,12 +421,4 @@ If you want some animation:
 # About all parameter:
 
 I wrote them in my code with dart doc comments.You can read them in source code.
-
-# Previous Bug List with related issues
-
-- [issue7](https://github.com/luckysmg/flutter_swipe_action_cell/issues/7) (SwipeActionEditController can't delete cells
-  correctly) --> fixed after v1.1.0
-
- 
-
 

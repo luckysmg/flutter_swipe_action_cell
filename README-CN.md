@@ -21,7 +21,7 @@
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^3.0.2
+flutter_swipe_action_cell: ^3.0.3
 ```
 
  <br/>
@@ -524,13 +524,5 @@ selectAll (length)|全选（需要你提供你数据集合的长度
 deselectAll()|取消全选
 deleteCellAt(indexPaths)|删除所在index的cell（只是同步内部数据，并不会刷新UI）
 
-
-
-
-# 之前遇到的bug（附上关联的issue）
--  [issue7](https://github.com/luckysmg/flutter_swipe_action_cell/issues/7) (SwipeActionEditController 不能正确的删除数据) --> fixed after v1.1.0
-
- 
- 
 
 
