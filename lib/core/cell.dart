@@ -728,6 +728,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   Map<Type, GestureRecognizerFactory> get gestures {
+    final DeviceGestureSettings? gestureSettings =
+        MediaQuery.maybeOf(context)?.gestureSettings;
     return {
       TapGestureRecognizer:
           GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
@@ -758,7 +760,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
                     _closeNestedAction();
                   }
                 }
-              : null;
+              : null
+          ..gestureSettings = gestureSettings;
       }),
       if (widget.isDraggable)
         _DirectionDependentDragGestureRecognizer:
@@ -771,7 +774,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
           instance
             ..onStart = _onHorizontalDragStart
             ..onUpdate = _onHorizontalDragUpdate
-            ..onEnd = _onHorizontalDragEnd;
+            ..onEnd = _onHorizontalDragEnd
+            ..gestureSettings = gestureSettings;
         }),
     };
   }
