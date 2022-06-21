@@ -14,7 +14,12 @@
  #### 从 3.0.0 版本开始支持flutter 3
  
  和框架有关问题,无论是新功能探索，开发，bug提出，还是有关建议都可以发群里交流，只要我有时间，我很乐意帮助大家(^▽^)
- 
+
+### 捐赠：
+
+Alipay | Wechat | 
+-------- | -----
+<img src="https://raw.githubusercontent.com/luckysmg/daily_images/main/flutter_swipe_action_cell_images/alipay.JPG?raw=true" width="250"  alt=""/> | <img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/wechat.JPG?raw=true" width="250"  alt=""/>
 
 ## 直接进入正题:
 

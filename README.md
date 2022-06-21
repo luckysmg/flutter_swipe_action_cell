@@ -9,6 +9,14 @@ A package that can give you a cell that can be swiped, effect is like iOS native
 
 ### If you like this package, you can give me a star😀. The more stars this project has, the more time I will speant in the project😀
 
+
+### Donate:
+
+Alipay | Wechat | 
+-------- | -----
+<img src="https://raw.githubusercontent.com/luckysmg/daily_images/main/flutter_swipe_action_cell_images/alipay.JPG?raw=true" width="250"  alt=""/> | <img src="https://github.com/luckysmg/daily_images/blob/main/flutter_swipe_action_cell_images/wechat.JPG?raw=true" width="250"  alt=""/>
+
+
 ## Get started
 
 ### 3.0.0 and later version is for flutter 3
