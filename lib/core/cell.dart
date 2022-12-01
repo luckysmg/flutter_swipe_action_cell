@@ -595,9 +595,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
       };
 
       if (whenTrailingActionShowing && widget.trailingActions != null) {
-        await widget.trailingActions?[0].onTap.call(completionHandler);
+        widget.trailingActions?[0].onTap(completionHandler);
       } else if (whenLeadingActionShowing && widget.leadingActions != null) {
-        await widget.leadingActions?[0].onTap.call(completionHandler);
+        widget.leadingActions?[0].onTap(completionHandler);
       }
     } else {
       /// normal dragging update
@@ -967,25 +967,28 @@ class SwipeActionCellState extends State<SwipeActionCell>
 /// you should modify your data source first,then wait handler to execute,after that,
 /// you can call setState to update your UI.
 ///
-///
-/// Code Example
-///
-///  initState(){
+/// Code Example:
+/// ```
+///  initState() {
 ///    List list = [1,2,3,5];
 ///  }
 ///
-/// onTap(handler)async {
+///  onTap(handler) async {
+///    list.removeAt(2);
 ///
-///   list.removeAt(2);
+///    // true: will delete this row in ListView
+///    // false: will not delete it
+///    // Q: When to use "await"?
+///    // A: The time when you want animation
+///    await handler(true or false);
 ///
-///   await handler(true or false);
-///   //true: will delete this row in ListView ,false: will not delete it
-///   //Q:When to use "await"? A:The time when you want animation
+///    setState((){});
+///  }
+/// ```
 ///
-///   setState((){});
-/// }
-///
-typedef CompletionHandler = Function(bool);
+typedef CompletionHandler = Future<void> Function(bool deleteOrCloseAnimation);
+
+typedef SwipeActionOnTapCallback = void Function(CompletionHandler animator);
 
 class SwipeAction {
   /// title's text Style
@@ -1016,7 +1019,7 @@ class SwipeAction {
   /// onTap callback
   ///
   /// 点击事件回调
-  final Function(CompletionHandler) onTap;
+  final SwipeActionOnTapCallback onTap;
 
   /// 图标
   final Widget? icon;
