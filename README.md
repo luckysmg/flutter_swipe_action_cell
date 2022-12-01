@@ -72,7 +72,7 @@ And you can find full example code in [example page](https://pub.dev/packages/fl
 
 ```dart
  SwipeActionCell(
-      key: ObjectKey(list[index]), ///this key is necessary
+      key: ObjectKey(list[index]), /// this key is necessary
       trailingActions: <SwipeAction>[
         SwipeAction(
             title: "delete",
@@ -130,7 +130,7 @@ SwipeActionCell(
             onTap: (CompletionHandler handler) async {
               
               /// await handler(true) : will delete this row
-              ///And after delete animation,setState will called to 
+              /// And after delete animation,setState will called to 
               /// sync your data source with your UI
 
               await handler(true);
@@ -246,7 +246,7 @@ return SwipeActionCell(
 /// To controller edit mode
 SwipeActionEditController controller;
 
-///在initState
+/// 在initState
 @override
   void initState() {
     super.initState();
@@ -332,7 +332,6 @@ Widget _item(int index) {
         SwipeAction(
             nestedAction: SwipeNestedAction(
               /// customize your nested action content
-
               content: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),

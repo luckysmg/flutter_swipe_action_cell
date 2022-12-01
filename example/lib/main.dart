@@ -81,10 +81,10 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
       print(
           'cell at ${changedIndexPaths.toString()} is/are ${selected ? 'selected' : 'unselected'} ,current selected count is $currentCount');
 
-      ///I just call setState() to update simply in this example.
-      ///But the whole page will be rebuilt.
-      ///So when you are developing,you'd better update a little piece
-      ///of UI sub tree for best performance....
+      /// I just call setState() to update simply in this example.
+      /// But the whole page will be rebuilt.
+      /// So when you are developing,you'd better update a little piece
+      /// of UI sub tree for best performance....
 
       setState(() {});
     });
@@ -143,7 +143,7 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
                 'delete cells (${controller.getSelectedIndexPaths().length})',
                 style: const TextStyle(color: Colors.white)),
             onPressed: () {
-              ///获取选取的索引集合
+              /// 获取选取的索引集合
               List<int> selectedIndexes = controller.getSelectedIndexPaths();
 
               List<String> idList = [];
@@ -151,14 +151,14 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
                 idList.add(list[element].id);
               }
 
-              ///遍历id集合，并且在原来的list中删除这些id所对应的数据
+              /// 遍历id集合，并且在原来的list中删除这些id所对应的数据
               for (var itemId in idList) {
                 list.removeWhere((element) {
                   return element.id == itemId;
                 });
               }
 
-              ///更新内部数据，这句话一定要写哦
+              /// 更新内部数据，这句话一定要写哦
               controller.deleteCellAt(indexPaths: selectedIndexes);
               setState(() {});
             }),
@@ -188,7 +188,7 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
       // Required!
       key: ValueKey(list[index]),
 
-      /// Animation default value below
+      // Animation default value below
       // normalAnimationDuration: 400,
       // deleteAnimationDuration: 400,
       selectedForegroundColor: Colors.black.withAlpha(30),

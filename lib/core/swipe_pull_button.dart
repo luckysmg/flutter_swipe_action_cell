@@ -9,7 +9,7 @@ import 'events.dart';
 import 'store.dart';
 import 'swipe_data.dart';
 
-///The normal swipe action button
+/// The normal swipe action button
 class SwipePullButton extends StatefulWidget {
   final int actionIndex;
   final bool trailing;
@@ -28,7 +28,7 @@ class SwipePullButton extends StatefulWidget {
 
 class _SwipePullButtonState extends State<SwipePullButton>
     with TickerProviderStateMixin {
-  ///The cell's total offset,not button's
+  /// The cell's total offset,not button's
   late double offsetX;
 
   late Alignment alignment;
@@ -110,7 +110,7 @@ class _SwipePullButtonState extends State<SwipePullButton>
   }
 
   void _listenEvent() {
-    ///Cell layer has judged the value of performsFirstActionWithFullSwipe
+    /// Cell layer has judged the value of performsFirstActionWithFullSwipe
     pullLastButtonSubscription = SwipeActionStore.getInstance()
         .bus
         .on<PullLastButtonEvent>()
@@ -241,7 +241,7 @@ class _SwipePullButtonState extends State<SwipePullButton>
         whenNestedActionShowing;
 
     if (whenActiveToOffset && !whenNestedActionShowing) {
-      ///compute offset
+      /// compute offset
       final currentPullOffset = data.currentOffset;
       if (willPull) {
         offsetX = data.currentOffset;

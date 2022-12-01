@@ -93,7 +93,7 @@ class _SwipePullAlignButtonState extends State<SwipePullAlignButton>
   }
 
   void _listenEvent() {
-    ///Cell layer has judged the value of performsFirstActionWithFullSwipe
+    /// Cell layer has judged the value of performsFirstActionWithFullSwipe
     pullLastButtonSubscription = SwipeActionStore.getInstance()
         .bus
         .on<PullLastButtonEvent>()
