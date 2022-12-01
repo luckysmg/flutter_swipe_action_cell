@@ -91,7 +91,7 @@ flutter_swipe_action_cell: ^3.0.4
  - ##### Tip：你把下面的放在你ListView的itemBuilder里面返回就行
 ```dart
  SwipeActionCell(
-      ///这个key是必要的
+      /// 这个key是必要的
       key: ValueKey(list[index]),
       trailingActions: <SwipeAction>[
         SwipeAction(
@@ -120,7 +120,7 @@ flutter_swipe_action_cell: ^3.0.4
        key: ValueKey(list[index]),
        trailingActions: <SwipeAction>[
          SwipeAction(
-             ///参数名和iOS原生相同
+             /// 参数名和iOS原生相同
              performsFirstActionWithFullSwipe: true,
              title: "delete",
              onTap: (CompletionHandler handler) async {
@@ -150,7 +150,7 @@ SwipeActionCell(
             onTap: (CompletionHandler handler) async {
               
               /// await handler(true) : 代表将会删除这一行
-             ///在删除动画结束后，setState函数才应该被调用来同步你的数据和UI
+              /// 在删除动画结束后，setState函数才应该被调用来同步你的数据和UI
 
               await handler(true);
               list.removeAt(index);
@@ -188,7 +188,7 @@ SwipeActionCell(
             widthSpace: 120,
             title: "popAlert",
             onTap: (CompletionHandler handler) async {
-              ///false 代表他不会删除这一行，默认情况下会关闭这个action button
+              /// false 代表他不会删除这一行，默认情况下会关闭这个action button
               handler(false);
               showCupertinoDialog(
                   context: context,
@@ -227,7 +227,7 @@ return SwipeActionCell(
       trailingActions: <SwipeAction>[
         SwipeAction(
 
-          ///这个参数只能给的第一个action设置哦
+          /// 这个参数只能给的第一个action设置哦
           nestedAction: SwipeNestedAction(title: "确认删除"),
           title: "删除",
           onTap: (CompletionHandler handler) async {
@@ -261,32 +261,32 @@ return SwipeActionCell(
 /// 控制器（目前就是控制编辑的）
  SwipeActionEditController controller;
 
-///在init里面初始化
+/// 在init里面初始化
 @override
   void initState() {
     super.initState();
     controller = SwipeActionController();
   }
-///如果你想获取你选中的行，那么请调用以下API
+/// 如果你想获取你选中的行，那么请调用以下API
 List<int> selectedIndexes = controller.getSelectedIndexes();
 
-///打开cell
+/// 打开cell
 controller.openCellAt(index: 2, trailing: true, animated: true);
 
-///关闭 cell
+/// 关闭 cell
 controller.closeAllOpenCell();
 
-///切换编辑模式
+/// 切换编辑模式
 controller.toggleEditingMode()
 
-///开始编辑模式
+/// 开始编辑模式
 controller.startEditingMode()
 
-///停止编辑模式
+/// 停止编辑模式
 controller.stopEditingMode()
 
 
-///在build中传入你的列表组件，这里用常用的ListView：
+/// 在build中传入你的列表组件，这里用常用的ListView：
 ListView.builder(
         itemBuilder: (c, index) {
           return _item(index);
@@ -297,9 +297,9 @@ ListView.builder(
 
  Widget _item(int index) {
      return SwipeActionCell(
-       ///在这传入controller
+       /// 在这传入controller
        controller: controller,
-       ///这个index需要你传入，否则会报错
+       /// 这个index需要你传入，否则会报错
        index: index,
        key: ValueKey(list[index]),
        trailingActions: [
@@ -344,11 +344,11 @@ Widget _item(int index) {
             title: "delete",
             onTap: (CompletionHandler handler) async {
               
-              ///利用延时模拟请求网络的过程
+              /// 利用延时模拟请求网络的过程
               await Future.delayed(Duration(seconds: 1));
 
-              ///准备执行删除动画，更新UI
-              ///可以把handler当做参数传到其他地方去调用
+              /// 准备执行删除动画，更新UI
+              /// 可以把handler当做参数传到其他地方去调用
               _remove(index, handler);
             },
             color: Colors.red),
@@ -362,7 +362,7 @@ Widget _item(int index) {
   }
 
   void _remove(int index, CompletionHandler handler) async {
-    ///在这里删除，删除后更新UI
+    /// 在这里删除，删除后更新UI
     await handler(true);
     list.removeAt(index);
     setState(() {});
@@ -382,7 +382,7 @@ Widget _item(int index) {
         SwipeAction(
             nestedAction: SwipeNestedAction(
   
-              ///自定义你nestedAction 的内容
+              /// 自定义你nestedAction 的内容
               content: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
@@ -406,10 +406,10 @@ Widget _item(int index) {
                 ),
               ),
             ),
-            ///将原本的背景设置为透明，因为要用你自己的背景
+            /// 将原本的背景设置为透明，因为要用你自己的背景
             color: Colors.transparent,
 
-            ///设置了content就不要设置title和icon了
+            /// 设置了content就不要设置title和icon了
             content: _getIconButton(Colors.red, Icons.delete),
             onTap: (handler) async {
               list.removeAt(index);
@@ -436,7 +436,7 @@ Widget _item(int index) {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
 
-        ///设置你自己的背景
+        /// 设置你自己的背景
         color: color,
       ),
       child: Icon(
