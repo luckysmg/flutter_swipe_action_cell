@@ -986,10 +986,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
 ///  }
 /// ```
 ///
-typedef CompletionHandler = Future<void> Function(bool deleteOrCloseAnimation);
+typedef CompletionHandler = Future<void> Function(bool delete);
 
-typedef SwipeActionOnTapCallback = void Function(CompletionHandler animator);
-
+typedef SwipeActionOnTapCallback = void Function(CompletionHandler handler);
 class SwipeAction {
   /// title's text Style
   /// default value is :TextStyle(fontSize: 18,color: Colors.white)
