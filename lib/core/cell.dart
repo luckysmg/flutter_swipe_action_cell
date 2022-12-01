@@ -102,42 +102,41 @@ class SwipeActionCell extends StatefulWidget {
   /// 当选中cell的时候的一个前景蒙版颜色，默认为Colors.black.withAlpha(30)
   final Color? selectedForegroundColor;
 
-  const SwipeActionCell(
-      {required Key key,
-      required this.child,
-      this.trailingActions,
-      this.leadingActions,
-      this.isDraggable = true,
-      this.closeWhenScrolling = true,
-      this.firstActionWillCoverAllSpaceOnDeleting = true,
-      this.controller,
-      this.index,
-      this.selectedIndicator = const Icon(
-        Icons.add_circle,
-        color: Colors.blue,
-      ),
-      this.unselectedIndicator = const Icon(
-        Icons.do_not_disturb_on,
-        color: Colors.red,
-      ),
-      this.backgroundColor,
-      this.editModeOffset = 60,
-      this.fullSwipeFactor = 0.75,
-      this.deleteAnimationDuration = 400,
-      this.normalAnimationDuration = 400,
-      this.selectedForegroundColor})
-      : super(key: key);
-
-  /// About Key::::::
+  /// ## About [key] / 关于[key]
   /// You should put a key,like [ValueKey] or [ObjectKey]
   /// don't use [GlobalKey] or [UniqueKey]
   /// because that will make your app slow.
   ///
-  /// 关于key：：：你应该在构造的时候放入key，推荐使用[ValueKey] 或者 [ObjectKey] 。
+  /// 你应该在构造的时候放入key，推荐使用[ValueKey] 或者 [ObjectKey] 。
   /// 最好 不要 使用[GlobalKey]和[UniqueKey]。
   /// 我之前在内部也想使用[GlobalKey] 和 [UniqueKey]。
   /// 但是想到有性能问题，所以需要您从外部提供轻量级的key用于我框架内部判断，同时用于
   /// flutter框架内部刷新。
+  const SwipeActionCell({
+    required Key key,
+    required this.child,
+    this.trailingActions,
+    this.leadingActions,
+    this.isDraggable = true,
+    this.closeWhenScrolling = true,
+    this.firstActionWillCoverAllSpaceOnDeleting = true,
+    this.controller,
+    this.index,
+    this.selectedIndicator = const Icon(
+      Icons.add_circle,
+      color: Colors.blue,
+    ),
+    this.unselectedIndicator = const Icon(
+      Icons.do_not_disturb_on,
+      color: Colors.red,
+    ),
+    this.backgroundColor,
+    this.editModeOffset = 60,
+    this.fullSwipeFactor = 0.75,
+    this.deleteAnimationDuration = 400,
+    this.normalAnimationDuration = 400,
+    this.selectedForegroundColor,
+  }) : super(key: key);
 
   @override
   SwipeActionCellState createState() => SwipeActionCellState();
@@ -989,6 +988,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
 typedef CompletionHandler = Future<void> Function(bool delete);
 
 typedef SwipeActionOnTapCallback = void Function(CompletionHandler handler);
+
 class SwipeAction {
   /// title's text Style
   /// default value is :TextStyle(fontSize: 18,color: Colors.white)
