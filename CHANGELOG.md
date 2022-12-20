@@ -1,3 +1,4 @@
+## [3.0.6] - Fix lints.
 ## [3.0.5] - Fix lints.
 ## [3.0.4] - Add gesture settings for gestures.
 ## [3.0.3] - Remove bad code
