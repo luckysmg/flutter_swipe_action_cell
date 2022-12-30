@@ -820,16 +820,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
       transformHitTests: false,
       child: SizedBox(
         width: double.infinity,
-        child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: widget.backgroundColor ??
-                  Theme.of(context).scaffoldBackgroundColor,
-            ),
-            child: IgnorePointer(
-                ignoring: editController.isAnimating ||
-                    editing ||
-                    currentOffset.dx.abs() > 20,
-                child: widget.child)),
+        child: IgnorePointer(
+            ignoring: editController.isAnimating ||
+                editing ||
+                currentOffset.dx.abs() > 20,
+            child: widget.child),
       ),
     );
 
@@ -851,27 +846,31 @@ class SwipeActionCellState extends State<SwipeActionCell>
         child: RawGestureDetector(
           behavior: HitTestBehavior.opaque,
           gestures: gestures,
-          child: DecoratedBox(
-            position: DecorationPosition.foreground,
-            decoration: BoxDecoration(
-              color: selected
-                  ? (widget.selectedForegroundColor ??
-                      Colors.black.withAlpha(30))
-                  : Colors.transparent,
-            ),
-            child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                width = constraints.maxWidth;
-                return Stack(
-                  alignment: Alignment.centerLeft,
-                  children: <Widget>[
-                    selectedButton,
-                    content,
-                    trailing,
-                    leading,
-                  ],
-                );
-              },
+          child: ColoredBox(
+            color: widget.backgroundColor ??
+                Theme.of(context).scaffoldBackgroundColor,
+            child: DecoratedBox(
+              position: DecorationPosition.foreground,
+              decoration: BoxDecoration(
+                color: selected
+                    ? (widget.selectedForegroundColor ??
+                        Colors.black.withAlpha(30))
+                    : Colors.transparent,
+              ),
+              child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  width = constraints.maxWidth;
+                  return Stack(
+                    alignment: Alignment.centerLeft,
+                    children: <Widget>[
+                      selectedButton,
+                      content,
+                      trailing,
+                      leading,
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -881,7 +880,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   Widget _buildSelectedButton(bool selected) {
     return Container(
-      decoration: BoxDecoration(color: widget.backgroundColor),
       alignment: Alignment.center,
       width: widget.editModeOffset,
       child: selected ? widget.selectedIndicator : widget.unselectedIndicator,
