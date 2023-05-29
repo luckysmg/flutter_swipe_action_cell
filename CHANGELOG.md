@@ -1,3 +1,4 @@
+## [3.1.1] - Fix #59
 ## [3.1.0] - Adjust flutter 3.7
 ## [3.0.7] - Fix backgroundColor.
 ## [3.0.6] - Fix lints.
