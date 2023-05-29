@@ -189,8 +189,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   bool get hasLeadingAction => leadingActionsCount > 0;
 
-  final _CellStateInfo cellStateInfo = _CellStateInfo();
-
   @override
   void initState() {
     super.initState();
@@ -778,17 +776,16 @@ class SwipeActionCellState extends State<SwipeActionCell>
       }),
       if (widget.isDraggable)
         _DirectionDependentDragGestureRecognizer:
-            GestureRecognizerFactoryWithHandlers<
-                    _DirectionDependentDragGestureRecognizer>(
-                () => _DirectionDependentDragGestureRecognizer(
-                    cellStateInfo: cellStateInfo,
-                    canDragToLeft: hasTrailingAction,
-                    canDragToRight: hasLeadingAction), (instance) {
+            GestureRecognizerFactoryWithHandlers<_DirectionDependentDragGestureRecognizer>(
+                () => _DirectionDependentDragGestureRecognizer(), (instance) {
           instance
             ..onStart = _onHorizontalDragStart
             ..onUpdate = _onHorizontalDragUpdate
             ..onEnd = _onHorizontalDragEnd
-            ..gestureSettings = gestureSettings;
+            ..gestureSettings = gestureSettings
+            ..isActionShowing = whenTrailingActionShowing || whenLeadingActionShowing
+            ..canDragToLeft = hasTrailingAction
+            ..canDragToRight = hasLeadingAction;
         }),
     };
   }
@@ -805,8 +802,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
     whenTrailingActionShowing = currentOffset.dx < 0;
     whenLeadingActionShowing = currentOffset.dx > 0;
-    cellStateInfo.isActionShowing =
-        whenTrailingActionShowing || whenLeadingActionShowing;
 
     final Widget selectedButton = widget.controller != null &&
             (widget.controller!.isEditing.value || editController.isAnimating)
@@ -887,7 +882,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   Widget _buildLeadingActionButtons() {
-    if (currentOffset.dx < 0) {
+    if (currentOffset.dx < 0 || !hasLeadingAction) {
       return const SizedBox();
     }
     final List<Widget> actionButtons =
@@ -923,7 +918,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   Widget _buildTrailingActionButtons() {
-    if (currentOffset.dx > 0) {
+    if (currentOffset.dx > 0 || !hasTrailingAction) {
       return const SizedBox();
     }
     final List<Widget> actionButtons =
@@ -1109,27 +1104,18 @@ class SwipeNestedAction {
 
 class _DirectionDependentDragGestureRecognizer
     extends HorizontalDragGestureRecognizer {
-  final bool canDragToLeft;
-  final bool canDragToRight;
-  final _CellStateInfo cellStateInfo;
-
-  _DirectionDependentDragGestureRecognizer(
-      {required this.cellStateInfo,
-      required this.canDragToLeft,
-      required this.canDragToRight});
+  late bool canDragToLeft;
+  late bool canDragToRight;
+  late bool isActionShowing;
 
   @override
   void handleEvent(PointerEvent event) {
-    final delta = event.delta.dx;
-    if (cellStateInfo.isActionShowing ||
+    final double delta = event.delta.dx;
+    if (isActionShowing ||
         canDragToLeft && delta < 0 ||
         canDragToRight && delta > 0 ||
         delta == 0) {
       super.handleEvent(event);
     }
   }
-}
-
-class _CellStateInfo {
-  bool isActionShowing = false;
 }
