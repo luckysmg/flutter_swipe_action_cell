@@ -1,3 +1,4 @@
+## [3.0.8] - Fix #59
 ## [3.0.7] - Fix backgroundColor.
 ## [3.0.6] - Fix lints.
 ## [3.0.5] - Fix lints.
