@@ -213,8 +213,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
-    curvedAnim =
-        CurvedAnimation(parent: controller, curve: Curves.easeOutQuart);
+    curvedAnim = CurvedAnimation(parent: controller, curve: Curves.easeOutBack);
     deleteCurvedAnim =
         CurvedAnimation(parent: deleteController, curve: Curves.easeInToLinear);
     editCurvedAnim =
@@ -776,14 +775,16 @@ class SwipeActionCellState extends State<SwipeActionCell>
       }),
       if (widget.isDraggable)
         _DirectionDependentDragGestureRecognizer:
-            GestureRecognizerFactoryWithHandlers<_DirectionDependentDragGestureRecognizer>(
+            GestureRecognizerFactoryWithHandlers<
+                    _DirectionDependentDragGestureRecognizer>(
                 () => _DirectionDependentDragGestureRecognizer(), (instance) {
           instance
             ..onStart = _onHorizontalDragStart
             ..onUpdate = _onHorizontalDragUpdate
             ..onEnd = _onHorizontalDragEnd
             ..gestureSettings = gestureSettings
-            ..isActionShowing = whenTrailingActionShowing || whenLeadingActionShowing
+            ..isActionShowing =
+                whenTrailingActionShowing || whenLeadingActionShowing
             ..canDragToLeft = hasTrailingAction
             ..canDragToRight = hasLeadingAction;
         }),
