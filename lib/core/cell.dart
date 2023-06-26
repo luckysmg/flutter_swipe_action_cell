@@ -152,7 +152,7 @@ class SwipeActionCell extends StatefulWidget {
     this.openAnimationDuration = 400,
     this.closeAnimationDuration = 400,
     this.openAnimationCurve = Curves.easeOutQuart,
-    this.closeAnimationCurve = Curves.easeOut,
+    this.closeAnimationCurve = Curves.easeOutQuart,
     this.selectedForegroundColor,
   }) : super(key: key);
 
