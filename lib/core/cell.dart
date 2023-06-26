@@ -164,8 +164,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   late double maxTrailingPullWidth;
   late double maxLeadingPullWidth;
 
-  bool lockOpenAnim = false;
-  bool lockCloseAnim = false;
+  bool lockAnim = false;
   bool lastItemOut = false;
 
   late AnimationController openController;
@@ -210,7 +209,8 @@ class SwipeActionCellState extends State<SwipeActionCell>
   void initState() {
     super.initState();
     lastItemOut = false;
-    lockOpenAnim = false;
+    lockAnim = false;
+
     ignorePointer = false;
     maxTrailingPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
@@ -248,14 +248,14 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _startEditingWithAnim() {
-    lockOpenAnim = true;
+    lockAnim = true;
     editController.value = 0.0;
-    lockOpenAnim = false;
+    lockAnim = false;
     animation =
         Tween<double>(begin: currentOffset.dx, end: widget.editModeOffset)
             .animate(editCurvedAnim)
           ..addListener(() {
-            if (lockOpenAnim) return;
+            if (lockAnim) return;
             currentOffset = Offset(animation.value, 0);
             setState(() {});
           });
@@ -263,13 +263,13 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _stopEditingWithAnim() {
-    lockOpenAnim = true;
+    lockAnim = true;
     editController.value = 0.0;
-    lockOpenAnim = false;
+    lockAnim = false;
     animation = Tween<double>(begin: widget.editModeOffset, end: 0)
         .animate(editCurvedAnim)
       ..addListener(() {
-        if (lockOpenAnim) return;
+        if (lockAnim) return;
         currentOffset = Offset(animation.value, 0);
         setState(() {});
       });
@@ -393,6 +393,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   void dispose() {
     _removeScrollListener();
     openController.dispose();
+    closeController.dispose();
     deleteController.dispose();
     editController.dispose();
     selectedSubscription?.cancel();
@@ -674,7 +675,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     animation = Tween<double>(begin: currentOffset.dx, end: endOffset)
         .animate(curveAnim)
       ..addListener(() {
-        if (lockOpenAnim) return;
+        if (lockAnim) return;
         this.currentOffset = Offset(animation.value, 0);
         setState(() {});
       });
@@ -691,7 +692,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
               end: trailing ? -maxTrailingPullWidth : maxLeadingPullWidth)
           .animate(openCurvedAnim)
         ..addListener(() {
-          if (lockOpenAnim) return;
+          if (lockAnim) return;
           this.currentOffset = Offset(animation.value, 0);
           setState(() {});
         });
@@ -713,7 +714,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
       animation = Tween<double>(begin: currentOffset.dx, end: 0.0)
           .animate(closeCurvedAnim)
         ..addListener(() {
-          if (lockCloseAnim) return;
+          if (lockAnim) return;
           this.currentOffset = Offset(animation.value, 0);
           setState(() {});
         });
@@ -737,15 +738,15 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _resetOpenAnimValue() {
-    lockOpenAnim = true;
+    lockAnim = true;
     openController.value = 0.0;
-    lockOpenAnim = false;
+    lockAnim = false;
   }
 
   void _resetCloseAnimValue() {
-    lockCloseAnim = true;
+    lockAnim = true;
     closeController.value = 0.0;
-    lockCloseAnim = false;
+    lockAnim = false;
   }
 
   /// delete this cell and return the [Future] of the animation
