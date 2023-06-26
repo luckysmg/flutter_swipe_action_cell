@@ -110,12 +110,12 @@ class SwipeActionCell extends StatefulWidget {
   /// The curve of open animation
   ///
   /// 开启动画的曲线
-  final Cubic openAnimationCurve;
+  final Curve openAnimationCurve;
 
   /// The curve of close animation
   ///
   /// 关闭动画的曲线
-  final Cubic closeAnimationCurve;
+  final Curve closeAnimationCurve;
 
   /// ## About [key] / 关于[key]
   /// You should put a key,like [ValueKey] or [ObjectKey]

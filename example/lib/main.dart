@@ -184,13 +184,11 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
     return SwipeActionCell(
       controller: controller,
       index: index,
-      openAnimationDuration: 600,
 
       // Required!
       key: ValueKey(list[index]),
 
       // Animation default value below
-      // normalAnimationDuration: 400,
       // deleteAnimationDuration: 400,
       selectedForegroundColor: Colors.black.withAlpha(30),
       trailingActions: [

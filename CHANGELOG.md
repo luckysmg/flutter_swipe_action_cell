@@ -1,3 +1,7 @@
+## [3.1.2] 
+- [Breaking change] Change normalAnimationDuration to openAnimationDuration and closeAnimationDuration.
+- [New] You can control animation curve by passing openAnimationCurve or closeAnimationCurve to cell.
+
 ## [3.1.1] - Fix #59
 ## [3.1.0] - Adjust flutter 3.7
 ## [3.0.7] - Fix backgroundColor.
