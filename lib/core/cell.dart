@@ -87,10 +87,15 @@ class SwipeActionCell extends StatefulWidget {
   /// def value = 0.75
   final double fullSwipeFactor;
 
-  /// The normal animation duration,such as open animation and close animation duration. The unit is ms
+  /// The open animation duration,such as open animation and close animation duration. The unit is ms
   ///
   /// 普通动画的执行时间，比如开启动画，关闭动画,单位是毫秒
-  final int normalAnimationDuration;
+  final int openAnimationDuration;
+
+  /// The close animation duration
+  ///
+  /// 关闭动画的执行时间，单位是毫秒
+  final int closeAnimationDuration;
 
   /// The animation duration of the delete animation.The unit is ms.
   ///
@@ -101,6 +106,12 @@ class SwipeActionCell extends StatefulWidget {
   ///
   /// 当选中cell的时候的一个前景蒙版颜色，默认为Colors.black.withAlpha(30)
   final Color? selectedForegroundColor;
+
+  /// The curve of open animation
+  final Cubic openCurve;
+
+  /// The curve of close animation
+  final Cubic closeCurve;
 
   /// ## About [key] / 关于[key]
   /// You should put a key,like [ValueKey] or [ObjectKey]
@@ -134,7 +145,10 @@ class SwipeActionCell extends StatefulWidget {
     this.editModeOffset = 60,
     this.fullSwipeFactor = 0.75,
     this.deleteAnimationDuration = 400,
-    this.normalAnimationDuration = 400,
+    this.openAnimationDuration = 400,
+    this.closeAnimationDuration = 400,
+    this.openCurve = Curves.easeOutBack,
+    this.closeCurve = Curves.easeOut,
     this.selectedForegroundColor,
   }) : super(key: key);
 
@@ -150,15 +164,18 @@ class SwipeActionCellState extends State<SwipeActionCell>
   late double maxTrailingPullWidth;
   late double maxLeadingPullWidth;
 
-  bool lockAnim = false;
+  bool lockOpenAnim = false;
+  bool lockCloseAnim = false;
   bool lastItemOut = false;
 
-  late AnimationController controller;
+  late AnimationController openController;
+  late AnimationController closeController;
   late AnimationController deleteController;
   late AnimationController editController;
 
   late Animation<double> animation;
-  late Animation<double> curvedAnim;
+  late Animation<double> openCurvedAnim;
+  late Animation<double> closeCurvedAnim;
   late Animation<double> deleteCurvedAnim;
   late Animation<double> editCurvedAnim;
 
@@ -193,17 +210,23 @@ class SwipeActionCellState extends State<SwipeActionCell>
   void initState() {
     super.initState();
     lastItemOut = false;
-    lockAnim = false;
+    lockOpenAnim = false;
     ignorePointer = false;
     maxTrailingPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
     currentOffset = Offset.zero;
 
-    controller = AnimationController(
+    openController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: widget.normalAnimationDuration),
+      duration: Duration(milliseconds: widget.openAnimationDuration),
       value: 0.0,
     );
+    closeController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: widget.closeAnimationDuration),
+      value: 0.0,
+    );
+
     deleteController = AnimationController(
       vsync: this,
       value: 1.0,
@@ -213,7 +236,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
-    curvedAnim = CurvedAnimation(parent: controller, curve: Curves.easeOutBack);
+    openCurvedAnim =
+        CurvedAnimation(parent: openController, curve: widget.openCurve);
+    closeCurvedAnim =
+        CurvedAnimation(parent: closeController, curve: widget.closeCurve);
     deleteCurvedAnim =
         CurvedAnimation(parent: deleteController, curve: Curves.easeInToLinear);
     editCurvedAnim =
@@ -222,14 +248,14 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _startEditingWithAnim() {
-    lockAnim = true;
+    lockOpenAnim = true;
     editController.value = 0.0;
-    lockAnim = false;
+    lockOpenAnim = false;
     animation =
         Tween<double>(begin: currentOffset.dx, end: widget.editModeOffset)
             .animate(editCurvedAnim)
           ..addListener(() {
-            if (lockAnim) return;
+            if (lockOpenAnim) return;
             currentOffset = Offset(animation.value, 0);
             setState(() {});
           });
@@ -237,13 +263,13 @@ class SwipeActionCellState extends State<SwipeActionCell>
   }
 
   void _stopEditingWithAnim() {
-    lockAnim = true;
+    lockOpenAnim = true;
     editController.value = 0.0;
-    lockAnim = false;
+    lockOpenAnim = false;
     animation = Tween<double>(begin: widget.editModeOffset, end: 0)
         .animate(editCurvedAnim)
       ..addListener(() {
-        if (lockAnim) return;
+        if (lockOpenAnim) return;
         currentOffset = Offset(animation.value, 0);
         setState(() {});
       });
@@ -366,7 +392,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   @override
   void dispose() {
     _removeScrollListener();
-    controller.dispose();
+    openController.dispose();
     deleteController.dispose();
     editController.dispose();
     selectedSubscription?.cancel();
@@ -638,7 +664,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
   /// When nestedAction is open ,adjust currentOffset if nestedWidth > currentOffset
   void adjustOffset(
       {required double offsetX, required Curve curve, required bool trailing}) {
-    controller.stop();
+    openController.stop();
     final adjustOffsetAnimController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 150));
     final curveAnim =
@@ -648,7 +674,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     animation = Tween<double>(begin: currentOffset.dx, end: endOffset)
         .animate(curveAnim)
       ..addListener(() {
-        if (lockAnim) return;
+        if (lockOpenAnim) return;
         this.currentOffset = Offset(animation.value, 0);
         setState(() {});
       });
@@ -659,18 +685,18 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   void _open({required bool trailing, bool animated = true}) {
     if (animated) {
-      _resetAnimValue();
+      _resetOpenAnimValue();
       animation = Tween<double>(
               begin: currentOffset.dx,
               end: trailing ? -maxTrailingPullWidth : maxLeadingPullWidth)
-          .animate(curvedAnim)
+          .animate(openCurvedAnim)
         ..addListener(() {
-          if (lockAnim) return;
+          if (lockOpenAnim) return;
           this.currentOffset = Offset(animation.value, 0);
           setState(() {});
         });
 
-      controller.forward();
+      openController.forward();
     } else {
       this.currentOffset =
           Offset(trailing ? -maxTrailingPullWidth : maxLeadingPullWidth, 0);
@@ -682,17 +708,17 @@ class SwipeActionCellState extends State<SwipeActionCell>
   Future<void> closeWithAnim() async {
     //when close animation is running,ignore action button hit test
     ignoreActionButtonHit = true;
-    _resetAnimValue();
+    _resetCloseAnimValue();
     if (mounted) {
-      animation =
-          Tween<double>(begin: currentOffset.dx, end: 0.0).animate(curvedAnim)
-            ..addListener(() {
-              if (lockAnim) return;
-              this.currentOffset = Offset(animation.value, 0);
-              setState(() {});
-            });
+      animation = Tween<double>(begin: currentOffset.dx, end: 0.0)
+          .animate(closeCurvedAnim)
+        ..addListener(() {
+          if (lockCloseAnim) return;
+          this.currentOffset = Offset(animation.value, 0);
+          setState(() {});
+        });
 
-      return controller.forward()
+      return closeController.forward()
         ..whenCompleteOrCancel(() {
           ignoreActionButtonHit = false;
         });
@@ -710,10 +736,16 @@ class SwipeActionCellState extends State<SwipeActionCell>
     }
   }
 
-  void _resetAnimValue() {
-    lockAnim = true;
-    controller.value = 0.0;
-    lockAnim = false;
+  void _resetOpenAnimValue() {
+    lockOpenAnim = true;
+    openController.value = 0.0;
+    lockOpenAnim = false;
+  }
+
+  void _resetCloseAnimValue() {
+    lockCloseAnim = true;
+    closeController.value = 0.0;
+    lockCloseAnim = false;
   }
 
   /// delete this cell and return the [Future] of the animation
@@ -745,32 +777,33 @@ class SwipeActionCellState extends State<SwipeActionCell>
           GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
               () => TapGestureRecognizer(), (instance) {
         instance
-          ..onTap = editing && !editController.isAnimating ||
-                  currentOffset.dx != 0.0
-              ? () {
-                  if (editing && !editController.isAnimating) {
-                    assert(
-                        widget.index != null,
-                        "From SwipeActionCell:\nIf you want to enter edit mode,please pass the 'index' parameter in SwipeActionCell\n"
-                        "=====================================================================================\n"
-                        "如果你要进入编辑模式，请在SwipeActionCell中传入index 参数，他的值就是你列表组件的itemBuilder中返回的index即可");
+          ..onTap =
+              editing && !editController.isAnimating || currentOffset.dx != 0.0
+                  ? () {
+                      if (editing && !editController.isAnimating) {
+                        assert(
+                            widget.index != null,
+                            "From SwipeActionCell:\nIf you want to enter edit mode,please pass the 'index' parameter in SwipeActionCell\n"
+                            "=====================================================================================\n"
+                            "如果你要进入编辑模式，请在SwipeActionCell中传入index 参数，他的值就是你列表组件的itemBuilder中返回的index即可");
 
-                    if (selected) {
-                      widget.controller?.selectedSet.remove(widget.index);
-                      _updateControllerSelectedIndexChangedCallback(
-                          selected: false);
-                    } else {
-                      widget.controller?.selectedSet.add(widget.index!);
-                      _updateControllerSelectedIndexChangedCallback(
-                          selected: true);
+                        if (selected) {
+                          widget.controller?.selectedSet.remove(widget.index);
+                          _updateControllerSelectedIndexChangedCallback(
+                              selected: false);
+                        } else {
+                          widget.controller?.selectedSet.add(widget.index!);
+                          _updateControllerSelectedIndexChangedCallback(
+                              selected: true);
+                        }
+                        setState(() {});
+                      } else if (currentOffset.dx != 0 &&
+                          !openController.isAnimating) {
+                        closeWithAnim();
+                        _closeNestedAction();
+                      }
                     }
-                    setState(() {});
-                  } else if (currentOffset.dx != 0 && !controller.isAnimating) {
-                    closeWithAnim();
-                    _closeNestedAction();
-                  }
-                }
-              : null
+                  : null
           ..gestureSettings = gestureSettings;
       }),
       if (widget.isDraggable)

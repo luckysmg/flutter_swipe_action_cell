@@ -184,7 +184,7 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
     return SwipeActionCell(
       controller: controller,
       index: index,
-      normalAnimationDuration: 600,
+      openAnimationDuration: 600,
 
       // Required!
       key: ValueKey(list[index]),
