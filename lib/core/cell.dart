@@ -89,7 +89,7 @@ class SwipeActionCell extends StatefulWidget {
 
   /// The open animation duration,such as open animation and close animation duration. The unit is ms
   ///
-  /// 普通动画的执行时间，比如开启动画，关闭动画,单位是毫秒
+  /// 开启动画的执行时间,单位是毫秒
   final int openAnimationDuration;
 
   /// The close animation duration
