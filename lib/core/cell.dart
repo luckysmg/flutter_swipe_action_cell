@@ -108,10 +108,14 @@ class SwipeActionCell extends StatefulWidget {
   final Color? selectedForegroundColor;
 
   /// The curve of open animation
-  final Cubic openCurve;
+  ///
+  /// 开启动画的曲线
+  final Cubic openAnimationCurve;
 
   /// The curve of close animation
-  final Cubic closeCurve;
+  ///
+  /// 关闭动画的曲线
+  final Cubic closeAnimationCurve;
 
   /// ## About [key] / 关于[key]
   /// You should put a key,like [ValueKey] or [ObjectKey]
@@ -147,8 +151,8 @@ class SwipeActionCell extends StatefulWidget {
     this.deleteAnimationDuration = 400,
     this.openAnimationDuration = 400,
     this.closeAnimationDuration = 400,
-    this.openCurve = Curves.easeOutBack,
-    this.closeCurve = Curves.easeOut,
+    this.openAnimationCurve = Curves.easeOutQuart,
+    this.closeAnimationCurve = Curves.easeOut,
     this.selectedForegroundColor,
   }) : super(key: key);
 
@@ -232,9 +236,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
       duration: const Duration(milliseconds: 200),
     );
     openCurvedAnim =
-        CurvedAnimation(parent: controller, curve: widget.openCurve);
+        CurvedAnimation(parent: controller, curve: widget.openAnimationCurve);
     closeCurvedAnim =
-        CurvedAnimation(parent: controller, curve: widget.closeCurve);
+        CurvedAnimation(parent: controller, curve: widget.closeAnimationCurve);
     deleteCurvedAnim =
         CurvedAnimation(parent: deleteController, curve: Curves.easeInToLinear);
     editCurvedAnim =
