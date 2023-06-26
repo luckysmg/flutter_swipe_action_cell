@@ -87,10 +87,15 @@ class SwipeActionCell extends StatefulWidget {
   /// def value = 0.75
   final double fullSwipeFactor;
 
-  /// The normal animation duration,such as open animation and close animation duration. The unit is ms
+  /// The open animation duration,such as open animation and close animation duration. The unit is ms
   ///
-  /// 普通动画的执行时间，比如开启动画，关闭动画,单位是毫秒
-  final int normalAnimationDuration;
+  /// 开启动画的执行时间,单位是毫秒
+  final int openAnimationDuration;
+
+  /// The close animation duration
+  ///
+  /// 关闭动画的执行时间，单位是毫秒
+  final int closeAnimationDuration;
 
   /// The animation duration of the delete animation.The unit is ms.
   ///
@@ -101,6 +106,16 @@ class SwipeActionCell extends StatefulWidget {
   ///
   /// 当选中cell的时候的一个前景蒙版颜色，默认为Colors.black.withAlpha(30)
   final Color? selectedForegroundColor;
+
+  /// The curve of open animation
+  ///
+  /// 开启动画的曲线
+  final Cubic openAnimationCurve;
+
+  /// The curve of close animation
+  ///
+  /// 关闭动画的曲线
+  final Cubic closeAnimationCurve;
 
   /// ## About [key] / 关于[key]
   /// You should put a key,like [ValueKey] or [ObjectKey]
@@ -134,7 +149,10 @@ class SwipeActionCell extends StatefulWidget {
     this.editModeOffset = 60,
     this.fullSwipeFactor = 0.75,
     this.deleteAnimationDuration = 400,
-    this.normalAnimationDuration = 400,
+    this.openAnimationDuration = 400,
+    this.closeAnimationDuration = 400,
+    this.openAnimationCurve = Curves.easeOutQuart,
+    this.closeAnimationCurve = Curves.easeOutQuart,
     this.selectedForegroundColor,
   }) : super(key: key);
 
@@ -154,11 +172,13 @@ class SwipeActionCellState extends State<SwipeActionCell>
   bool lastItemOut = false;
 
   late AnimationController controller;
+
   late AnimationController deleteController;
   late AnimationController editController;
 
   late Animation<double> animation;
-  late Animation<double> curvedAnim;
+  late Animation<double> openCurvedAnim;
+  late Animation<double> closeCurvedAnim;
   late Animation<double> deleteCurvedAnim;
   late Animation<double> editCurvedAnim;
 
@@ -194,6 +214,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
     super.initState();
     lastItemOut = false;
     lockAnim = false;
+
     ignorePointer = false;
     maxTrailingPullWidth = _getTrailingMaxPullWidth();
     maxLeadingPullWidth = _getLeadingMaxPullWidth();
@@ -201,9 +222,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
     controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: widget.normalAnimationDuration),
+      duration: Duration(milliseconds: widget.openAnimationDuration),
       value: 0.0,
     );
+
     deleteController = AnimationController(
       vsync: this,
       value: 1.0,
@@ -213,8 +235,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
-    curvedAnim =
-        CurvedAnimation(parent: controller, curve: Curves.easeOutQuart);
+    openCurvedAnim =
+        CurvedAnimation(parent: controller, curve: widget.openAnimationCurve);
+    closeCurvedAnim =
+        CurvedAnimation(parent: controller, curve: widget.closeAnimationCurve);
     deleteCurvedAnim =
         CurvedAnimation(parent: deleteController, curve: Curves.easeInToLinear);
     editCurvedAnim =
@@ -664,13 +688,14 @@ class SwipeActionCellState extends State<SwipeActionCell>
       animation = Tween<double>(
               begin: currentOffset.dx,
               end: trailing ? -maxTrailingPullWidth : maxLeadingPullWidth)
-          .animate(curvedAnim)
+          .animate(openCurvedAnim)
         ..addListener(() {
           if (lockAnim) return;
           this.currentOffset = Offset(animation.value, 0);
           setState(() {});
         });
-
+      controller.duration =
+          Duration(milliseconds: widget.openAnimationDuration);
       controller.forward();
     } else {
       this.currentOffset =
@@ -685,14 +710,16 @@ class SwipeActionCellState extends State<SwipeActionCell>
     ignoreActionButtonHit = true;
     _resetAnimValue();
     if (mounted) {
-      animation =
-          Tween<double>(begin: currentOffset.dx, end: 0.0).animate(curvedAnim)
-            ..addListener(() {
-              if (lockAnim) return;
-              this.currentOffset = Offset(animation.value, 0);
-              setState(() {});
-            });
+      animation = Tween<double>(begin: currentOffset.dx, end: 0.0)
+          .animate(closeCurvedAnim)
+        ..addListener(() {
+          if (lockAnim) return;
+          this.currentOffset = Offset(animation.value, 0);
+          setState(() {});
+        });
 
+      controller.duration =
+          Duration(milliseconds: widget.closeAnimationDuration);
       return controller.forward()
         ..whenCompleteOrCancel(() {
           ignoreActionButtonHit = false;
@@ -776,14 +803,16 @@ class SwipeActionCellState extends State<SwipeActionCell>
       }),
       if (widget.isDraggable)
         _DirectionDependentDragGestureRecognizer:
-            GestureRecognizerFactoryWithHandlers<_DirectionDependentDragGestureRecognizer>(
+            GestureRecognizerFactoryWithHandlers<
+                    _DirectionDependentDragGestureRecognizer>(
                 () => _DirectionDependentDragGestureRecognizer(), (instance) {
           instance
             ..onStart = _onHorizontalDragStart
             ..onUpdate = _onHorizontalDragUpdate
             ..onEnd = _onHorizontalDragEnd
             ..gestureSettings = gestureSettings
-            ..isActionShowing = whenTrailingActionShowing || whenLeadingActionShowing
+            ..isActionShowing =
+                whenTrailingActionShowing || whenLeadingActionShowing
             ..canDragToLeft = hasTrailingAction
             ..canDragToRight = hasLeadingAction;
         }),
