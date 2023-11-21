@@ -1,3 +1,4 @@
+## [3.1.3] Fix action width when screen rotating. 适配横竖屏切换
 ## [3.1.2] 
 - [Breaking change] Change normalAnimationDuration to openAnimationDuration and closeAnimationDuration.
 - [New] You can control animation curve by passing openAnimationCurve or closeAnimationCurve to cell.
