@@ -852,17 +852,6 @@ class SwipeActionCellState extends State<SwipeActionCell>
       ),
     );
 
-    // Action buttons
-    final bool shouldHideActionButtons =
-        currentOffset.dx == 0.0 || editController.isAnimating || editing;
-    final Widget trailing = shouldHideActionButtons
-        ? const SizedBox()
-        : _buildTrailingActionButtons();
-
-    final Widget leading = shouldHideActionButtons
-        ? const SizedBox()
-        : _buildLeadingActionButtons();
-
     return IgnorePointer(
       ignoring: ignorePointer,
       child: SizeTransition(
@@ -884,6 +873,16 @@ class SwipeActionCellState extends State<SwipeActionCell>
               child: LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
                   width = constraints.maxWidth;
+                  // Action buttons
+                  final bool shouldHideActionButtons =
+                      currentOffset.dx == 0.0 || editController.isAnimating || editing;
+                  final Widget trailing = shouldHideActionButtons
+                      ? const SizedBox()
+                      : _buildTrailingActionButtons();
+
+                  final Widget leading = shouldHideActionButtons
+                      ? const SizedBox()
+                      : _buildLeadingActionButtons();
                   return Stack(
                     alignment: Alignment.centerLeft,
                     children: <Widget>[
