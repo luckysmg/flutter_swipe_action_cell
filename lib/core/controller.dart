@@ -187,4 +187,8 @@ class SwipeActionController {
         .bus
         .fire(EditingModeEvent(controller: controller, editing: editing));
   }
+
+  void dispose() {
+    isEditing.dispose();
+  }
 }
