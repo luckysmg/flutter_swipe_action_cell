@@ -109,5 +109,7 @@ void main() {
     await tester.timedDrag(
         find.byKey(key), const Offset(100, 0), const Duration(milliseconds: 100));
     expect(find.text('leadingActions 1'), findsNothing);
+
+    controller.dispose();
   });
 }
