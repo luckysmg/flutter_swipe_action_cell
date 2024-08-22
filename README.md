@@ -26,7 +26,7 @@ Alipay | Wechat |
 ##### install:
 
 ```yaml
-flutter_swipe_action_cell: ^3.1.3
+flutter_swipe_action_cell: ^3.1.4
 ```  
 
 ## 1.Preview：
