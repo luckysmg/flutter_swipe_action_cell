@@ -1,3 +1,4 @@
+## [3.1.5] Fix #71 (Assertion error during selectCellAt on second list)
 ## [3.1.4] Add dispose to SwipeActionController #70
 ## [3.1.3] Fix action width when screen rotating. 适配横竖屏切换
 ## [3.1.2] 
