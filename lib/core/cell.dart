@@ -303,6 +303,9 @@ class SwipeActionCellState extends State<SwipeActionCell>
         .bus
         .on<CellSelectedEvent>()
         .listen((event) {
+      if (event.controller != widget.controller) {
+        return;
+      }
       assert(widget.controller != null && widget.index != null);
 
       if (event.selected &&

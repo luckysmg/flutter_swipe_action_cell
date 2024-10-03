@@ -50,7 +50,6 @@ void main() {
     );
     expect(find.text('leadingActions 1'), findsNothing);
 
-
     controller.closeAllOpenCell();
     await tester.pumpAndSettle();
 
@@ -111,5 +110,70 @@ void main() {
     expect(find.text('leadingActions 1'), findsNothing);
 
     controller.dispose();
+  });
+
+  testWidgets('Select event should not conflict with each other.', (tester) async {
+    final SwipeActionController controller = SwipeActionController();
+
+    final List<String> words = <String>[
+      'Apple',
+      'Banana',
+      'Cherry',
+      'Date',
+    ];
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return SwipeActionCell(
+                      key: ObjectKey(words[index]),
+                      trailingActions: [
+                        SwipeAction(
+                          onTap: (handler) async {
+                            await handler(false);
+                          },
+                          color: Colors.grey,
+                          icon: const Icon(Icons.edit, color: Colors.white),
+                        )
+                      ],
+                      child: ListTile(
+                        title: Text("Test"),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: words.length,
+                  itemBuilder: (context, index) {
+                    final word = words[index];
+                    return SwipeActionCell(
+                      key: ObjectKey(word),
+                      index: index,
+                      controller: controller,
+                      child: ListTile(
+                        title: Text(word),
+                        onLongPress: () {
+                          controller.startEditingMode();
+                          controller.selectCellAt(indexPaths: [index]);
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.longPress(find.text(words[0]));
   });
 }

@@ -55,7 +55,8 @@ class EditingModeEvent {
 }
 
 class CellSelectedEvent {
-  CellSelectedEvent({required this.selected});
+  const CellSelectedEvent({required this.selected, required this.controller});
 
+  final SwipeActionController controller;
   final bool selected;
 }

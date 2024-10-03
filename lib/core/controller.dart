@@ -130,7 +130,7 @@ class SwipeActionController {
     });
     selectedIndexPathsChangeCallback?.call(
         indexPaths, true, selectedSet.length);
-    SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: true));
+    SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: true, controller: this));
   }
 
   /// Deselect  cells  (You must pass [SwipeActionCell.index] attr to your [SwipeActionCell]
@@ -147,7 +147,7 @@ class SwipeActionController {
     });
     selectedIndexPathsChangeCallback?.call(
         indexPaths, false, selectedSet.length);
-    SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false));
+    SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false, controller: this));
   }
 
   /// select all cell
@@ -162,7 +162,7 @@ class SwipeActionController {
     List<int> selectedList = List.generate(dataLength, (index) => index);
     selectedSet.addAll(selectedList);
     selectedIndexPathsChangeCallback?.call(selectedList, true, dataLength);
-    SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: true));
+    SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: true, controller: this));
   }
 
   /// deselect all cell
@@ -178,7 +178,7 @@ class SwipeActionController {
     selectedSet.clear();
     selectedIndexPathsChangeCallback?.call(
         deselectedList, false, selectedSet.length);
-    SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false));
+    SwipeActionStore.getInstance().bus.fire(CellSelectedEvent(selected: false, controller: this));
   }
 
   void _fireEditEvent(
