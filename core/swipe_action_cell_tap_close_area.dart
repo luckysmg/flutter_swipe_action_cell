@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
+
+import 'controller.dart';
 
 /// This widget maybe not compatible with nested action...
 class SwipeActionCellTapCloseArea extends StatelessWidget {

@@ -1046,6 +1046,7 @@ class SwipeAction {
 
   /// 图标
   final Widget? icon;
+  final Widget? secondIcon;
 
   /// 标题
   final String? title;
@@ -1086,6 +1087,7 @@ class SwipeAction {
     this.nestedAction,
     this.content,
     this.performsFirstActionWithFullSwipe = false,
+    this.secondIcon,
   });
 }
 
