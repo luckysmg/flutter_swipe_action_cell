@@ -247,11 +247,13 @@ class _SwipePullAlignButtonState extends State<SwipePullAlignButton>
           ),
           child: Align(
             alignment: trailing ? Alignment.centerLeft : Alignment.centerRight,
-            child: Container(
-              padding: const EdgeInsets.only(left: 16, right: 16),
-              alignment: alignment,
-              width: offsetX.abs(),
-              child: _buildButtonContent(shouldShowNestedActionInfo),
+            child: ClipRect(
+              child: Container(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                alignment: alignment,
+                width: offsetX.abs(),
+                child: _buildButtonContent(shouldShowNestedActionInfo),
+              ),
             ),
           ),
         ),
