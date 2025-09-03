@@ -26,7 +26,7 @@ Alipay | Wechat |
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^3.1.5
+flutter_swipe_action_cell: ^3.1.6
 ```
 
  <br/>
