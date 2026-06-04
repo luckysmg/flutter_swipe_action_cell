@@ -394,6 +394,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
   @override
   void dispose() {
     _removeScrollListener();
+    openCurvedAnim.dispose();
+    closeCurvedAnim.dispose();
+    deleteCurvedAnim.dispose();
+    editCurvedAnim.dispose();
     controller.dispose();
     deleteController.dispose();
     editController.dispose();
