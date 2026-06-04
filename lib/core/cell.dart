@@ -177,10 +177,10 @@ class SwipeActionCellState extends State<SwipeActionCell>
   late AnimationController editController;
 
   late Animation<double> animation;
-  late Animation<double> openCurvedAnim;
-  late Animation<double> closeCurvedAnim;
-  late Animation<double> deleteCurvedAnim;
-  late Animation<double> editCurvedAnim;
+  late CurvedAnimation openCurvedAnim;
+  late CurvedAnimation closeCurvedAnim;
+  late CurvedAnimation deleteCurvedAnim;
+  late CurvedAnimation editCurvedAnim;
 
   ScrollPosition? scrollPosition;
 
