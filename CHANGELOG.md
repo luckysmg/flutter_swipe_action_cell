@@ -1,3 +1,4 @@
+## [3.1.7] Fix leaks and CI
 ## [3.1.6] Fix #78
 ## [3.1.5] Fix #71 (Assertion error during selectCellAt on second list)
 ## [3.1.4] Add dispose to SwipeActionController #70

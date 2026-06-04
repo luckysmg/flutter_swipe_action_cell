@@ -26,7 +26,7 @@ Alipay | Wechat |
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^3.1.6
+flutter_swipe_action_cell: ^3.1.7
 ```
 
  <br/>
@@ -528,6 +528,5 @@ deselectCellAt (indexPaths)|取消选择一些行
 selectAll (length)|全选（需要你提供你数据集合的长度
 deselectAll()|取消全选
 deleteCellAt(indexPaths)|删除所在index的cell（只是同步内部数据，并不会刷新UI）
-
 
 
