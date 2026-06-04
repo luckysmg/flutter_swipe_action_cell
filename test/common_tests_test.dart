@@ -142,8 +142,11 @@ void main() {
                           icon: const Icon(Icons.edit, color: Colors.white),
                         )
                       ],
-                      child: ListTile(
-                        title: Text("Test"),
+                      child: const Material(
+                        type: MaterialType.transparency,
+                        child: ListTile(
+                          title: Text("Test"),
+                        ),
                       ),
                     );
                   },
@@ -158,12 +161,15 @@ void main() {
                       key: ObjectKey(word),
                       index: index,
                       controller: controller,
-                      child: ListTile(
-                        title: Text(word),
-                        onLongPress: () {
-                          controller.startEditingMode();
-                          controller.selectCellAt(indexPaths: [index]);
-                        },
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: ListTile(
+                          title: Text(word),
+                          onLongPress: () {
+                            controller.startEditingMode();
+                            controller.selectCellAt(indexPaths: [index]);
+                          },
+                        ),
                       ),
                     );
                   },

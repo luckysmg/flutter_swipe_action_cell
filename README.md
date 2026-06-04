@@ -26,7 +26,7 @@ Alipay | Wechat |
 ##### install:
 
 ```yaml
-flutter_swipe_action_cell: ^3.1.6
+flutter_swipe_action_cell: ^3.1.7
 ```  
 
 ## 1.Preview：
@@ -428,4 +428,3 @@ If you want some animation:
 # About all parameter:
 
 I wrote them in my code with dart doc comments. You can read them in source code.
-

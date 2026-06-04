@@ -78,7 +78,7 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
     super.initState();
     controller = SwipeActionController(selectedIndexPathsChangeCallback:
         (changedIndexPaths, selected, currentCount) {
-      print(
+      debugPrint(
           'cell at ${changedIndexPaths.toString()} is/are ${selected ? 'selected' : 'unselected'} ,current selected count is $currentCount');
 
       /// I just call setState() to update simply in this example.
@@ -131,6 +131,7 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
       appBar: CupertinoNavigationBar(
         middle: CupertinoButton.filled(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            // ignore: deprecated_member_use
             minSize: 0,
             child: const Text('deselect all', style: TextStyle(fontSize: 22)),
             onPressed: () {
@@ -138,6 +139,7 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
             }),
         leading: CupertinoButton.filled(
             padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+            // ignore: deprecated_member_use
             minSize: 0,
             child: Text(
                 'delete cells (${controller.getSelectedIndexPaths().length})',
@@ -163,6 +165,7 @@ class _SwipeActionPageState extends State<SwipeActionPage> {
               setState(() {});
             }),
         trailing: CupertinoButton.filled(
+            // ignore: deprecated_member_use
             minSize: 0,
             padding: const EdgeInsets.all(10),
             child: const Text('select all'),
