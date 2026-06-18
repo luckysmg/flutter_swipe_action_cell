@@ -24,6 +24,15 @@ class SwipeActionController {
 
   SelectedIndexPathsChangeCallback? selectedIndexPathsChangeCallback;
 
+  /// Whether any cell is currently open (its action buttons are showing).
+  ///
+  /// Useful when a page-level back gesture wants to close the open cell first
+  /// (via [closeAllOpenCell]) instead of leaving the page.
+  ///
+  /// 当前是否有任意 cell 处于打开态（露出操作按钮）。
+  /// 适合页面级返回手势据此先 [closeAllOpenCell] 关闭，而不是直接返回。
+  bool get hasAnyOpenCell => SwipeActionStore.getInstance().anyCellOpen;
+
   /// edit mode or not
   ///
   /// 获取是否正处于编辑模式

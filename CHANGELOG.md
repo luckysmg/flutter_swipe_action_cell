@@ -1,3 +1,4 @@
+## [3.1.8] Add `SwipeActionController.hasAnyOpenCell` / `SwipeActionStore.anyCellOpen` to query whether any cell is open
 ## [3.1.7] Fix leaks and CI
 ## [3.1.6] Fix #78
 ## [3.1.5] Fix #71 (Assertion error during selectCellAt on second list)

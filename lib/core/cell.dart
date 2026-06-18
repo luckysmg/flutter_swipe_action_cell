@@ -164,7 +164,25 @@ class SwipeActionCellState extends State<SwipeActionCell>
     with TickerProviderStateMixin {
   double width = 0;
 
-  late Offset currentOffset;
+  Offset _currentOffset = Offset.zero;
+
+  /// The cell's current horizontal offset. Wrapped with a setter so the global
+  /// open-cell set ([SwipeActionStore.openCells]) stays in sync with the real
+  /// open/closed state (dx != 0 means open), letting callers query
+  /// [SwipeActionStore.anyCellOpen] without needing a close event.
+  Offset get currentOffset => _currentOffset;
+
+  set currentOffset(Offset value) {
+    if (_currentOffset == value) return;
+    _currentOffset = value;
+    final SwipeActionStore store = SwipeActionStore.getInstance();
+    if (value.dx != 0.0) {
+      store.openCells.add(this);
+    } else {
+      store.openCells.remove(this);
+    }
+  }
+
   late double maxTrailingPullWidth;
   late double maxLeadingPullWidth;
 
@@ -393,6 +411,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   @override
   void dispose() {
+    SwipeActionStore.getInstance().openCells.remove(this);
     _removeScrollListener();
     openCurvedAnim.dispose();
     closeCurvedAnim.dispose();
