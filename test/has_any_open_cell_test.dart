@@ -122,4 +122,22 @@ void main() {
 
     controller.dispose();
   });
+
+  testWidgets('hasAnyOpenCell stays false in edit mode (no action buttons).',
+      (tester) async {
+    final SwipeActionController controller = SwipeActionController();
+    await pumpCells(tester, controller);
+
+    // Edit mode drives currentOffset to editModeOffset, but the action buttons
+    // are intentionally hidden, so the cell must not count as "open".
+    controller.startEditingMode();
+    await tester.pumpAndSettle();
+    expect(controller.hasAnyOpenCell, isFalse);
+
+    controller.stopEditingMode();
+    await tester.pumpAndSettle();
+    expect(controller.hasAnyOpenCell, isFalse);
+
+    controller.dispose();
+  });
 }
