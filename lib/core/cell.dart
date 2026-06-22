@@ -164,7 +164,32 @@ class SwipeActionCellState extends State<SwipeActionCell>
     with TickerProviderStateMixin {
   double width = 0;
 
-  late Offset currentOffset;
+  Offset _currentOffset = Offset.zero;
+
+  /// The cell's current horizontal offset. Wrapped with a setter so the global
+  /// open-cell set stays in sync with the real open/closed state, letting callers
+  /// query [SwipeActionStore.anyCellOpen] without needing a close event.
+  ///
+  /// A cell counts as "open" only when its action buttons are showing, i.e. the
+  /// offset is non-zero AND it is not in (or animating in/out of) edit mode —
+  /// edit mode also drives [currentOffset] (to [SwipeActionCell.editModeOffset])
+  /// but intentionally hides the action buttons.
+  Offset get currentOffset => _currentOffset;
+
+  set currentOffset(Offset value) {
+    if (_currentOffset == value) return;
+    _currentOffset = value;
+    SwipeActionStore.getInstance()
+        .setCellOpen(this, value.dx != 0.0 && !_inEditContext);
+  }
+
+  /// True while this cell is in edit mode or animating into/out of it, during
+  /// which a non-zero [currentOffset] is the edit-mode offset, not an open cell.
+  bool get _inEditContext {
+    if (widget.controller?.isEditing.value ?? false) return true;
+    return editController.isAnimating;
+  }
+
   late double maxTrailingPullWidth;
   late double maxLeadingPullWidth;
 
@@ -393,6 +418,7 @@ class SwipeActionCellState extends State<SwipeActionCell>
 
   @override
   void dispose() {
+    SwipeActionStore.getInstance().setCellOpen(this, false);
     _removeScrollListener();
     openCurvedAnim.dispose();
     closeCurvedAnim.dispose();

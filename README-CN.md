@@ -26,7 +26,7 @@ Alipay | Wechat |
 #### pub 仓库点这里： [pub](https://pub.dev/packages/flutter_swipe_action_cell)
 #### 安装：
 ```yaml
-flutter_swipe_action_cell: ^3.1.7
+flutter_swipe_action_cell: ^3.1.8
 ```
 
  <br/>
@@ -276,6 +276,9 @@ controller.openCellAt(index: 2, trailing: true, animated: true);
 /// 关闭 cell
 controller.closeAllOpenCell();
 
+/// 当前是否有任意 cell 处于打开态（例如让返回手势先关闭它）
+bool hasOpen = controller.hasAnyOpenCell;
+
 /// 切换编辑模式
 controller.toggleEditingMode()
 
@@ -519,6 +522,7 @@ isEditing | 是否处于编辑模式
 selectedIndexPathsChangeCallback|获取选择/取消选择cell的回调
 openCellAt|打开特定位置的cell
 closeAllOpenCell|关闭所有打开的cell
+hasAnyOpenCell|当前是否有任意 cell 处于打开态
 getSelectedIndexPaths() | 获取选中的行的索引集合
 toggleEditingMode() | 切换编辑模式
 stopEditingMode()|暂停编辑模式

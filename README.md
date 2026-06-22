@@ -26,7 +26,7 @@ Alipay | Wechat |
 ##### install:
 
 ```yaml
-flutter_swipe_action_cell: ^3.1.7
+flutter_swipe_action_cell: ^3.1.8
 ```  
 
 ## 1.Preview：
@@ -261,6 +261,9 @@ controller.openCellAt(index: 2, trailing: true, animated: true);
 
 /// close cell
 controller.closeAllOpenCell();
+
+/// whether any cell is currently open (e.g. to let a back gesture close it first)
+bool hasOpen = controller.hasAnyOpenCell;
 
 /// toggleEditingMode
 controller.toggleEditingMode()
