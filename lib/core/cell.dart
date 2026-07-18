@@ -918,6 +918,11 @@ class SwipeActionCellState extends State<SwipeActionCell>
                       : _buildLeadingActionButtons();
                   return Stack(
                     alignment: Alignment.centerLeft,
+                    // Do not clip the child's overflow (e.g. an elevation
+                    // shadow) at the cell's boundaries. The action buttons are
+                    // pushed off-screen and clipped by their own inner Stacks,
+                    // so disabling clipping here is safe. See issue #81.
+                    clipBehavior: Clip.none,
                     children: <Widget>[
                       selectedButton,
                       content,
